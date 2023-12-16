@@ -9,10 +9,15 @@ class Competition extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'location_id'];
+    protected $fillable = ['name'];
 
-    public function location()
+    public function matchDays()
     {
-        return $this->belongsTo(Location::class);
+        return $this->hasMany(MatchDay::class);
+    }
+
+    public function teams()
+    {
+        return $this->hasMany(Team::class);
     }
 }

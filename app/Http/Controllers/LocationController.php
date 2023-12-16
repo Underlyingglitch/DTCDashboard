@@ -40,7 +40,7 @@ class LocationController extends Controller
             'address' => $request->address,
         ]);
 
-        return redirect()->route('locations.index');
+        return redirect()->route('locations.index')->with('success', 'Locatie is aangemaakt.');
     }
 
     /**
@@ -76,7 +76,7 @@ class LocationController extends Controller
             'address' => $request->address,
         ]);
 
-        return redirect()->route('locations.index');
+        return redirect()->route('locations.index')->with('success', 'Locatie is aangepast.');
     }
 
     /**
@@ -86,6 +86,6 @@ class LocationController extends Controller
     {
         $location->delete();
 
-        return redirect()->route('locations.index');
+        return redirect()->route('locations.index')->with('success', 'Locatie is verwijderd.');
     }
 }

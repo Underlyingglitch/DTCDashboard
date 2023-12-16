@@ -27,18 +27,9 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompetities"
-            aria-expanded="true" aria-controls="collapseCompetities">
+        <a class="nav-link" href="{{ route('competitions.index') }}">
             <i class="fas fa-fw fa-list"></i>
-            <span>Wedstrijdverwerking</span>
-        </a>
-        <div id="collapseCompetities" class="collapse" aria-labelledby="headingCompetities"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('competitions.index') }}">Competities</a>
-                <a class="collapse-item" href="#">Wedstrijden</a>
-            </div>
-        </div>
+            <span>Competities</span></a>
     </li>
 
     <li class="nav-item">
@@ -55,19 +46,25 @@
 
     <li class="nav-item">
         <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Juryleden</span></a>
+            <i class="fas fa-fw fa-users"></i>
+            <span>Turners</span></a>
     </li>
 
     <li class="nav-item">
         <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-chart-area"></i>
+            <i class="fas fa-fw fa-users"></i>
+            <span>Juryleden</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('trainers.index') }}">
+            <i class="fas fa-fw fa-users"></i>
             <span>Trainers</span></a>
     </li>
 
     <li class="nav-item">
         <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-chart-area"></i>
+            <i class="fas fa-fw fa-users"></i>
             <span>Gebruikers</span></a>
     </li>
 

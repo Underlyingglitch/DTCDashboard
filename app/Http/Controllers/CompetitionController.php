@@ -14,7 +14,7 @@ class CompetitionController extends Controller
     public function index()
     {
         return view('pages.competitions.index', [
-            'competitions' => Competition::with('location')->get(),
+            'competitions' => Competition::all(),
         ]);
     }
 
@@ -23,9 +23,7 @@ class CompetitionController extends Controller
      */
     public function create()
     {
-        return view('pages.competitions.create', [
-            'locations' => Location::all(),
-        ]);
+        return view('pages.competitions.create');
     }
 
     /**
@@ -34,11 +32,10 @@ class CompetitionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'location_id' => 'required|exists:locations,id',
             'name' => 'required|string',
         ]);
 
-        Competition::create($request->only('location_id', 'name'));
+        Competition::create($request->only('name'));
 
         return redirect()->route('competitions.index');
     }
@@ -46,9 +43,12 @@ class CompetitionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Competition $competition)
     {
-        //
+        return view('pages.competitions.show', [
+            'competition' => $competition,
+            'matchdays' => $competition->matchDays()->with('location')->orderBy('date')->get(),
+        ]);
     }
 
     /**
@@ -58,7 +58,6 @@ class CompetitionController extends Controller
     {
         return view('pages.competitions.edit', [
             'competition' => $competition,
-            'locations' => Location::all(),
         ]);
     }
 
@@ -68,11 +67,10 @@ class CompetitionController extends Controller
     public function update(Request $request, Competition $competition)
     {
         $this->validate($request, [
-            'location_id' => 'required|exists:locations,id',
             'name' => 'required|string',
         ]);
 
-        $competition->update($request->only('location_id', 'name'));
+        $competition->update($request->only('name'));
 
         return redirect()->route('competitions.index');
     }

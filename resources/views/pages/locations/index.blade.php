@@ -3,7 +3,7 @@
 @section('page_title', 'Locaties')
 
 @section('content')
-    <a href="{{ route('locations.create') }}" class="btn btn-success">Nieuwe locatie</a>
+    <a href="{{ route('locations.create') }}" class="btn btn-sm btn-success">Nieuwe locatie</a>
     <table class="table">
         <thead>
             <tr>
@@ -25,12 +25,12 @@
                     <td>{{ $location->name }}</td>
                     <td>{{ $location->address }}</td>
                     <td>
-                        <a href="{{ route('locations.edit', $location) }}" class="btn btn-warning"><i
+                        <a href="{{ route('locations.edit', $location) }}" class="btn btn-sm btn-warning"><i
                                 class="fas fa-pencil"></i></a>
                         <form class="button-form" method="post" action="{{ route('locations.destroy', $location) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

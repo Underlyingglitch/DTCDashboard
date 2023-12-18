@@ -7,13 +7,25 @@ echo "Deployment started ..."
 # if already is in maintenance mode
 (php artisan down) || true
 
+# Copy the current composer.json, package.json, and vite.config.js files
+cp composer.json composer.json.bak
+cp package.json package.json.bak
+cp vite.config.js vite.config.js.bak
+cp -r resources/js resources/js.bak
+cp -r resources/css resources/css.bak
+
 # Pull the latest version of the app
 git fetch --all
 git reset --hard origin/main
 
-# Install composer dependencies
-echo "Installing composer dependencies ..."
-composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader > /dev/null 2>&1
+# Check if composer.json has changed
+if ! cmp -s composer.json composer.json.bak; then
+    # Install composer dependencies
+    echo "Installing composer dependencies ..."
+    composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader > /dev/null 2>&1
+else
+    echo "No changes in composer.json. Skipping installation of composer dependencies."
+fi
 
 # Clear the old cache
 php artisan clear-compiled
@@ -21,13 +33,21 @@ php artisan clear-compiled
 # Recreate cache
 php artisan optimize
 
-# Compile npm assets
-echo "Installing npm packages ..."
-npm install > /dev/null 2>&1
+if ! cmp -s package.json package.json.bak; then
+    # Compile npm assets
+    echo "Installing npm packages ..."
+    npm install > /dev/null 2>&1
+else
+    echo "No changes in package.json. Skipping installation of npm packages."
+fi
 
-# Compile npm assets
-echo "Compiling npm assets ..."
-npm run build > /dev/null 2>&1
+if ! cmp -s vite.config.js vite.config.js.bak || ! diff -qr resources/js resources/js.bak || ! diff -qr resources/css resources/css.bak; then
+    # Compile npm assets
+    echo "Compiling npm assets ..."
+    npm run build > /dev/null 2>&1
+else
+    echo "No changes in vite.config.js, resources/js or resources/css. Skipping compilation of npm assets."
+fi
 
 # Run database migrations
 php artisan migrate --force

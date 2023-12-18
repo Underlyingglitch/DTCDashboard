@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClubController;
 use App\Http\Controllers\JuryController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\GymnastController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MatchDaysController;
@@ -25,7 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('locations', LocationController::class);
     Route::resource('trainers', TrainerController::class);
     Route::resource('juries', JuryController::class);
+    Route::resource('gymnasts', GymnastController::class);
     Route::resource('users', UserController::class);
+    Route::resource('clubs', ClubController::class);
 
     Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
         Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');

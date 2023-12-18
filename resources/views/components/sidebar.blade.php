@@ -17,56 +17,80 @@
             <i class="fas fa-fw fa-house"></i>
             <span>Home</span></a>
     </li>
-
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Scoresysteem
-    </div>
+    @if (Auth::user()->hasRole('dtc') || Auth::user()->hasRole('admin'))
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Scoresysteem
+        </div>
+    @endif
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('competitions.index') }}">
-            <i class="fas fa-fw fa-list"></i>
-            <span>Competities</span></a>
-    </li>
+    @can('viewAny', App\Models\Competition::class)
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('competitions.index') }}">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Competities</span></a>
+        </li>
+    @endcan
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('locations.index') }}">
-            <i class="fas fa-fw fa-map-marker"></i>
-            <span>Locaties</span></a>
-    </li>
+    @can('viewAny', App\Models\Location::class)
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('locations.index') }}">
+                <i class="fas fa-fw fa-map-marker"></i>
+                <span>Locaties</span></a>
+        </li>
+    @endcan
 
-    <hr class="sidebar-divider">
+    @can('viewAny', App\Models\Club::class)
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('clubs.index') }}">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Verenigingen</span></a>
+        </li>
+    @endcan
 
-    <div class="sidebar-heading">
-        Administratie
-    </div>
+    @if (Auth::user()->can('viewAny', App\Models\Gymnast::class) ||
+            Auth::user()->can('viewAny', App\Models\Trainer::class) ||
+            Auth::user()->can('viewAny', App\Models\Jury::class))
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePeople"
+                aria-expanded="true" aria-controls="collapsePeople">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Personen</span>
+            </a>
+            <div id="collapsePeople" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    @can('viewAny', App\Models\Gymnast::class)
+                        <a class="collapse-item" href="{{ route('gymnasts.index') }}">Turners</a>
+                    @endcan
+                    @can('viewAny', App\Models\Trainer::class)
+                        <a class="collapse-item" href="{{ route('trainers.index') }}">Trainers</a>
+                    @endcan
+                    @can('viewAny', App\Models\Jury::class)
+                        <a class="collapse-item" href="{{ route('juries.index') }}">Juryleden</a>
+                    @endcan
+                </div>
+            </div>
+        </li>
+    @endif
 
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Turners</span></a>
-    </li>
+    @if (Auth::user()->hasRole('admin'))
+        <hr class="sidebar-divider">
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Administratie
+        </div>
+    @endif
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('juries.index') }}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Juryleden</span></a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('trainers.index') }}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Trainers</span></a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('users.index') }}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Gebruikers</span></a>
-    </li>
+    @can('viewAny', App\Models\User::class)
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('users.index') }}">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Gebruikers</span></a>
+        </li>
+    @endcan
 
     {{-- <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">

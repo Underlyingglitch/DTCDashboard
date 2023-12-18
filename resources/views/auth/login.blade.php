@@ -62,7 +62,7 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="btn-link small" href="{{ route('auth.register') }}">Nog geen
+                                        <a class="btn btn-secondary" href="{{ route('auth.register') }}">Nog geen
                                             account?</a>
                                         {{-- <br>of<br>
                                         <a class="btn-link small" href="#">Wachtwoord vergeten?</a> --}}

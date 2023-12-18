@@ -26,6 +26,18 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welkom!</h1>
                                     </div>
+                                    @if (Session::has('success'))
+                                        <div class="alert alert-success">{!! Session::get('success') !!}</div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{!! $error !!}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     @error('details')
                                         <div class="alert alert-danger" role="alert">
                                             {{ $message }}
@@ -34,7 +46,7 @@
                                             </button>
                                         </div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.login') }}" method="post">
+                                    <form class="user" action="{{ route('auth.register') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text"
@@ -68,6 +80,16 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
+                                        <div class="form-group">
+                                            <input type="password"
+                                                class="form-control form-control-user @if ($errors->any()) @error('password_confirmation') is-invalid @enderror @endif"
+                                                placeholder="Wachtwoord bevestigen" name="password_confirmation">
+                                        </div>
+                                        @error('password_confirmation')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Registreren
                                         </button>
@@ -76,6 +98,9 @@
                                     <div class="text-center">
                                         Voor meer informatie, neem contact op met <a
                                             href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>.
+                                        <hr>
+                                        <a class="btn btn-secondary" href="{{ route('auth.login') }}">Terug naar
+                                            inloggen</a>
                                     </div>
                                 </div>
                             </div>

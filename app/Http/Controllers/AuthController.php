@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,11 +20,23 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'), true)) {
-            return back()
-                ->withInput($request->except('password'))
-                ->withErrors(['details' => 'Ongeldige inloggegevens!']);
+        if (Auth::validate($request->only('email', 'password'))) {
+            // Check if the user is active
+            $user = User::where('email', $request->email)->first();
+            if ($user->active) {
+                // Log the user in and remember them
+                Auth::login($user, true);
+                return redirect()->intended('/');
+            } else {
+                return back()
+                    ->withInput($request->except('password'))
+                    ->withErrors(['details' => 'Uw account is nog niet geactiveerd.']);
+            }
         }
+
+        return back()
+            ->withInput($request->except('password'))
+            ->withErrors(['details' => 'Ongeldige inloggegevens!']);
 
         return redirect()->intended('/');
     }
@@ -35,7 +48,17 @@ class AuthController extends Controller
 
     public function register_post(Request $request)
     {
-        // TODO implement logic
+        $request->merge(['email' => strtolower($request->email)]);
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed'
+        ]);
+
+        User::create($request->only('name', 'email', 'password'));
+
+        return redirect()->route('auth.register')->with('success', 'Account aangemaakt! Zodra uw account is geactiveerd ontvangt u bericht per email.');
     }
 
     public function logout()

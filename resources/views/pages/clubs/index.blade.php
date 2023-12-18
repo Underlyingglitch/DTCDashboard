@@ -1,34 +1,34 @@
 @extends('layouts.app')
 
-@section('page_title', 'Gebruikers')
+@section('page_title', 'Verenigingen')
 
 @section('content')
     <table id="dataTable" class="table">
         <thead>
             <tr>
                 <th>Naam</th>
+                <th>Plaats</th>
+                <th>District</th>
                 <th>Email</th>
-                <th>Rol(len)</th>
-                <th>Actief</th>
                 <th>Acties</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>Naam</th>
+                <th>Plaats</th>
+                <th>District</th>
                 <th>Email</th>
-                <th>Rol(len)</th>
-                <th>Actief</th>
                 <th>Acties</th>
             </tr>
         </tfoot>
         <tbody>
-            @foreach ($users as $user)
+            @foreach ($clubs as $club)
                 <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
-                    <td>{{ $user->active ? 'Ja' : 'Nee' }}</td>
+                    <td>{{ $club->name }}</td>
+                    <td>{{ $club->place }}</td>
+                    <td>{{ $club->district }}</td>
+                    <td>{{ $club->email }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                         <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pencil"></i></a>

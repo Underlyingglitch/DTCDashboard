@@ -1,34 +1,34 @@
 @extends('layouts.app')
 
-@section('page_title', 'Gebruikers')
+@section('page_title', 'Turners')
 
 @section('content')
     <table id="dataTable" class="table">
         <thead>
             <tr>
                 <th>Naam</th>
-                <th>Email</th>
-                <th>Rol(len)</th>
-                <th>Actief</th>
+                <th>Club</th>
+                <th>Geboortedatum</th>
+                <th>Foto</th>
                 <th>Acties</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>Naam</th>
-                <th>Email</th>
-                <th>Rol(len)</th>
-                <th>Actief</th>
+                <th>Club</th>
+                <th>Geboortedatum</th>
+                <th>Foto</th>
                 <th>Acties</th>
             </tr>
         </tfoot>
         <tbody>
-            @foreach ($users as $user)
+            @foreach ($gymnasts as $gymnast)
                 <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
-                    <td>{{ $user->active ? 'Ja' : 'Nee' }}</td>
+                    <td>{{ $gymnast->name }}</td>
+                    <td>{{ $gymnast->club->name }}</td>
+                    <td>{{ $gymnast->birthdate }}</td>
+                    <td>{{ $gymnast->photo ? 'Ja' : 'Nee' }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                         <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pencil"></i></a>

@@ -64,3 +64,6 @@ php artisan queue:restart
 php artisan up
 
 echo "Deployment finished!"
+
+rm composer.json.bak package.json.bak vite.config.js.bak
+rm -r resources/js.bak resources/scss.bak

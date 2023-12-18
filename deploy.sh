@@ -41,12 +41,12 @@ else
     echo "No changes in package.json. Skipping installation of npm packages."
 fi
 
-if ! cmp -s vite.config.js vite.config.js.bak || ! diff -qr resources/js resources/js.bak || ! diff -qr resources/css resources/css.bak; then
+if ! cmp -s vite.config.js vite.config.js.bak || ! diff -qr resources/js resources/js.bak || ! diff -qr resources/scss resources/scss.bak; then
     # Compile npm assets
     echo "Compiling npm assets ..."
     npm run build > /dev/null 2>&1
 else
-    echo "No changes in vite.config.js, resources/js or resources/css. Skipping compilation of npm assets."
+    echo "No changes in vite.config.js, resources/js or resources/scss. Skipping compilation of npm assets."
 fi
 
 # Run database migrations

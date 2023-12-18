@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JuryController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\TrainerController;
@@ -22,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('competitions', CompetitionController::class);
     Route::resource('locations', LocationController::class);
     Route::resource('trainers', TrainerController::class);
+    Route::resource('juries', JuryController::class);
+    Route::resource('users', UserController::class);
 
     Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
         Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');

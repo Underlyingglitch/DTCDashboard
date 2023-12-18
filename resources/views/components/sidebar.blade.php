@@ -51,7 +51,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('juries.index') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>Juryleden</span></a>
     </li>
@@ -63,7 +63,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('users.index') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>Gebruikers</span></a>
     </li>

@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Casts\Date;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class MatchDay extends Model
+class MatchDay extends Model implements Auditable
 {
-    use HasFactory;
+    use SoftDeletes, CascadeSoftDeletes, \OwenIt\Auditing\Auditable;
+
+    protected $cascadeDeletes = ['wedstrijden', 'registrations', 'scores', 'declarations'];
 
     protected $fillable = [
         'date',
@@ -38,6 +42,16 @@ class MatchDay extends Model
     public function registrations()
     {
         return $this->hasMany(Registration::class);
+    }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
+    }
+
+    public function declarations()
+    {
+        return $this->hasMany(Declaration::class);
     }
 
     public function getNameAttribute()

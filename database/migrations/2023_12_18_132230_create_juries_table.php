@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trainers', function (Blueprint $table) {
+        Schema::create('juries', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('club_id')->nullable()->constrained()->onDelete('restrict');
+            $table->string('function')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('postal')->nullable();
+            $table->string('city')->nullable();
+            $table->foreignId('club_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('iban')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trainers');
+        Schema::dropIfExists('juries');
     }
 };

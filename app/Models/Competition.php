@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Competition extends Model
+class Competition extends Model implements Auditable
 {
-    use HasFactory;
+    use SoftDeletes, CascadeSoftDeletes, \OwenIt\Auditing\Auditable;
+
+    protected $cascadeDeletes = ['matchDays', 'teams'];
 
     protected $fillable = ['name'];
 

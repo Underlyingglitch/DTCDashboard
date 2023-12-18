@@ -8,3 +8,8 @@
 .button-form {
     display: inline-block;
 }
+
+.dtsb-search {
+    @extend .btn;
+    @extend .btn-primary;
+}

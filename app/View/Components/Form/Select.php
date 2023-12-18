@@ -11,13 +11,21 @@ class Select extends Component
     /**
      * Create a new component instance.
      */
+    public $disabled = false;
     public function __construct(
         public $name,
         public $label = null,
         public $placeholder = '--',
         public $value = null,
-        public $options = []
+        public $options = [],
+        $disabled = "no"
     ) {
+        if ($disabled == "yes") {
+            $this->disabled = true;
+        }
+        if ($disabled == "onvalue" && $value) {
+            $this->disabled = true;
+        }
     }
 
     /**

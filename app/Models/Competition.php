@@ -20,4 +20,9 @@ class Competition extends Model
     {
         return $this->hasMany(Team::class);
     }
+
+    public function getDatesAttribute()
+    {
+        return $this->matchDays->pluck('date');
+    }
 }

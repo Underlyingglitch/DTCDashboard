@@ -3,7 +3,6 @@
 @section('page_title', $competition->name)
 
 @section('content')
-    <a href="{{ route('import.index', ['competition' => $competition]) }}" class="btn btn-sm btn-info">Importeren</a>
     <h4>Wedstrijddagen</h4>
     <a href="{{ route('matchdays.create', $competition) }}" class="btn btn-sm btn-success">Nieuwe wedstrijddag</a>
     <table class="table">

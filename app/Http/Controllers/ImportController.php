@@ -7,7 +7,7 @@ use App\Models\Team;
 use App\Models\Group;
 use App\Models\Niveau;
 use App\Models\Gymnast;
-use App\Models\Competition;
+use App\Models\MatchDay;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -17,9 +17,9 @@ class ImportController extends Controller
     public function index(Request $request)
     {
         return view('pages.import.index', [
-            'type' => $request->has('competition') ? "registrations" : null,
-            'competitions' => Competition::all()->pluck('name', 'id'),
-            'competition' => $request->input('competition'),
+            'type' => $request->has('matchday') ? "registrations" : null,
+            'matchdays' => MatchDay::all()->pluck('name', 'id'),
+            'matchday' => $request->input('matchday'),
         ]);
     }
 
@@ -46,7 +46,7 @@ class ImportController extends Controller
         $array = $spreadsheet->getSheet(0)->toArray();
 
         if ($request->type == 'registrations') {
-            $competition = Competition::find($request->competition);
+            $matchday = MatchDay::find($request->matchday);
 
             foreach ($array as $i => $row) {
                 if (!is_numeric($row[0])) {
@@ -70,40 +70,38 @@ class ImportController extends Controller
                     : Team::firstOrCreate(
                         [
                             'name' => $row[7],
-                            'competition_id' => $competition->id,
+                            'competition_id' => $matchday->competition_id,
                             'niveau_id' => $niveau->id
                         ],
                         [
                             'name' => $row[7],
-                            'competition_id' => $competition->id,
+                            'competition_id' => $matchday->competition_id,
                             'niveau_id' => $niveau->id
                         ]
                     );
 
-                foreach ($competition->matchdays as $matchday) {
-                    $matchday->registrations()->delete();
-                    Registration::updateOrCreate(
-                        [
-                            'match_day_id' => $matchday->id,
-                            'gymnast_id' => $row[0]
-                        ],
-                        [
-                            'gymnast_id' => $row[0],
-                            'match_day_id' => $matchday->id,
-                            'startnumber' => $i,
-                            'club_id' => Club::updateOrCreate(
-                                ['id' =>  $row[2]],
-                                [
-                                    'id' => $row[2],
-                                    'name' => $row[3]
-                                ]
-                            )->id,
-                            'niveau_id' => $niveau->id,
-                            'group_id' => Group::where([['baan', $row[8]], ['nr', $row[9]]])->first()->id,
-                            'team_id' => $team->id ?? null
-                        ]
-                    );
-                }
+                $matchday->registrations()->delete();
+                Registration::updateOrCreate(
+                    [
+                        'match_day_id' => $matchday->id,
+                        'gymnast_id' => $row[0]
+                    ],
+                    [
+                        'gymnast_id' => $row[0],
+                        'match_day_id' => $matchday->id,
+                        'startnumber' => $i,
+                        'club_id' => Club::updateOrCreate(
+                            ['id' =>  $row[2]],
+                            [
+                                'id' => $row[2],
+                                'name' => $row[3]
+                            ]
+                        )->id,
+                        'niveau_id' => $niveau->id,
+                        'group_id' => Group::where([['baan', $row[8]], ['nr', $row[9]]])->first()->id,
+                        'team_id' => $team->id ?? null
+                    ]
+                );
             }
             return redirect()->back()->with('success', 'Registraties geimporteerd');
         }

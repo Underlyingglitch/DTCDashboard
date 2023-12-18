@@ -8,12 +8,14 @@
         <thead>
             <tr>
                 <th>Naam</th>
+                <th>Datum</th>
                 <th>Acties</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>Naam</th>
+                <th>Datum</th>
                 <th>Acties</th>
             </tr>
         </tfoot>
@@ -21,6 +23,7 @@
             @foreach ($competitions as $competition)
                 <tr>
                     <td>{{ $competition->name }}</td>
+                    <td>{{ implode(', ', $competition->dates->toArray()) }}</td>
                     <td>
                         <a href="{{ route('competitions.show', $competition) }}" class="btn btn-sm btn-info"><i
                                 class="fas fa-info-circle"></i></a>

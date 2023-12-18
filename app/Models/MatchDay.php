@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Date;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,10 @@ class MatchDay extends Model
         'date',
         'location_id',
         'competition_id',
+    ];
+
+    protected $casts = [
+        'date' => Date::class,
     ];
 
     public function competition()
@@ -33,5 +38,10 @@ class MatchDay extends Model
     public function registrations()
     {
         return $this->hasMany(Registration::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->location->name . " " . $this->date;
     }
 }

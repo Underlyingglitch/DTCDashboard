@@ -7,6 +7,8 @@
     <a href="{{ route('competitions.show', $matchday->competition) }}" class="btn btn-sm btn-primary">Terug naar
         competitie</a>
     <a href="{{ route('wedstrijden.create', $matchday) }}" class="btn btn-sm btn-success">Nieuwe wedstrijd</a>
+    <a href="{{ route('import.index', ['matchday' => $matchday]) }}"
+        class="btn btn-sm {{ $matchday->imported ? 'btn-warning' : 'btn-info' }}">Importeren</a>
     <table class="table">
         <thead>
             <tr>

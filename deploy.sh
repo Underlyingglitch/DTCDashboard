@@ -12,7 +12,7 @@ cp composer.json composer.json.bak
 cp package.json package.json.bak
 cp vite.config.js vite.config.js.bak
 cp -r resources/js resources/js.bak
-cp -r resources/css resources/css.bak
+cp -r resources/scss resources/scss.bak
 
 # Pull the latest version of the app
 git fetch --all

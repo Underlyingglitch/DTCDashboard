@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    @vite('resources/sass/pdf.scss')
+    @vite('resources/scss/pdf.scss')
     <title>Jurybriefjes - W{{ $wedstrijd->index }}</title>
 </head>
 

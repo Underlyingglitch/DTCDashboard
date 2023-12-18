@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    @vite('resources/sass/pdf.scss')
+    @vite('resources/scss/pdf.scss')
     <title>Groepsindeling W{{ $wedstrijd->index }} - {{ $wedstrijd->match_day->location->name }}</title>
 </head>
 

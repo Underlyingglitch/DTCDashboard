@@ -13,13 +13,22 @@ use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\WedstrijdController;
+use Symfony\Component\HttpFoundation\Request;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\WedstrijdExportController;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('index');
-    })->name('home');
+    Route::get('/test', function (Request $request) {
+        dd(
+            $_SERVER,
+            $request->ip(),
+            $request->ips(),
+            $request->isFromTrustedProxy(),
+        );
+    });
+    Route::get('/dashboard', function () {
+        return view('pages.dashboard.main');
+    })->name('dashboard');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 

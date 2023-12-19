@@ -18,14 +18,6 @@ use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\WedstrijdExportController;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/test', function (Request $request) {
-        dd(
-            $_SERVER,
-            $request->ip(),
-            $request->ips(),
-            $request->isFromTrustedProxy(),
-        );
-    });
     Route::get('/dashboard', function () {
         return view('pages.dashboard.main');
     })->name('dashboard');

@@ -26,7 +26,7 @@ class AuthController extends Controller
             if ($user->active) {
                 // Log the user in and remember them
                 Auth::login($user, true);
-                return redirect()->intended('/');
+                return redirect()->intended(route('dashboard'));
             } else {
                 return back()
                     ->withInput($request->except('password'))
@@ -37,8 +37,6 @@ class AuthController extends Controller
         return back()
             ->withInput($request->except('password'))
             ->withErrors(['details' => 'Ongeldige inloggegevens!']);
-
-        return redirect()->intended('/');
     }
 
     public function register()
@@ -64,6 +62,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('auth.login');
+        return redirect()->route('home');
     }
 }

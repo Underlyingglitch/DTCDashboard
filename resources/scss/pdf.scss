@@ -62,6 +62,16 @@ main {
     }
 }
 
+@page 
+{
+    size:  auto;   /* auto is the initial value */
+    margin: 20mm 0mm 20mm 0mm;  /* this affects the margin in the printer settings */
+}
+
+@page:first {
+    margin-top: 0;
+}
+
 /*
 table { page-break-inside:auto }
     tr    { page-break-inside:avoid; page-break-after:auto }

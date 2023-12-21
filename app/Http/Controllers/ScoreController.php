@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
 use App\Jobs\CalculateTeamScore;
 use App\Http\Traits\FunctionsTrait;
+use Illuminate\Support\Facades\Bus;
 
 class ScoreController extends Controller
 {
@@ -133,10 +134,11 @@ class ScoreController extends Controller
         //     }
         // }
         foreach ($wedstrijd->teams as $team) {
+            $jobs = [];
             for ($i = 1; $i <= 6; $i++) {
-                //CheckCountedScore::dispatch($team, $i, $wedstrijd->match_day_id);
-                CalculateTeamScore::dispatch($team, $i, $wedstrijd->match_day_id);
+                $jobs[] = new CalculateTeamScore($team, $i, $wedstrijd->match_day_id);
             }
+            Bus::chain($jobs)->dispatch();
         }
 
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores worden herberekend.');

@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class CalculateTeamScore implements ShouldQueue
+class CalculateTeamScore implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -24,25 +24,23 @@ class CalculateTeamScore implements ShouldQueue
         //
     }
 
+    public function uniqueId()
+    {
+        return $this->team->id . '-' . $this->match_day_id;
+    }
+
     /**
      * Execute the job.
      */
     public function handle(): void
     {
         $scores = $this->team->registrations->pluck('scores')->flatten()->where('match_day_id', $this->match_day_id)->where('toestel', $this->toestel);
-        $thirdHighestScore = $scores->sortByDesc('total')->values()->get(2);
+        $topThreeScores = $scores->sortByDesc('total')->take(3);
         foreach ($scores as $score) {
             // Set counted to true if score is among the 3 highest scores for this toestel, otherwise set to false
-            if ($thirdHighestScore) {
-                $score->counted = $score->total >= $thirdHighestScore->total;
-            } else {
-                // If there are fewer than 3 scores, all scores are counted
-                $score->counted = true;
-            }
+            $score->counted = $topThreeScores->contains($score);
             $score->save();
         }
-        // $toestel = $this->score->toestel;
-        // $team = $this->score->registration->team;
         // Sum all counted scores for this team on this toestel
         $team_total_toestel = $scores->where('counted', true)->sum('total');
         // Get the team score for this match day or create it if it doesn't exist

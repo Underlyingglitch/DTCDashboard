@@ -52,17 +52,22 @@ class WedstrijdExportController extends Controller
 
     public function teams(Wedstrijd $wedstrijd)
     {
-        //dd($wedstrijd->teams()->with('registrations')->get()->flatten()->toArray());
-        // dd($wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
-        //     $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau');
-        // }])->get()->toArray());
         $teams = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau');
         }])->get();
-        return view('pdf.teams', [
+
+        // If debug is enabled, return the view instead of downloading the pdf
+        if (config('app.debug')) {
+            return view('pdf.teams', [
+                'wedstrijd' => $wedstrijd,
+                'teams' => $teams
+            ]);
+        }
+        $pdf = Pdf::loadView('pdf.teams', [
             'wedstrijd' => $wedstrijd,
             'teams' => $teams
         ]);
+        return $pdf->download('Teamindeling W' . $wedstrijd->index . '.pdf');
     }
 
     public function jury(Wedstrijd $wedstrijd, $group_nr = null)
@@ -84,12 +89,22 @@ class WedstrijdExportController extends Controller
             $baans[$i] = $this->getGroupNrs($group_count[$i], $i);
         }
 
-        return view('pdf.jury', [
+        // If debug is enabled, return the view instead of downloading the pdf
+        if (config('app.debug')) {
+            return view('pdf.jury', [
+                'wedstrijd' => $wedstrijd,
+                'registrations' => $registrations,
+                'groups' => $groups,
+                'baans' => $baans
+            ]);
+        }
+        $pdf = Pdf::loadView('pdf.jury', [
             'wedstrijd' => $wedstrijd,
             'registrations' => $registrations,
             'groups' => $groups,
             'baans' => $baans
         ]);
+        return $pdf->stream('Jurybriefjes W' . $wedstrijd->index . '.pdf');
     }
 
     public function teamscores(Wedstrijd $wedstrijd)

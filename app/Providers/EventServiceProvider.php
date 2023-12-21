@@ -23,9 +23,7 @@ class EventServiceProvider extends ServiceProvider
         ],
     ];
 
-    protected $subscribe = [
-        'App\Listeners\JobEventListener',
-    ];
+    protected $subscribe = [];
 
     protected $observers = [
         \App\Models\Score::class => [\App\Observers\ScoreObserver::class],

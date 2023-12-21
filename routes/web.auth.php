@@ -64,6 +64,7 @@ Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wed
             Route::post('/', 'correct')->name('correct');
             Route::get('/{toestel}/{group}', 'add')->name('add');
             Route::post('/{toestel}/{group}', 'store')->name('store');
+            Route::get('/recalculate', 'recalculate')->name('recalculate');
             // Route::get('/{toestel}', 'toestel')->name('toestel');
             // Route::get('/{toestel}/group/{group}', 'group')->name('group');
             // Route::get('/{toestel}/group/{group}/gymnast/{gymnast}', 'gymnast')->name('gymnast');

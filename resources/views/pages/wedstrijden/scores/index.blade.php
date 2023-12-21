@@ -4,6 +4,8 @@
 
 @section('content')
     <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-primary">Terug naar wedstrijd</a>
+    <a href="{{ route('wedstrijden.score.recalculate', $wedstrijd) }}" class="btn btn-sm btn-warning">Scores
+        herberekenen</a>
     <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date }} | {{ $wedstrijd->match_day->location->name }}
         | {{ $wedstrijd->niveaus_list }}</h4>
 
@@ -85,9 +87,5 @@
                 $(`.form-control[name='t']`).val(total)
             }
         })
-    </script>
-    <script>
-        Echo.channel('scores')
-            .listen('ProcessedScoreFinished', (e) => console.log('RealTimeMessage: ' + e.processedScore));
     </script>
 @endsection

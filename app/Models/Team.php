@@ -27,14 +27,9 @@ class Team extends Model implements Auditable
         return $this->belongsTo(Niveau::class);
     }
 
-    public function getToestelScoresAttribute()
+    public function team_scores()
     {
-        return explode(',', $this->attributes['toestel_scores']);
-    }
-
-    public function setToestelScoresAttribute($value)
-    {
-        $this->attributes['toestel_scores'] = implode(',', $value);
+        return $this->hasMany(TeamScore::class);
     }
 
     public function calculateScore()

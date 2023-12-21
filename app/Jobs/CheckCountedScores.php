@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Team;
+use App\Models\Score;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
@@ -18,7 +19,7 @@ class CheckCountedScores implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Team $team, protected $toestel)
+    public function __construct(protected Score $score)
     {
         //
     }
@@ -28,7 +29,7 @@ class CheckCountedScores implements ShouldQueue
      */
     public function handle(): void
     {
-        $scores = $this->team->registrations->pluck('scores')->flatten()->where('toestel', $this->toestel);
+        $scores = $this->score->registration->team->registrations->pluck('scores')->flatten()->where('match_day_id', $this->score->match_day_id)->where('toestel', $this->score->toestel);
         $thirdHighestScore = $scores->sortByDesc('total')->values()->get(2);
 
         foreach ($scores as $score) {

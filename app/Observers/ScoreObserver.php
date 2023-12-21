@@ -18,7 +18,7 @@ class ScoreObserver
         // Check if score belongs to a team
         if ($score->registration->team) {
             // Check which scores count for this team
-            CheckCountedScores::dispatch($score->registration->team, $score->toestel);
+            CheckCountedScores::dispatch($score);
         }
     }
 
@@ -36,7 +36,7 @@ class ScoreObserver
             // Check if score belongs to a team
             if ($score->registration->team) {
                 // Check which scores count for this team
-                CheckCountedScores::dispatch($score->registration->team, $score->toestel);
+                CheckCountedScores::dispatch($score);
             }
         }
     }
@@ -46,6 +46,7 @@ class ScoreObserver
      */
     public function deleted(Score $score): void
     {
+        CheckCountedScores::dispatch($score);
         CalculateTeamScore::dispatch($score);
     }
 
@@ -54,6 +55,7 @@ class ScoreObserver
      */
     public function restored(Score $score): void
     {
+        CheckCountedScores::dispatch($score);
         CalculateTeamScore::dispatch($score);
     }
 
@@ -62,6 +64,7 @@ class ScoreObserver
      */
     public function forceDeleted(Score $score): void
     {
+        CheckCountedScores::dispatch($score);
         CalculateTeamScore::dispatch($score);
     }
 }

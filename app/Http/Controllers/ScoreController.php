@@ -7,6 +7,7 @@ use App\Models\Score;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
+use App\Jobs\CheckCountedScores;
 use App\Http\Traits\FunctionsTrait;
 
 class ScoreController extends Controller
@@ -59,20 +60,22 @@ class ScoreController extends Controller
 
     public function store(Wedstrijd $wedstrijd, $toestel, Group $group, Request $request)
     {
-        foreach (explode(',', $request->ids) as $id) if (!in_array($id, $request->s ?? [])) Score::firstOrCreate(
-            [
+        if (!is_null($request->ids)) {
+            foreach (explode(',', $request->ids) as $id) if (!in_array($id, $request->s ?? [])) Score::firstOrCreate(
+                [
 
-                'match_day_id' => $wedstrijd->match_day->id,
-                'startnumber' => $id,
-                'toestel' => $toestel,
-            ],
-            [
-                'd' => $request['d-' . $id],
-                'e' => $request['e-' . $id],
-                'n' => $request['n-' . $id],
-                'total' => $request['d-' . $id] > 0 ? (($request['d-' . $id] + (10 - $request['e-' . $id])) - $request['n-' . $id]) : 0,
-            ]
-        );
+                    'match_day_id' => $wedstrijd->match_day->id,
+                    'startnumber' => $id,
+                    'toestel' => $toestel,
+                ],
+                [
+                    'd' => $request['d-' . $id],
+                    'e' => $request['e-' . $id],
+                    'n' => $request['n-' . $id],
+                    'total' => $request['d-' . $id] > 0 ? (($request['d-' . $id] + (10 - $request['e-' . $id])) - $request['n-' . $id]) : 0,
+                ]
+            );
+        }
 
         ProcessedScore::updateOrCreate([
             'wedstrijd_id' => $wedstrijd->id,
@@ -114,5 +117,19 @@ class ScoreController extends Controller
         ]);
 
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Score is bijgewerkt.');
+    }
+
+    public function recalculate(Wedstrijd $wedstrijd)
+    {
+        $scores = Score::where('match_day_id', $wedstrijd->match_day_id)->get();
+
+        foreach ($scores as $score) {
+            if ($score->registration->team) {
+                // Check which scores count for this team
+                CheckCountedScores::dispatch($score);
+            }
+        }
+
+        return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores worden herberekend.');
     }
 }

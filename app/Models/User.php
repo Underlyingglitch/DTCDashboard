@@ -3,14 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements Auditable
+class User extends Authenticatable implements Auditable, MustVerifyEmail
 {
     use HasApiTokens, Notifiable, SoftDeletes, \OwenIt\Auditing\Auditable, HasRoles;
 
@@ -48,5 +49,15 @@ class User extends Authenticatable implements Auditable
     public function settings()
     {
         return $this->hasMany(UserSetting::class);
+    }
+
+    public function getIsTrainerAttribute()
+    {
+        return Trainer::where('email', $this->email)->count() == 1;
+    }
+
+    public function getIsJuryAttribute()
+    {
+        return Jury::where('email', $this->email)->count() == 1;
     }
 }

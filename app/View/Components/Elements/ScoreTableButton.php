@@ -20,6 +20,10 @@ class ScoreTableButton extends Component
         public $toestel,
         public $pc
     ) {
+        if ($this->toestel > 6) {
+            $this->class = "btn-secondary";
+            return;
+        }
         if (is_null($this->groupnr)) {
             $this->class = "btn-secondary";
         } else {

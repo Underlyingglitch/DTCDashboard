@@ -31,7 +31,8 @@
                     <td>{{ $user->active ? 'Ja' : 'Nee' }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
-                        <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pencil"></i></a>
+                        <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning"><i
+                                class="fas fa-pencil"></i></a>
                         <form class="button-form" method="post" action="#">
                             @csrf
                             @method('DELETE')

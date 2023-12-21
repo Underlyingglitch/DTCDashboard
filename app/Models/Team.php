@@ -21,4 +21,28 @@ class Team extends Model implements Auditable
     {
         return $this->hasMany(Registration::class)->orderBy('startnumber');
     }
+
+    public function niveau()
+    {
+        return $this->belongsTo(Niveau::class);
+    }
+
+    public function getToestelScoresAttribute()
+    {
+        return explode(',', $this->attributes['toestel_scores']);
+    }
+
+    public function setToestelScoresAttribute($value)
+    {
+        $this->attributes['toestel_scores'] = implode(',', $value);
+    }
+
+    public function calculateScore()
+    {
+        // Calculate the team total score by summing the scores that have counted = true
+        $scores = $this->registrations->pluck('scores')->flatten()->where('counted', true)->pluck('total');
+
+        $this->total_score = $scores->sum();
+        $this->save();
+    }
 }

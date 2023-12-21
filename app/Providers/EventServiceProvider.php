@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Mail\EmailNotification;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Queue\Events\QueueBusy;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,12 +23,27 @@ class EventServiceProvider extends ServiceProvider
         ],
     ];
 
+    protected $subscribe = [
+        'App\Listeners\JobEventListener',
+    ];
+
+    protected $observers = [
+        \App\Models\Score::class => [\App\Observers\ScoreObserver::class],
+    ];
+
     /**
      * Register any events for your application.
      */
     public function boot(): void
     {
-        //
+        Event::listen(function (QueueBusy $event) {
+            Notification::route('mail', 'dev@example.com')
+                ->notify(new EmailNotification(
+                    "rickokkersen@gmail.com",
+                    "Queue is busy",
+                    "The current queue is backed up with " . $event->size . " jobs"
+                ));
+        });
     }
 
     /**
@@ -33,6 +51,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function shouldDiscoverEvents(): bool
     {
-        return false;
+        return true;
     }
 }

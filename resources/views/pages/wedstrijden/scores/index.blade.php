@@ -86,4 +86,8 @@
             }
         })
     </script>
+    <script>
+        Echo.channel('scores')
+            .listen('ProcessedScoreFinished', (e) => console.log('RealTimeMessage: ' + e.processedScore));
+    </script>
 @endsection

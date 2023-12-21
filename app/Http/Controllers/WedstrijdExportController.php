@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Wedstrijd;
 use App\Models\Registration;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Traits\FunctionsTrait;
 
 class WedstrijdExportController extends Controller
@@ -32,22 +31,13 @@ class WedstrijdExportController extends Controller
                 }
             }
         }
-        // If debug is enabled, return the view instead of downloading the pdf
-        if (config('app.debug')) {
-            return view('pdf.groups', [
-                'wedstrijd' => $wedstrijd,
-                'groups' => $groups,
-                'registrations' => $registrations,
-                'teams' => $teams,
-            ]);
-        }
-        $pdf = Pdf::loadView('pdf.groups', [
+
+        return view('pdf.groups', [
             'wedstrijd' => $wedstrijd,
             'groups' => $groups,
             'registrations' => $registrations,
             'teams' => $teams,
         ]);
-        return $pdf->download('Groepsindeling W' . $wedstrijd->index . '.pdf');
     }
 
     public function teams(Wedstrijd $wedstrijd)

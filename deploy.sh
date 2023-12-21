@@ -3,6 +3,15 @@ set -e
 
 echo "Deployment started ..."
 
+# Pulling new updates
+git fetch --all
+
+# Check if there are changes in the git repository that haven't been pulled
+if git diff --quiet; then
+    echo "No changes in the git repository. Skipping deployment."
+    exit 1
+fi
+
 # Enter maintenance mode or return true
 # if already is in maintenance mode
 (php artisan down) || true
@@ -14,8 +23,7 @@ cp vite.config.js vite.config.js.bak
 cp -r resources/js resources/js.bak
 cp -r resources/scss resources/scss.bak
 
-# Pull the latest version of the app
-git fetch --all
+# Reset the git repository
 git reset --hard origin/main
 
 # Check if composer.json has changed

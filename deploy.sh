@@ -6,10 +6,13 @@ echo "Deployment started ..."
 # Pulling new updates
 git fetch --all
 
-# Check if there are changes in the git repository that haven't been pulled
-if ! git diff --quiet; then
-    echo "No changes in the git repository. Skipping deployment."
-    exit 1
+# if force is passed as an argument dont check if there are changes in the git repository that haven't been pulled
+if [ "$1" != "force" ]; then
+    # Check if there are changes in the git repository that haven't been pulled
+    if ! git diff --quiet; then
+        echo "There are changes in the git repository that haven't been pulled. Skipping deployment."
+        exit 1
+    fi
 fi
 
 # Enter maintenance mode or return true

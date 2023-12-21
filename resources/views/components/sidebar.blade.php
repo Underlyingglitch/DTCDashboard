@@ -25,6 +25,12 @@
         Scoresysteem
     </div>
 
+    <li class="nav-item">
+            <a class="nav-link" href="{{ route('livescores') }}">
+                <i class="fas fa-fw fa-sliders"></i>
+                <span>Livescores</span></a>
+        </li>
+
     @can('viewAny', App\Models\Competition::class)
         <li class="nav-item">
             <a class="nav-link" href="{{ route('competitions.index') }}">

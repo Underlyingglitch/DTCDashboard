@@ -29,6 +29,8 @@ Route::resource('gymnasts', GymnastController::class);
 Route::resource('users', UserController::class);
 Route::resource('clubs', ClubController::class);
 
+Route::get('/livescores', [ScoreController::class, 'livescores'])->name('livescores');
+
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
     Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');
     Route::post('competitions/{competition}/matchdays', 'store')->name('store');

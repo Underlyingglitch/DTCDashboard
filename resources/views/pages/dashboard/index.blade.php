@@ -35,7 +35,7 @@
         <div class="col-md-6">
             <h2>Wedstrijden</h2>
             <p>Op deze website vind je alle informatie over de wedstrijden die wij organiseren.</p>
-            <p>Deze website is nog in ontwikkeling. Mocht je een fout tegenkomen, laat het mijn dan weten via <a
+            <p>Deze website is nog in ontwikkeling. Mocht je een fout tegenkomen, laat dit mij dan weten via <a
                     href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>.</p>
         </div>
     </div>

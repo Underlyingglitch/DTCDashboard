@@ -3,15 +3,15 @@ set -e
 
 echo "Deployment started ..."
 
-# Pulling new updates
+# Fetch the latest changes from the remote repository
 git fetch
 
-# if force is passed as an argument dont check if there are changes in the git repository that haven't been pulled
-if [ "$1" != "force" ]; then
-    # Check if there are changes in the git repository that haven't been pulled
-    if ! git diff --quiet; then
-        echo "There are changes in the git repository that haven't been pulled. Skipping deployment."
-        exit 1
+# Check if "force" is passed as an argument
+if [[ "$1" != "force" ]]; then
+    # Check if there are changes that have not been pulled yet
+    if [ -z "$(git diff origin/main)" ]; then
+        echo "No changes to pull from the remote repository."
+        exit 0
     fi
 fi
 
@@ -78,3 +78,5 @@ echo "Deployment finished!"
 
 rm composer.json.bak package.json.bak vite.config.js.bak
 rm -r resources/js.bak resources/scss.bak
+# If install.log exists, remove it
+[ -f install.log ] && rm install.log

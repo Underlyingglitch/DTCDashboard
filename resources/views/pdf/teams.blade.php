@@ -24,7 +24,7 @@
                     <th>Team</th>
                     <th>Niveau</th>
                 </tr>
-                @foreach ($team->registrations()->with('gymnast', 'club', 'niveau')->get() as $registration)
+                @foreach ($team->registrations as $registration)
                     <tr
                         @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
                         <td style="width: 20%">{{ $registration->gymnast->name }}</td>

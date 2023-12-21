@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Wedstrijd;
 use App\Models\Registration;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Traits\FunctionsTrait;
 
 class WedstrijdExportController extends Controller
@@ -21,7 +22,7 @@ class WedstrijdExportController extends Controller
 
     public function groups(Wedstrijd $wedstrijd)
     {
-        $registrations = Registration::where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau', 'team')->get();
+        $registrations = Registration::where('match_day_id', $wedstrijd->match_day_id)->whereIn('niveau_id', $wedstrijd->niveaus->pluck('id'))->with('gymnast', 'club', 'niveau', 'team')->get();
         $groups = $wedstrijd->groups;
         $teams = [];
         foreach ($groups as $group) {
@@ -31,18 +32,33 @@ class WedstrijdExportController extends Controller
                 }
             }
         }
-        return view('pdf.groups', [
+        // If debug is enabled, return the view instead of downloading the pdf
+        if (config('app.debug')) {
+            return view('pdf.groups', [
+                'wedstrijd' => $wedstrijd,
+                'groups' => $groups,
+                'registrations' => $registrations,
+                'teams' => $teams,
+            ]);
+        }
+        $pdf = Pdf::loadView('pdf.groups', [
             'wedstrijd' => $wedstrijd,
             'groups' => $groups,
             'registrations' => $registrations,
             'teams' => $teams,
         ]);
+        return $pdf->download('Groepsindeling W' . $wedstrijd->index . '.pdf');
     }
 
     public function teams(Wedstrijd $wedstrijd)
     {
-        $registrations = Registration::where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau', 'team')->get();
-        $teams = $wedstrijd->teams()->with('registrations')->get();
+        //dd($wedstrijd->teams()->with('registrations')->get()->flatten()->toArray());
+        // dd($wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+        //     $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau');
+        // }])->get()->toArray());
+        $teams = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau');
+        }])->get();
         return view('pdf.teams', [
             'wedstrijd' => $wedstrijd,
             'teams' => $teams

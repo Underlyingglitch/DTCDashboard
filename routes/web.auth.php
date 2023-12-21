@@ -15,7 +15,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\WedstrijdExportController;
+
+Route::get('/test', [TestController::class, 'index'])->name('test');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('team_id')->constrained()->cascadeOnDelete();
             $table->foreignId('match_day_id')->constrained()->cascadeOnDelete();
             $table->string('toestel_scores')->default('0,0,0,0,0,0');
-            $table->float('total_score', 5, 3)->default(0);
+            $table->float('total_score', 6, 3)->default(0);
             $table->timestamps();
         });
     }

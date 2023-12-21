@@ -14,11 +14,10 @@ class ScoreObserver
      */
     public function created(Score $score): void
     {
-        Log::info('Score created');
         // Check if score belongs to a team
         if ($score->registration->team) {
             // Check which scores count for this team
-            CheckCountedScores::dispatch($score);
+            CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
         }
     }
 
@@ -27,16 +26,9 @@ class ScoreObserver
      */
     public function updated(Score $score): void
     {
-        Log::info('Score updated');
-        // Check if the counted column is changed
-        if ($score->isDirty('counted')) {
-            Log::info('Counted column changed');
-            CalculateTeamScore::dispatch($score);
-        } else {
-            // Check if score belongs to a team
-            if ($score->registration->team) {
-                // Check which scores count for this team
-                CheckCountedScores::dispatch($score);
+        if ($score->registration->team) {
+            if ($score->isDirty('total')) {
+                CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
             }
         }
     }
@@ -46,8 +38,9 @@ class ScoreObserver
      */
     public function deleted(Score $score): void
     {
-        CheckCountedScores::dispatch($score);
-        CalculateTeamScore::dispatch($score);
+        if ($score->registration->team) {
+            CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
+        }
     }
 
     /**
@@ -55,8 +48,9 @@ class ScoreObserver
      */
     public function restored(Score $score): void
     {
-        CheckCountedScores::dispatch($score);
-        CalculateTeamScore::dispatch($score);
+        if ($score->registration->team) {
+            CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
+        }
     }
 
     /**
@@ -64,7 +58,8 @@ class ScoreObserver
      */
     public function forceDeleted(Score $score): void
     {
-        CheckCountedScores::dispatch($score);
-        CalculateTeamScore::dispatch($score);
+        if ($score->registration->team) {
+            CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
+        }
     }
 }

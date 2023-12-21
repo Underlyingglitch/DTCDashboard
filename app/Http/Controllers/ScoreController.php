@@ -7,7 +7,7 @@ use App\Models\Score;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
-use App\Jobs\CheckCountedScores;
+use App\Jobs\CalculateTeamScore;
 use App\Http\Traits\FunctionsTrait;
 
 class ScoreController extends Controller
@@ -121,12 +121,21 @@ class ScoreController extends Controller
 
     public function recalculate(Wedstrijd $wedstrijd)
     {
-        $scores = Score::where('match_day_id', $wedstrijd->match_day_id)->get();
+        // // Get all startnumbers for this wedstrijd
+        // $startnumbers = $wedstrijd->registrations()->pluck('startnumber')->toArray();
+        // // Get all scores for this wedstrijd
+        // $scores = Score::where('match_day_id', $wedstrijd->match_day_id)->whereIn('startnumber', $startnumbers)->get();
 
-        foreach ($scores as $score) {
-            if ($score->registration->team) {
-                // Check which scores count for this team
-                CheckCountedScores::dispatch($score);
+        // foreach ($scores as $score) {
+        //     if ($score->registration->team) {
+        //         // Check which scores count for this team
+        //         CheckCountedScores::dispatch($score);
+        //     }
+        // }
+        foreach ($wedstrijd->teams as $team) {
+            for ($i = 1; $i <= 6; $i++) {
+                //CheckCountedScore::dispatch($team, $i, $wedstrijd->match_day_id);
+                CalculateTeamScore::dispatch($team, $i, $wedstrijd->match_day_id);
             }
         }
 

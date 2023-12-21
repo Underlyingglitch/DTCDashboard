@@ -11,9 +11,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class CalculateTeamScore implements ShouldQueue
+class CalculateTeamScore implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $uniqueFor = 10;
 
     /**
      * Create a new job instance.
@@ -39,5 +41,10 @@ class CalculateTeamScore implements ShouldQueue
         $team_score->toestel_scores = $toestel_scores;
         $team_score->total_score = array_sum($toestel_scores);
         $team_score->save();
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->score->registration->team;
     }
 }

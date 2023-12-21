@@ -11,14 +11,13 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\GymnastController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\WedstrijdExportController;
 
-Route::get('/dashboard', function () {
-    return view('pages.dashboard.main');
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 

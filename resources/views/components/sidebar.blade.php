@@ -13,19 +13,17 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('home') }}">
+        <a class="nav-link" href="{{ route('dashboard') }}">
             <i class="fas fa-fw fa-house"></i>
-            <span>Home</span></a>
+            <span>Dashboard</span></a>
     </li>
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    @if (Auth::user()->hasRole('dtc') || Auth::user()->hasRole('admin'))
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Scoresysteem
-        </div>
-    @endif
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Scoresysteem
+    </div>
 
     @can('viewAny', App\Models\Competition::class)
         <li class="nav-item">

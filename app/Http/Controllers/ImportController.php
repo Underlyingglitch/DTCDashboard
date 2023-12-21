@@ -28,8 +28,24 @@ class ImportController extends Controller
         $this->validate($request, [
             'type' => 'required',
             'competition' => 'required_if:type,registrations|exists:competitions,id',
-            'file' => 'required|file|mimes:xlsx',
         ]);
+        if ($request->type == 'registrations') {
+            $this->validate($request, [
+                'matchday' => 'required|exists:match_days,id',
+            ]);
+            return $this->import_from_file($request);
+        } else if ($request->type == 'registrations_match') {
+            $this->validate($request, [
+                'import_matchday' => 'required|exists:match_days,id',
+            ]);
+            return $this->import_from_match_day($request);
+        } else {
+            return redirect()->back()->with('error', 'Onbekend type import');
+        }
+    }
+
+    public function import_from_file(Request $request)
+    {
         $reader = new Xlsx();
         // 0 relatienummer deelnemer
         // 1 naam deelnemer
@@ -105,5 +121,19 @@ class ImportController extends Controller
             }
             return redirect()->back()->with('success', 'Registraties geimporteerd');
         }
+    }
+    public function import_from_match_day(Request $request)
+    {
+        $import_matchday = MatchDay::find($request->import_matchday);
+        $registrations = $import_matchday->registrations;
+        $matchday = MatchDay::find($request->matchday);
+        // Copy all registrations from the import match day to the new match day but set signed_off to false
+        foreach ($registrations as $registration) {
+            $new_registration = $registration->replicate();
+            $new_registration->match_day_id = $matchday->id;
+            $new_registration->signed_off = false;
+            $new_registration->save();
+        }
+        return redirect()->back()->with('success', 'Registraties geimporteerd');
     }
 }

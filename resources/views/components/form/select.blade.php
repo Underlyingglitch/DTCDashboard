@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="form-group" id="{{ $name }}_field">
     <label for="{{ $name }}">{{ $label }}</label>
     <select name="{{ $name }}" id="{{ $name }}" class="form-control @error($name) is-invalid @enderror"
         @if ($disabled) disabled @endif>

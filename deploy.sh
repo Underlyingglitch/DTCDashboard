@@ -4,7 +4,7 @@ set -e
 echo "Deployment started ..."
 
 # Pulling new updates
-git fetch --all
+git fetch
 
 # if force is passed as an argument dont check if there are changes in the git repository that haven't been pulled
 if [ "$1" != "force" ]; then

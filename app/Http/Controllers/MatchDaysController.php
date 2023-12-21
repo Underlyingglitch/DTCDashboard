@@ -24,7 +24,7 @@ class MatchDaysController extends Controller
         // dd(Location::all()->pluck('name', 'id')->toArray());
         return view('pages.matchdays.create', [
             'competition' => $competition,
-            'locations' => Location::all()->pluck('name', 'id')->toArray()
+            'locations' => Location::all()->pluck('select_name', 'id')->toArray()
         ]);
     }
 

@@ -11,4 +11,9 @@ class Location extends Model implements Auditable
     use SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $fillable = ['name', 'address'];
+
+    public function getSelectNameAttribute()
+    {
+        return $this->name . ' (' . $this->address . ')';
+    }
 }

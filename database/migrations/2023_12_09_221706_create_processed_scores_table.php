@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('wedstrijd_id')->constrained()->cascadeOnDelete();
             $table->integer('group_id');
-            $table->integer('baan');
+            $table->integer('toestel');
             $table->boolean('completed')->default(false);
             $table->timestamps();
         });

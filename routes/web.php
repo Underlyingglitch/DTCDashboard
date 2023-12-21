@@ -13,10 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/test', function () {
+    return view('emails.verify');
+});
+
 Route::middleware([])->group(base_path('routes/web.public.php'));
 
 // non-authenticated users only
 Route::middleware(['guest'])->group(base_path('routes/web.guest.php'));
 
 // user routes
-Route::middleware(['auth'])->group(base_path('routes/web.auth.php'));
+Route::middleware(['auth', 'verified'])->group(base_path('routes/web.auth.php'));
+Route::middleware(['auth'])->group(base_path('routes/web.email.php'));

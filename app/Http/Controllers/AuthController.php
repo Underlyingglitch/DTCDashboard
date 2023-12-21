@@ -24,6 +24,10 @@ class AuthController extends Controller
             // Check if the user is active
             $user = User::where('email', $request->email)->first();
             if ($user->active) {
+                if ($user->is_jury) $user->assignRole('jury');
+                else $user->removeRole('jury');
+                if ($user->is_trainer) $user->assignRole('trainer');
+                else $user->removeRole('trainer');
                 // Log the user in and remember them
                 Auth::login($user, true);
                 return redirect()->intended(route('dashboard'));
@@ -54,9 +58,17 @@ class AuthController extends Controller
             'password' => 'required|confirmed'
         ]);
 
-        User::create($request->only('name', 'email', 'password'));
+        $user = User::create($request->only('name', 'email', 'password'));
+        if ($user->is_jury) {
+            $user->assignRole('jury');
+            $user->active = true;
+        }
+        if ($user->is_trainer) {
+            $user->assignRole('trainer');
+            $user->active = true;
+        }
 
-        return redirect()->route('auth.register')->with('success', 'Account aangemaakt! Zodra uw account is geactiveerd ontvangt u bericht per email.');
+        return $user->active ? redirect()->route('auth.login') : redirect()->route('auth.register')->with('success', 'Account aangemaakt! Zodra uw account is geactiveerd ontvangt u bericht per email.');
     }
 
     public function logout()

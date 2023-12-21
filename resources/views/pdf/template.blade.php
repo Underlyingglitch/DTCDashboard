@@ -81,6 +81,7 @@
 
 <body>
     <header>
+        <img class="header-img" src="{{ public_path('img/kngu_header.png') }}" alt="">
         @yield('header')
     </header>
     <main>

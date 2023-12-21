@@ -31,6 +31,7 @@
                 <p>Er is momenteel geen wedstrijd geselecteerd.</p>
             @endif
         </div>
+
         <div class="col-md-6">
             <h2>Wedstrijden</h2>
             <p>Op deze website vind je alle informatie over de wedstrijden die wij organiseren.</p>

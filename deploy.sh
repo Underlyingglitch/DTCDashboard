@@ -7,7 +7,7 @@ echo "Deployment started ..."
 git fetch --all
 
 # Check if there are changes in the git repository that haven't been pulled
-if git diff --quiet; then
+if ! git diff --quiet; then
     echo "No changes in the git repository. Skipping deployment."
     exit 1
 fi

@@ -23,6 +23,7 @@ fi
 cp composer.json composer.json.bak
 cp package.json package.json.bak
 cp vite.config.js vite.config.js.bak
+# Copy the current resources/js and resources/scss directories
 cp -r resources/js resources/js.bak
 cp -r resources/scss resources/scss.bak
 
@@ -63,9 +64,15 @@ fi
 # Run database migrations
 php artisan migrate --force
 
+# Make sure the directories are writable for the webserver
+# NOTE: This will make the entire /var/www directory writable for the webserver
+#       which is not ideal. You should change the permissions to the specific
+#       directories that need to be writable by the webserver.
 chown -R www-data:www-data /var/www/
 
 # Reload PHP to update opcache
+# NOTE: This will only work if you have php-fpm installed
+#       and if you change the line below to match your version
 echo "" | sudo -S service php8.2-fpm reload
 
 # Restart queue workers
@@ -76,6 +83,7 @@ php artisan up
 
 echo "Deployment finished!"
 
+# Remove the backup files
 rm composer.json.bak package.json.bak vite.config.js.bak
 rm -r resources/js.bak resources/scss.bak
 # If install.log exists, remove it

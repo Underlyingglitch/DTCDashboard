@@ -11,7 +11,7 @@
             <a href="{{ route('wedstrijden.score.index', $wedstrijd) }}" class="btn btn-sm btn-info">Scoreverwerking</a>
         </div>
         <div class="col-md-4">
-            <form action="{{ route('wedstrijden.export.select', $wedstrijd) }}" method="post">
+            <form action="{{ route('wedstrijden.export.select', $wedstrijd) }}" method="post" target="_blank">
                 @csrf
                 <div class="input-group">
                     <select name="option" id="option"

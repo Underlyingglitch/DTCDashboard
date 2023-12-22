@@ -109,8 +109,16 @@ class WedstrijdExportController extends Controller
 
     public function teamscores(Wedstrijd $wedstrijd)
     {
-        $registrations = Registration::where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau', 'team')->get();
-        $teams = $wedstrijd->teams()->with('registrations')->get();
+        $teams = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day_id)
+                ->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
+                    $query->where('match_day_id', $wedstrijd->match_day_id);
+                }]);
+        }, 'team_scores' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day_id);
+        }])->get()->sortByDesc(function ($team) {
+            return $team->team_scores->first()->total_score;
+        });
         return view('pdf.scores.teams', [
             'wedstrijd' => $wedstrijd,
             'teams' => $teams

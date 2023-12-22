@@ -52,6 +52,6 @@ class Registration extends Model implements Auditable
 
     public function scores()
     {
-        return $this->hasMany(Score::class, 'startnumber', 'startnumber')->where('match_day_id', $this->match_day_id);
+        return $this->hasMany(Score::class, 'startnumber', 'startnumber');
     }
 }

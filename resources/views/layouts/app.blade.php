@@ -17,8 +17,16 @@
 
     <script>
         window.userId = @json(auth()->id());
+        window.laravel_echo_port = @json(env('LARAVEL_ECHO_PORT'));
     </script>
+    <script src="//{{ Request::getHost() }}:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    <script type="module">
+        window.Echo.channel('test-channel')
+            .listen('.TestEvent', (data) => {
+                console.log(data.title);
+            });
+    </script>
 
 </head>
 

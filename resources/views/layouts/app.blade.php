@@ -17,15 +17,16 @@
 
     <script>
         window.userId = @json(auth()->id());
-        window.laravel_echo_port = @json(env('LARAVEL_ECHO_PORT'));
     </script>
-    <script src="//{{ Request::getHost() }}:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script>
+    {{-- <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script> --}}
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    <script type="module">
+    <script type="module" defer>
+        console.log('Subscribing to channel')
         window.Echo.channel('test-channel')
             .listen('.TestEvent', (data) => {
                 console.log(data.title);
             });
+            console.log('Subscribed to channel')
     </script>
 
 </head>

@@ -6,6 +6,18 @@ import "@fortawesome/fontawesome-free/scss/solid.scss";
 import "@fortawesome/fontawesome-free/scss/brands.scss";
 import "@fortawesome/fontawesome-free/scss/regular.scss";
 
+import Echo from 'laravel-echo';
+// import socket.io using import
+import io from 'socket.io-client';
+console.log('connecting to echo');
+window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    client: io,
+    host: window.location.hostname + ":6001"
+});
+console.log('connected to echo');
+console.log(window.Echo);
+
 $(function () {
     "use strict"; // Start of use strict
 

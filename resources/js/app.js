@@ -11,14 +11,14 @@ import io from 'socket.io-client';
 console.log('connecting to echo');
 console.log(`${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`);
 if (import.meta.env.VITE_LARAVEL_ECHO_PORT == 0) {
-    var port = '/socket.io';
+    var host = `https://${import.meta.env.VITE_LARAVEL_ECHO_HOST}/socket.io`;
 } else {
-    var port = `:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`;
+    var host = `http://${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`;
 }
 window.Echo = new Echo({
     broadcaster: 'socket.io',
     client: io,
-    host: `http://${import.meta.env.VITE_LARAVEL_ECHO_HOST}${port}`
+    host: host
 });
 console.log('connected to echo');
 console.log(window.Echo);

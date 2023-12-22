@@ -9,11 +9,13 @@ import "@fortawesome/fontawesome-free/scss/regular.scss";
 import Echo from 'laravel-echo';
 // import socket.io using import
 import io from 'socket.io-client';
+// get the host name from the .env file
+// const host = process.env.MIX_APP_URL + ':6001';
 console.log('connecting to echo');
 window.Echo = new Echo({
     broadcaster: 'socket.io',
     client: io,
-    host: window.location.hostname + ":6001"
+    host: `${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`
 });
 console.log('connected to echo');
 console.log(window.Echo);

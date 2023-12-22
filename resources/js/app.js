@@ -10,10 +10,15 @@ import Echo from 'laravel-echo';
 import io from 'socket.io-client';
 console.log('connecting to echo');
 console.log(`${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`);
+if (import.meta.env.VITE_LARAVEL_ECHO_PORT == 0) {
+    var port = '/socket.io';
+} else {
+    var port = `:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`;
+}
 window.Echo = new Echo({
     broadcaster: 'socket.io',
     client: io,
-    host: `http://${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`
+    host: `http://${import.meta.env.VITE_LARAVEL_ECHO_HOST}${port}`
 });
 console.log('connected to echo');
 console.log(window.Echo);

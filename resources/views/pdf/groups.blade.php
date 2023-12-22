@@ -3,8 +3,8 @@
 @section('title', 'Groepsindeling W' . $wedstrijd->index . ' - ' . $wedstrijd->match_day->location->name)
 
 @section('header')
-    <img class="header-img" src="{{ config('app.debug') ? asset('img/kngu_header.png') : public_path('img/kngu_header.png') }}"
-        alt="">
+    <img class="header-img"
+        src="{{ config('app.debug') ? asset('img/kngu_header.png') : public_path('img/kngu_header.png') }}" alt="">
     <h2 class="title">{{ $wedstrijd->competition->name }}</h2>
     <h2 class="subtitle">Locatie: {{ $wedstrijd->match_day->location->name }}</h2>
     <p><a class="no-print" href="{{ route('wedstrijden.export.groups', $wedstrijd->id - 1) }}">
@@ -36,7 +36,7 @@
                             -
                         @endif
                     </td>
-                    <td>{{ $registration->niveau->name }}</td>
+                    <td>{{ $registration->niveau->full_name }}</td>
                 </tr>
             @endforeach
         </table>

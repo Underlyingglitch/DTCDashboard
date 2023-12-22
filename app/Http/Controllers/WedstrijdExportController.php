@@ -52,20 +52,20 @@ class WedstrijdExportController extends Controller
 
     public function teams(Wedstrijd $wedstrijd)
     {
-        $teams = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
-            $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club', 'niveau');
-        }])->get();
+        $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club');
+        }, 'niveau'])->get()->groupBy('niveau_id');
 
         // If debug is enabled, return the view instead of downloading the pdf
         if (config('app.debug')) {
             return view('pdf.teams', [
                 'wedstrijd' => $wedstrijd,
-                'teams' => $teams
+                'niveaus' => $niveaus
             ]);
         }
         $pdf = Pdf::loadView('pdf.teams', [
             'wedstrijd' => $wedstrijd,
-            'teams' => $teams
+            'niveaus' => $niveaus
         ]);
         return $pdf->download('Teamindeling W' . $wedstrijd->index . '.pdf');
     }
@@ -109,19 +109,52 @@ class WedstrijdExportController extends Controller
 
     public function teamscores(Wedstrijd $wedstrijd)
     {
-        $teams = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+        $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day_id)
-                ->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
+                ->with(['gymnast', 'club', 'scores' => function ($query) use ($wedstrijd) {
                     $query->where('match_day_id', $wedstrijd->match_day_id);
                 }]);
-        }, 'team_scores' => function ($query) use ($wedstrijd) {
+        }, 'niveau', 'team_scores' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day_id);
-        }])->get()->sortByDesc(function ($team) {
-            return $team->team_scores->first()->total_score;
+        }])->get()->groupBy('niveau_id')->map(function ($group) {
+            return $group->sortByDesc(function ($team) {
+                return $team->team_scores->first()->total_score ?? 0;
+            });
         });
-        return view('pdf.scores.teams', [
+
+        // If debug is enabled, return the view instead of downloading the pdf
+        if (config('app.debug')) {
+            return view('pdf.scores.teams', [
+                'wedstrijd' => $wedstrijd,
+                'niveaus' => $niveaus
+            ]);
+        }
+        $pdf = Pdf::loadView('pdf.scores.teams', [
             'wedstrijd' => $wedstrijd,
-            'teams' => $teams
+            'niveaus' => $niveaus
         ]);
+        return $pdf->download('Uitslag W' . $wedstrijd->index . ' teams.pdf');
+    }
+
+    public function individualscores(Wedstrijd $wedstrijd)
+    {
+        $registrations = $wedstrijd->registrations()->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day_id);
+        }])->get()->sortByDesc(function ($registration) {
+            return $registration->scores->sum('total');
+        });
+
+        // If debug is enabled, return the view instead of downloading the pdf
+        if (config('app.debug')) {
+            return view('pdf.scores.individual', [
+                'wedstrijd' => $wedstrijd,
+                'registrations' => $registrations
+            ]);
+        }
+        $pdf = Pdf::loadView('pdf.scores.individual', [
+            'wedstrijd' => $wedstrijd,
+            'registrations' => $registrations
+        ]);
+        return $pdf->download('Uitslag W' . $wedstrijd->index . ' individueel.pdf');
     }
 }

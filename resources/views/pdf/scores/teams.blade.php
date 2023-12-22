@@ -14,34 +14,39 @@
 @endsection
 
 @section('main')
-    @foreach ($teams as $i => $team)
-        <table class="group-table">
-            <tr>
-                <th colspan="3">{{ $i + 1 }}. {{ $team->name }}</th>
-                @foreach ($toestellen as $toestel)
-                    <th>{{ $toestel }}</th>
+    @foreach ($niveaus as $teams)
+        <b>{{ $teams->first()->niveau->full_name }}</b>
+        @foreach ($teams as $i => $team)
+            <table class="group-table">
+                <tr>
+                    <th colspan="3">{{ $i + 1 }}. {{ $team->name }}</th>
+                    @foreach ($toestellen as $toestel)
+                        <th>{{ $toestel }}</th>
+                    @endforeach
+                </tr>
+                @foreach ($team->registrations as $registration)
+                    <tr
+                        @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
+                        <td style="width: 5%">{{ $registration->startnumber }}</td>
+                        <td style="width: 10%">{{ $registration->gymnast->name }}</td>
+                        <td style="width: 25%">{{ $registration->club->name }}</td>
+                        @foreach ($toestellen as $key => $toestel)
+                            <td style="width: 10%">
+                                {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
+                            </td>
+                        @endforeach
+                    </tr>
                 @endforeach
-            </tr>
-            @foreach ($team->registrations as $registration)
-                <tr
-                    @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
-                    <td style="width: 5%">{{ $registration->startnumber }}</td>
-                    <td style="width: 10%">{{ $registration->gymnast->name }}</td>
-                    <td style="width: 25%">{{ $registration->club->name }}</td>
+                <tr>
+                    <td colspan=2></td>
+                    <td>Totaal: {{ $team->team_scores->first()->total_score ?? 0 }}</td>
                     @foreach ($toestellen as $key => $toestel)
                         <td style="width: 10%">
-                            {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
+                            {{ number_format($team->team_scores->first()->toestel_scores[$key] ?? 0, 3) }}
                         </td>
                     @endforeach
                 </tr>
-            @endforeach
-            <tr>
-                <td colspan=2></td>
-                <td>Totaal: {{ $team->team_scores->first()->total_score }}</td>
-                @foreach ($toestellen as $key => $toestel)
-                    <td style="width: 10%">{{ number_format($team->team_scores->first()->toestel_scores[$key], 3) }}</td>
-                @endforeach
-            </tr>
-        </table>
+            </table>
+        @endforeach
     @endforeach
 @endsection

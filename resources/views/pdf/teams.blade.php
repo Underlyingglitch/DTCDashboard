@@ -14,22 +14,25 @@
 @endsection
 
 @section('main')
-    @foreach ($teams as $team)
-        <table class="group-table">
-            <tr>
-                <th colspan="2">{{ $team->name }}</th>
-                <th>Team</th>
-                <th>Niveau</th>
-            </tr>
-            @foreach ($team->registrations as $registration)
-                <tr
-                    @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
-                    <td style="width: 20%">{{ $registration->gymnast->name }}</td>
-                    <td style="width: 35%">{{ $registration->club->name }}</td>
-                    <td style="width: 35%">{{ $team->name ?? '-' }}</td>
-                    <td style="width: 10%">{{ $registration->niveau->name }}</td>
+    @foreach ($niveaus as $teams)
+        <b>{{ $teams->first()->niveau->full_name }}</b>
+        @foreach ($teams as $team)
+            <table class="group-table">
+                <tr>
+                    <th colspan="2">{{ $team->name }}</th>
+                    <th>Team</th>
+                    <th>Niveau</th>
                 </tr>
-            @endforeach
-        </table>
+                @foreach ($team->registrations as $registration)
+                    <tr
+                        @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
+                        <td style="width: 20%">{{ $registration->gymnast->name }}</td>
+                        <td style="width: 35%">{{ $registration->club->name }}</td>
+                        <td style="width: 35%">{{ $team->name ?? '-' }}</td>
+                        <td style="width: 10%">{{ $team->niveau->full_name }}</td>
+                    </tr>
+                @endforeach
+            </table>
+        @endforeach
     @endforeach
 @endsection

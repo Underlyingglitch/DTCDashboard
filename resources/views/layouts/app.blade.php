@@ -26,7 +26,7 @@
             .listen('.TestEvent', (data) => {
                 console.log(data.title);
             });
-            console.log('Subscribed to channel')
+        console.log('Subscribed to channel')
     </script>
 
 </head>

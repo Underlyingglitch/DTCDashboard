@@ -19,6 +19,7 @@
         "owen-it/laravel-auditing": "^13.6",
         "phpoffice/phpspreadsheet": "^1.29",
         "predis/predis": "^2.2",
+        "pusher/pusher-php-server": "~7.0",
         "spatie/laravel-permission": "^6.1",
         "staudenmeir/eloquent-has-many-deep": "^1.19"
     },

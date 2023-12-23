@@ -7,21 +7,21 @@ import "@fortawesome/fontawesome-free/scss/brands.scss";
 import "@fortawesome/fontawesome-free/scss/regular.scss";
 
 import Echo from 'laravel-echo';
-import io from 'socket.io-client';
-console.log('connecting to echo');
-console.log(`${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`);
-if (import.meta.env.VITE_LARAVEL_ECHO_PORT == 0) {
-    var host = `https://${import.meta.env.VITE_LARAVEL_ECHO_HOST}/socket.io`;
-} else {
-    var host = `http://${import.meta.env.VITE_LARAVEL_ECHO_HOST}:${import.meta.env.VITE_LARAVEL_ECHO_PORT}`;
-}
+
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
+
 window.Echo = new Echo({
-    broadcaster: 'socket.io',
-    client: io,
-    host: host
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    wsHost: import.meta.env.VITE_PUSHER_HOST,
+    wsPort: import.meta.env.VITE_PUSHER_PORT,
+    cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+    forceTLS: false,
+    encrypted: true,
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
 });
-console.log('connected to echo');
-console.log(window.Echo);
 
 $(function () {
     "use strict"; // Start of use strict

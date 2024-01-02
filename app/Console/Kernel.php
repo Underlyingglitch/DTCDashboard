@@ -15,6 +15,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
         $schedule->command('queue:monitor database --max=100')->everyMinute();
+
+        if (env('APP_ENV') === 'local') {
+            $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
+        }
     }
 
     /**

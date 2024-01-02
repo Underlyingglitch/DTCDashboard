@@ -24,6 +24,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
+Route::get('/competitions/{competition}/setactive', [CompetitionController::class, 'setactive'])->name('competitions.setactive');
+Route::get('/matchdays/{matchday}/setactive', [MatchDaysController::class, 'setactive'])->name('matchdays.setactive');
+Route::get('/wedstrijden/{wedstrijd}/setactive', [WedstrijdController::class, 'setactive'])->name('wedstrijden.setactive');
+
 Route::resource('competitions', CompetitionController::class);
 Route::resource('locations', LocationController::class);
 Route::resource('trainers', TrainerController::class);

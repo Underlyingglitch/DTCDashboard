@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Niveau;
+use App\Models\Setting;
 use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use App\Models\Registration;
@@ -119,5 +120,12 @@ class WedstrijdController extends Controller
         $registration->update(['signed_off' => !$registration->signed_off]);
 
         return redirect()->route('wedstrijden.show', $wedstrijd)->with('success', 'Registratie is aangepast.');
+    }
+
+    public function setactive(Wedstrijd $wedstrijd)
+    {
+        Setting::setValue('current_wedstrijd', $wedstrijd->id);
+
+        return redirect()->route('matchdays.show', $wedstrijd->match_day_id);
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('page_title', 'Competitie aanmaken')
+@section('page_title', 'Competitie bewerken')
 
 @section('content')
     <form method="post" action="{{ route('competitions.update', $competition) }}">

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Location;
 use App\Models\Competition;
+use App\Models\UserSetting;
 use Illuminate\Http\Request;
 
 class CompetitionController extends Controller
@@ -15,6 +17,7 @@ class CompetitionController extends Controller
     {
         return view('pages.competitions.index', [
             'competitions' => Competition::all(),
+            'activeCompetition' => Setting::getValue('current_competition'),
         ]);
     }
 
@@ -47,6 +50,7 @@ class CompetitionController extends Controller
     {
         return view('pages.competitions.show', [
             'competition' => $competition,
+            'activeMatchDay' => Setting::getValue('current_match_day'),
             'matchdays' => $competition->matchDays()->with('location')->orderBy('date')->get(),
         ]);
     }
@@ -81,6 +85,13 @@ class CompetitionController extends Controller
     public function destroy(Competition $competition)
     {
         $competition->delete();
+
+        return redirect()->route('competitions.index');
+    }
+
+    public function setactive(Competition $competition)
+    {
+        Setting::setValue('current_competition', $competition->id);
 
         return redirect()->route('competitions.index');
     }

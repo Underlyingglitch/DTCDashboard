@@ -4,8 +4,7 @@
 
 @section('content')
     <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-primary">Terug naar wedstrijd</a>
-    <a href="{{ route('wedstrijden.score.recalculate', $wedstrijd) }}" class="btn btn-sm btn-warning">Scores
-        herberekenen</a>
+    @livewire('recalculate-scores-button', ['wedstrijd' => $wedstrijd])
     <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date }} | {{ $wedstrijd->match_day->location->name }}
         | {{ $wedstrijd->niveaus_list }}</h4>
 
@@ -24,8 +23,9 @@
                     <td>
                         @foreach ($baans as $baan => $groups)
                             {{-- Group number = $baan[$i][$j] --}}
-                            <x-elements.score-table-button :wedstrijd="$wedstrijd->id" :groupnr="$groups[$i][$j] ?? null" :pc="$pc"
-                                :toestel="$j + 1" />
+                            {{-- <x-elements.score-table-button :wedstrijd="$wedstrijd->id" :groupnr="$groups[$i][$j] ?? null" :pc="$pc"
+                                :toestel="$j + 1" /> --}}
+                            @livewire('score-table-button', ['wedstrijd' => $wedstrijd->id, 'groupnr' => $groups[$i][$j] ?? null, 'pc' => $pc, 'toestel' => $j + 1])
                         @endforeach
                     </td>
                 @endfor
@@ -56,6 +56,12 @@
             </div>
         </form>
     </div>
+    <script type="module">
+        window.Echo.channel('scorepage.16.2.2')
+            .listen('.ProcessedScoreUpdated', (e) => {
+                console.log(e)
+            })
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script>

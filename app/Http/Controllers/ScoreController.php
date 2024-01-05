@@ -8,8 +8,13 @@ use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
 use App\Jobs\CalculateTeamScore;
+use App\Jobs\IncrementCounterJob;
 use App\Http\Traits\FunctionsTrait;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use App\Notifications\UserNotification;
+use Illuminate\Support\Facades\Notification;
 
 class ScoreController extends Controller
 {
@@ -133,14 +138,16 @@ class ScoreController extends Controller
         //         CheckCountedScores::dispatch($score);
         //     }
         // }
+        Cache::put('counter' . $wedstrijd->id, 0, 600);
         foreach ($wedstrijd->teams as $team) {
             $jobs = [];
             for ($i = 1; $i <= 6; $i++) {
                 $jobs[] = new CalculateTeamScore($team, $i, $wedstrijd->match_day_id);
             }
+            $jobs[] = new IncrementCounterJob(Auth::user(), count($wedstrijd->teams), $wedstrijd->id);
             Bus::chain($jobs)->dispatch();
         }
-
+        Notification::send(Auth::user(), new UserNotification("Scoreberekening gestart", "De scoreberekening is gestart."));
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores worden herberekend.');
     }
 }

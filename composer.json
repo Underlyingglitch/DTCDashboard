@@ -16,8 +16,11 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
+        "livewire/livewire": "^3.3",
         "owen-it/laravel-auditing": "^13.6",
         "phpoffice/phpspreadsheet": "^1.29",
+        "predis/predis": "^2.2",
+        "pusher/pusher-php-server": "~7.0",
         "spatie/laravel-permission": "^6.1",
         "staudenmeir/eloquent-has-many-deep": "^1.19"
     },
@@ -36,10 +39,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "app/helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

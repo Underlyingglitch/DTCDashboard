@@ -23,7 +23,7 @@
                 <p>Er is momenteel geen wedstrijddag geselecteerd.</p>
             @endif
             @if ($current_wedstrijd)
-                <p>De huidige wedstrijd is <a href="{{ route('matchdays.show', $current_wedstrijd) }}">Wedstrijd
+                <p>De huidige wedstrijd is <a href="{{ route('wedstrijden.show', $current_wedstrijd) }}">Wedstrijd
                         {{ $current_wedstrijd->index }}</a> in
                     ronde {{ $current_round }}.
                 </p>

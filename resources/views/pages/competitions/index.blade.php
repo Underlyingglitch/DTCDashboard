@@ -3,7 +3,7 @@
 @section('page_title', 'Competities')
 
 @section('content')
-    <a href="{{ route('competitions.create') }}" class="btn btn-sm btn-success">Nieuwe competitie</a>
+    <a href="{{ route('competitions.create') }}" wire:navigate class="btn btn-sm btn-success">Nieuwe competitie</a>
     <table class="table">
         <thead>
             <tr>
@@ -34,6 +34,10 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
+                        @if ($competition->id != $activeCompetition)
+                            <a href="{{ route('competitions.setactive', $competition) }}" class="btn btn-sm btn-success"><i
+                                    class="fas fa-check"></i></a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

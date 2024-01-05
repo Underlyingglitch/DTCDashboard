@@ -18,8 +18,17 @@
     <script>
         window.userId = @json(auth()->id());
     </script>
+    {{-- <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script> --}}
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-
+    {{-- <script type="module" defer>
+        console.log('Subscribing to channel')
+        window.Echo.channel('test-channel')
+            .listen('.TestEvent', (data) => {
+                console.log(data.title);
+            });
+        console.log('Subscribed to channel')
+    </script> --}}
+    @livewireStyles
 </head>
 
 <body id="page-top">
@@ -112,12 +121,7 @@
         </div>
     </div>
 
-    <!-- Page level plugins -->
-    {{-- <script src="vendor/chart.js/Chart.min.js"></script> --}}
-    {{-- 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script> --}}
+    @livewireScripts
 
 </body>
 

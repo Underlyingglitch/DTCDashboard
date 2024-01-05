@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Location;
-use App\Models\Competition;
 use App\Models\MatchDay;
+use App\Models\Competition;
 use Illuminate\Http\Request;
 
 class MatchDaysController extends Controller
@@ -50,6 +51,7 @@ class MatchDaysController extends Controller
     {
         return view('pages.matchdays.show', [
             'matchday' => $matchday,
+            'activeWedstrijd' => Setting::getValue('current_wedstrijd'),
             'wedstrijden' => $matchday->wedstrijden()->with('niveaus')->orderBy('index')->get()
         ]);
     }
@@ -89,5 +91,12 @@ class MatchDaysController extends Controller
         $matchday->delete();
 
         return redirect()->route('competitions.show', $competition_id)->with('success', 'Wedstrijddag is verwijderd.');
+    }
+
+    public function setactive(MatchDay $matchday)
+    {
+        Setting::setValue('current_match_day', $matchday->id);
+
+        return redirect()->route('competitions.show', $matchday->competition_id);
     }
 }

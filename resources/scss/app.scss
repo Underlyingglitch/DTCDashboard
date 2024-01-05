@@ -12,6 +12,9 @@
 @import 'datatables.net-searchbuilder-bs4/css/searchBuilder.bootstrap4.css';
 @import 'datatables.net-datetime/css/dataTables.dateTime.scss';
 
+// Import toastr
+@import "toastr/toastr.scss";
+
 // Import Custom SB Admin 2 Mixins and Components
 @import "mixins.scss";
 @import "global.scss";

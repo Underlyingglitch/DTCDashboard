@@ -45,6 +45,10 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
+                        @if ($wedstrijd->id != $activeWedstrijd)
+                            <a href="{{ route('wedstrijden.setactive', $wedstrijd) }}" class="btn btn-sm btn-success"><i
+                                    class="fas fa-check"></i></a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

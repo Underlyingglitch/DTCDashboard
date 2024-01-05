@@ -35,6 +35,10 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
+                        @if ($matchday->id != $activeMatchDay)
+                            <a href="{{ route('matchdays.setactive', $matchday) }}" class="btn btn-sm btn-success"><i
+                                    class="fas fa-check"></i></a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

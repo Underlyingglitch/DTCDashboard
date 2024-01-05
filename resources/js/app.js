@@ -6,6 +6,68 @@ import "@fortawesome/fontawesome-free/scss/solid.scss";
 import "@fortawesome/fontawesome-free/scss/brands.scss";
 import "@fortawesome/fontawesome-free/scss/regular.scss";
 
+import toastr from 'toastr';
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+window.toastr = toastr;
+
+import Echo from 'laravel-echo';
+
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    wsHost: import.meta.env.VITE_PUSHER_HOST,
+    wsPort: import.meta.env.VITE_PUSHER_PORT,
+    wssPort: import.meta.env.VITE_PUSHER_PORT,
+    cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+    forceTLS: true,
+    encrypted: true,
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+});
+
+// Subscribe to a user channel
+console.log('Subscribing')
+window.Echo.private(`App.Models.User.${window.userId}`).notification((e) => {
+    console.log(e);
+    switch (e.style) {
+        case 'success':
+            window.toastr.success(e.message, e.title);
+            break;
+        case 'warning':
+            window.toastr.warning(e.message, e.title);
+            break;
+        case 'error':
+            window.toastr.error(e.message, e.title);
+            break;
+        default:
+            window.toastr.info(e.message, e.title);
+            break;
+    }
+});
+// window.Echo.private(`App.Models.User.${window.userId}`).listen('UserNotification', (e) => {
+//     console.log(e);
+//     window.toastr.success(e.message, e.title);
+// });
+
 $(function () {
     "use strict"; // Start of use strict
 

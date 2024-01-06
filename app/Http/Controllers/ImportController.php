@@ -62,7 +62,7 @@ class ImportController extends Controller
 
         if ($request->type == 'registrations') {
             $matchday = MatchDay::find($request->matchday);
-
+            $matchday->registrations()->delete();
             foreach ($array as $i => $row) {
                 if (!is_numeric($row[0])) {
                     continue;
@@ -95,7 +95,14 @@ class ImportController extends Controller
                         ]
                     );
 
-                $matchday->registrations()->delete();
+
+                Club::updateOrCreate(
+                    ['id' =>  $row[2]],
+                    [
+                        'id' => $row[2],
+                        'name' => $row[3]
+                    ]
+                );
                 Registration::updateOrCreate(
                     [
                         'match_day_id' => $matchday->id,
@@ -105,13 +112,7 @@ class ImportController extends Controller
                         'gymnast_id' => $row[0],
                         'match_day_id' => $matchday->id,
                         'startnumber' => $i,
-                        'club_id' => Club::updateOrCreate(
-                            ['id' =>  $row[2]],
-                            [
-                                'id' => $row[2],
-                                'name' => $row[3]
-                            ]
-                        )->id,
+                        'club_id' => $row[2],
                         'niveau_id' => $niveau->id,
                         'group_id' => Group::where([['baan', $row[8]], ['nr', $row[9]]])->first()->id,
                         'team_id' => $team->id ?? null

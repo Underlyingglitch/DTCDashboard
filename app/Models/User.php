@@ -24,6 +24,8 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
         'name',
         'email',
         'password',
+        'active',
+        'email_verified_at',
     ];
 
     /**

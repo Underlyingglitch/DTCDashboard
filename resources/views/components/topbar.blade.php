@@ -5,9 +5,15 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <div class="alert alert-warning">
-        Applicatie in local modus. Functies beperkt.
-    </div>
+    @if (env('APP_ENV') == 'local')
+        <div class="alert alert-warning">
+            Applicatie in local modus. Functies beperkt.
+        </div>
+    @elseif(env('APP_ENV') == 'development')
+        <div class="alert alert-danger">
+            Applicatie in development modus.
+        </div>
+    @endif
 
     <!-- Topbar Search -->
     {{-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -24,6 +30,11 @@
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
+
+        @if (env('APP_ENV') == 'local')
+            @livewire('sync-status')
+        @endif
+
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
         {{-- <li class="nav-item dropdown no-arrow d-sm-none">

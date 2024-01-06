@@ -28,15 +28,15 @@ class SyncDatabase implements ShouldQueue
      */
     public function handle(): void
     {
-        $audits = Audit::where('synced', false)->get(['id', 'event', 'auditable_type', 'old_values', 'new_values'])->toJSON();
+        $audits = Audit::where('synced', false)->get(['id', 'event', 'auditable_type', 'auditable_id', 'old_values', 'new_values'])->toArray();
         // Send to API
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'http://localhost:8000/api/audits', [
+        $response = $client->request('POST', env('API_BASE_URL') . '/audits', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'X-API-KEY' => env('API_KEY')
             ],
-            'body' => $audits,
+            'body' => json_encode(['audits' => $audits]),
         ]);
         // Update synced based on response
         Log::info($response->getBody());

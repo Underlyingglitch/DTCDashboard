@@ -27,7 +27,6 @@ class ImportController extends Controller
     {
         $this->validate($request, [
             'type' => 'required',
-            'competition' => 'required_if:type,registrations|exists:competitions,id',
         ]);
         if ($request->type == 'registrations') {
             $this->validate($request, [

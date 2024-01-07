@@ -52,8 +52,13 @@ class WedstrijdController extends Controller
      */
     public function show(Wedstrijd $wedstrijd)
     {
+        $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club');
+        }, 'niveau'])->get()->groupBy('niveau_id');
+        
         return view('pages.wedstrijden.show', [
-            'wedstrijd' => $wedstrijd
+            'wedstrijd' => $wedstrijd,
+            'niveaus' => $niveaus,
         ]);
     }
 

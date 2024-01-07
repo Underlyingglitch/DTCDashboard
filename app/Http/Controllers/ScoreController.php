@@ -125,29 +125,34 @@ class ScoreController extends Controller
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Score is bijgewerkt.');
     }
 
-    public function recalculate(Wedstrijd $wedstrijd)
-    {
-        // // Get all startnumbers for this wedstrijd
-        // $startnumbers = $wedstrijd->registrations()->pluck('startnumber')->toArray();
-        // // Get all scores for this wedstrijd
-        // $scores = Score::where('match_day_id', $wedstrijd->match_day_id)->whereIn('startnumber', $startnumbers)->get();
+    // public function recalculate(Wedstrijd $wedstrijd)
+    // {
+    //     // // Get all startnumbers for this wedstrijd
+    //     // $startnumbers = $wedstrijd->registrations()->pluck('startnumber')->toArray();
+    //     // // Get all scores for this wedstrijd
+    //     // $scores = Score::where('match_day_id', $wedstrijd->match_day_id)->whereIn('startnumber', $startnumbers)->get();
 
-        // foreach ($scores as $score) {
-        //     if ($score->registration->team) {
-        //         // Check which scores count for this team
-        //         CheckCountedScores::dispatch($score);
-        //     }
-        // }
-        Cache::put('counter' . $wedstrijd->id, 0, 600);
-        foreach ($wedstrijd->teams as $team) {
-            $jobs = [];
-            for ($i = 1; $i <= 6; $i++) {
-                $jobs[] = new CalculateTeamScore($team, $i, $wedstrijd->match_day_id);
-            }
-            $jobs[] = new IncrementCounterJob(Auth::user(), count($wedstrijd->teams), $wedstrijd->id);
-            Bus::chain($jobs)->dispatch();
-        }
-        Notification::send(Auth::user(), new UserNotification("Scoreberekening gestart", "De scoreberekening is gestart."));
-        return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores worden herberekend.');
+    //     // foreach ($scores as $score) {
+    //     //     if ($score->registration->team) {
+    //     //         // Check which scores count for this team
+    //     //         CheckCountedScores::dispatch($score);
+    //     //     }
+    //     // }
+    //     Cache::put('counter' . $wedstrijd->id, 0, 600);
+    //     foreach ($wedstrijd->teams as $team) {
+    //         $jobs = [];
+    //         for ($i = 1; $i <= 6; $i++) {
+    //             $jobs[] = new CalculateTeamScore($team, $i, $wedstrijd->match_day_id);
+    //         }
+    //         $jobs[] = new IncrementCounterJob(Auth::user(), count($wedstrijd->teams), $wedstrijd->id);
+    //         Bus::chain($jobs)->dispatch();
+    //     }
+    //     Notification::send(Auth::user(), new UserNotification("Scoreberekening gestart", "De scoreberekening is gestart."));
+    //     return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores worden herberekend.');
+    // }
+
+    public function livescores()
+    {
+        return view('pages.livescores.index');
     }
 }

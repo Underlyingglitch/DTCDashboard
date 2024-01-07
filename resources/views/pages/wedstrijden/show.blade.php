@@ -54,41 +54,45 @@
             </tr>
         </tfoot>
         <tbody>
-            @foreach ($wedstrijd->teams()->with('registrations')->get() ?? [] as $team)
-                <tr>
-                    <th></th>
-                    <th colspan="5">
-                        {{ $team->name }}
-                        <a href="{{ route('teams.edit', [$wedstrijd, $team]) }}" class="btn btn-sm btn-primary">Bewerken</a>
-                        <form class="button-form" method="post" action="{{ route('teams.destroy', [$wedstrijd, $team]) }}">
-                            @csrf
-                            @method('delete')
-                            <input class="btn btn-sm btn-danger" type="submit" value="Verwijderen" />
-                        </form>
-                    </th>
-                </tr>
-                @foreach ($team->registrations()->with('gymnast', 'club', 'niveau', 'group')->get() ?? [] as $registration)
-                    <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
-                        <td>{{ $registration->startnumber }}</td>
-                        <td>{{ $registration->gymnast->name }}</td>
-                        <td>{{ $registration->club->name }}</td>
-                        <td>{{ $registration->niveau->name }} {{ $registration->niveau->supplement }}</td>
-                        <td>{{ $wedstrijd->baans() > 1 ? $registration->group->full_name : $registration->group->name }}
-                        </td>
-                        <td>
-                            <a href="{{ route('teams.registration.add', [$wedstrijd, $registration]) }}"
-                                class="btn btn-sm btn-info">Verplaatsen</a>
-                            <a href="{{ route('teams.registration.remove', [$wedstrijd, $registration]) }}"
-                                class="btn btn-sm btn-danger">Verwijderen</a>
-                            @if ($registration->signed_off)
-                                <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                    class="btn btn-sm btn-success">Aanmelden</a>
-                            @else
-                                <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                    class="btn btn-sm btn-warning">Afmelden</a>
-                            @endif
-                        </td>
+            @foreach ($niveaus ?? [] as $teams)
+                @foreach ($teams ?? [] as $team)
+                    <tr>
+                        <th></th>
+                        <th colspan="5">
+                            {{ $team->name }}
+                            <a href="{{ route('teams.edit', [$wedstrijd, $team]) }}"
+                                class="btn btn-sm btn-primary">Bewerken</a>
+                            <form class="button-form" method="post"
+                                action="{{ route('teams.destroy', [$wedstrijd, $team]) }}">
+                                @csrf
+                                @method('delete')
+                                <input class="btn btn-sm btn-danger" type="submit" value="Verwijderen" />
+                            </form>
+                        </th>
                     </tr>
+                    @foreach ($team->registrations ?? [] as $registration)
+                        <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
+                            <td>{{ $registration->startnumber }}</td>
+                            <td>{{ $registration->gymnast->name }}</td>
+                            <td>{{ $registration->club->name }}</td>
+                            <td>{{ $registration->niveau->name }} {{ $registration->niveau->supplement }}</td>
+                            <td>{{ $wedstrijd->baans() > 1 ? $registration->group->full_name : $registration->group->name }}
+                            </td>
+                            <td>
+                                <a href="{{ route('teams.registration.add', [$wedstrijd, $registration]) }}"
+                                    class="btn btn-sm btn-info">Verplaatsen</a>
+                                <a href="{{ route('teams.registration.remove', [$wedstrijd, $registration]) }}"
+                                    class="btn btn-sm btn-danger">Verwijderen</a>
+                                @if ($registration->signed_off)
+                                    <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
+                                        class="btn btn-sm btn-success">Aanmelden</a>
+                                @else
+                                    <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
+                                        class="btn btn-sm btn-warning">Afmelden</a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
                 @endforeach
             @endforeach
             <tr>

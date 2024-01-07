@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('internalapi')->group(function () {
-    Route::post('/audits', [InternalAPIController::class, 'store'])->name('audits.store');
+    Route::post('/audits', [InternalAPIController::class, 'audits'])->name('audits');
 });

@@ -13,7 +13,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('dashboard') }}" wire:navigate>
+        <a class="nav-link" href="{{ route('dashboard') }}">
             <i class="fas fa-fw fa-house"></i>
             <span>Dashboard</span></a>
     </li>
@@ -33,7 +33,7 @@
 
     @can('viewAny', App\Models\Competition::class)
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('competitions.index') }}" wire:navigate>
+            <a class="nav-link" href="{{ route('competitions.index') }}">
                 <i class="fas fa-fw fa-list"></i>
                 <span>Competities</span></a>
         </li>

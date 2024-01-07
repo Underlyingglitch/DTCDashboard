@@ -47,7 +47,10 @@ class WedstrijdExportController extends Controller
             'registrations' => $registrations,
             'teams' => $teams,
         ]);
-        return $pdf->download('Groepsindeling W' . $wedstrijd->index . '.pdf');
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Groepsindeling W' . $wedstrijd->index . '.pdf"',
+        ]);
     }
 
     public function teams(Wedstrijd $wedstrijd)
@@ -67,7 +70,10 @@ class WedstrijdExportController extends Controller
             'wedstrijd' => $wedstrijd,
             'niveaus' => $niveaus
         ]);
-        return $pdf->download('Teamindeling W' . $wedstrijd->index . '.pdf');
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Teamindeling W' . $wedstrijd->index . '.pdf"',
+        ]);
     }
 
     public function jury(Wedstrijd $wedstrijd, $group_nr = null)
@@ -104,7 +110,10 @@ class WedstrijdExportController extends Controller
             'groups' => $groups,
             'baans' => $baans
         ]);
-        return $pdf->stream('Jurybriefjes W' . $wedstrijd->index . '.pdf');
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Jurybriefjes W' . $wedstrijd->index . '.pdf"',
+        ]);
     }
 
     public function teamscores(Wedstrijd $wedstrijd)
@@ -133,7 +142,10 @@ class WedstrijdExportController extends Controller
             'wedstrijd' => $wedstrijd,
             'niveaus' => $niveaus
         ]);
-        return $pdf->download('Uitslag W' . $wedstrijd->index . ' teams.pdf');
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' teams.pdf"',
+        ]);
     }
 
     public function individualscores(Wedstrijd $wedstrijd)
@@ -155,6 +167,9 @@ class WedstrijdExportController extends Controller
             'wedstrijd' => $wedstrijd,
             'registrations' => $registrations
         ]);
-        return $pdf->download('Uitslag W' . $wedstrijd->index . ' individueel.pdf');
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' individueel.pdf"',
+        ]);
     }
 }

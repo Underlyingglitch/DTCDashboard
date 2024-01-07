@@ -49,7 +49,7 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="Groepsindeling W' . $wedstrijd->index . '.pdf"',
+            'Content-Disposition' => 'inline; filename="Groepsindeling W' . $wedstrijd->index . '.pdf"',
         ]);
     }
 
@@ -72,7 +72,7 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="Teamindeling W' . $wedstrijd->index . '.pdf"',
+            'Content-Disposition' => 'inline; filename="Teamindeling W' . $wedstrijd->index . '.pdf"',
         ]);
     }
 
@@ -112,7 +112,7 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="Jurybriefjes W' . $wedstrijd->index . '.pdf"',
+            'Content-Disposition' => 'inline; filename="Jurybriefjes W' . $wedstrijd->index . '.pdf"',
         ]);
     }
 
@@ -144,7 +144,7 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="Uitslag W' . $wedstrijd->index . ' teams.pdf"',
+            'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' teams.pdf"',
         ]);
     }
 
@@ -169,7 +169,7 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="Uitslag W' . $wedstrijd->index . ' individueel.pdf"',
+            'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' individueel.pdf"',
         ]);
     }
 }

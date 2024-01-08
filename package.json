@@ -27,7 +27,7 @@
         "datatables.net-select-bs4": "^1.7.0",
         "jquery.easing": "^1.4.1",
         "jszip": "^3.10.1",
-        "pdfmake": "^0.2.7",
+        "pdfmake": "^0.2.9",
         "save": "^2.9.0",
         "toastr": "^2.1.4"
     }

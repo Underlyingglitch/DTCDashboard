@@ -10,6 +10,7 @@
                 <th>Email</th>
                 <th>Rol(len)</th>
                 <th>Actief</th>
+                <th>Laatst online</th>
                 <th>Acties</th>
             </tr>
         </thead>
@@ -19,6 +20,7 @@
                 <th>Email</th>
                 <th>Rol(len)</th>
                 <th>Actief</th>
+                <th>Laatst online</th>
                 <th>Acties</th>
             </tr>
         </tfoot>
@@ -26,9 +28,24 @@
             @foreach ($users as $user)
                 <tr>
                     <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
+                    <td class="{{ $user->email_verified_at ? 'text-green' : 'text-red' }}">{{ $user->email }}</td>
                     <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
-                    <td>{{ $user->active ? 'Ja' : 'Nee' }}</td>
+                    <td>
+                        @if ($user->active)
+                            <a href="{{ route('users.activate', [$user]) }}" class="btn btn-sm btn-success"><i
+                                    class="fas fa-check"></i></a>
+                            <span style="display:none">Ja</span>
+                        @else
+                            <a href="{{ route('users.activate', [$user]) }}" class="btn btn-sm btn-danger"><i
+                                    class="fas fa-times"></i></a>
+                            <span style="display:none">Nee</span>
+                        @endif
+
+                    </td>
+                    {{-- <td class="text-bold {{ $user->active ? 'text-green' : 'text-red' }}">{{ $user->active ? 'Ja' : 'Nee' }} --}}
+                    {{-- </td> --}}
+                    <td data-order="{{ $user->last_seen_at->timestamp }}">
+                        {{ $user->last_seen_at->diffForHumans() }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                         <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning"><i

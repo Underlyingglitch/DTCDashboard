@@ -34,6 +34,7 @@ Route::resource('trainers', TrainerController::class);
 Route::resource('juries', JuryController::class);
 Route::resource('gymnasts', GymnastController::class);
 Route::resource('users', UserController::class);
+Route::get('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
 Route::resource('clubs', ClubController::class);
 
 Route::get('/livescores', [ScoreController::class, 'livescores'])->name('livescores');

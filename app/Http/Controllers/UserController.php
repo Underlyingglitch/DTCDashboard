@@ -51,6 +51,7 @@ class UserController extends Controller
 
         return view('pages.users.edit', [
             'user' => $user,
+            'roles' => \Spatie\Permission\Models\Role::orderBy('name')->get(),
         ]);
     }
 
@@ -59,7 +60,15 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $this->authorize('update', $user);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+        $user->syncRoles($request->roles);
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -68,5 +77,16 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function activate(User $user)
+    {
+        $this->authorize('update', $user);
+
+        $user->update([
+            'active' => $user->active ? false : true,
+        ]);
+
+        return redirect()->route('users.index');
     }
 }

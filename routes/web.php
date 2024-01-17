@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,4 @@ Route::middleware(['guest'])->group(base_path('routes/web.guest.php'));
 // user routes
 Route::middleware(['auth', 'verified'])->group(base_path('routes/web.auth.php'));
 Route::middleware(['auth'])->group(base_path('routes/web.email.php'));
+Route::middleware(['auth'])->get('/logout', [AuthController::class, 'logout'])->name('auth.logout');

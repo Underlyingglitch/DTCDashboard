@@ -3,8 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Config;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\EmailVerification;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -63,5 +67,20 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     public function getIsJuryAttribute()
     {
         return Jury::where('email', $this->email)->count() == 1;
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $minutes = Config::get('auth.verification.expire', 60);
+        $verifyUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes($minutes),
+            [
+                'id' => $this->getKey(),
+                'hash' => sha1($this->getEmailForVerification()),
+            ]
+        );
+
+        $this->notify(new EmailVerification($verifyUrl, $minutes));
     }
 }

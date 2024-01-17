@@ -1,5 +1,5 @@
 @extends('emails.inc.template')
 
 @section('content')
-    <p>{{ $body }}</p>=
+    <p>{{ $body }}</p>
 @endsection

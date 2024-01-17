@@ -12,6 +12,7 @@ class UserObserver
             $user->update([
                 'email_verified_at' => now(),
             ]);
+            $user->notify(new \App\Notifications\AccountActivated($user));
         }
         if ($user->isDirty('email')) {
             $user->update([

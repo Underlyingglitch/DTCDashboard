@@ -39,7 +39,8 @@
                                             <a class="btn btn-sm btn-success mb-4"
                                                 href="{{ route('auth.login') }}">Inloggen</a>
                                             <p>&nbsp;&nbsp;of&nbsp;&nbsp;</p>
-                                            <a class="btn btn-sm btn-primary mb-4">Registreren</a>
+                                            <a class="btn btn-sm btn-primary mb-4"
+                                                href="{{ route('auth.register') }}">Registreren</a>
                                         </div>
                                     @endauth
 

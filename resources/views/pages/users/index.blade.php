@@ -44,13 +44,13 @@
                     </td>
                     {{-- <td class="text-bold {{ $user->active ? 'text-green' : 'text-red' }}">{{ $user->active ? 'Ja' : 'Nee' }} --}}
                     {{-- </td> --}}
-                    <td data-order="{{ $user->last_seen_at->timestamp }}">
-                        {{ $user->last_seen_at->diffForHumans() }}</td>
+                    <td data-order="{{ $user->last_seen_at->timestamp ?? 'Nooit' }}">
+                        {{ $user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'Nooit' }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                         <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning"><i
                                 class="fas fa-pencil"></i></a>
-                        <form class="button-form" method="post" action="#">
+                        <form class="button-form" method="post" action="{{ route('users.destroy', $user) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>

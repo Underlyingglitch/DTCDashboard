@@ -5,11 +5,11 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    @if (env('APP_ENV') == 'local')
+    @if (config('app.env') == 'local')
         <div class="alert alert-warning">
             Applicatie in local modus. Functies beperkt.
         </div>
-    @elseif(env('APP_ENV') == 'development')
+    @elseif(config('app.env') == 'development')
         <div class="alert alert-danger">
             Applicatie in development modus.
         </div>
@@ -31,7 +31,7 @@
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
-        @if (env('APP_ENV') == 'local')
+        @if (config('app.env') == 'local')
             @livewire('sync-status')
         @endif
 

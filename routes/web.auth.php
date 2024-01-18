@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\JuryController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ImportController;
@@ -13,9 +14,9 @@ use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
+use App\Http\Controllers\OefenstofController;
 use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\CompetitionController;
-use App\Http\Controllers\TestController;
 use App\Http\Controllers\WedstrijdExportController;
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
@@ -36,6 +37,8 @@ Route::get('/users/{user}/activate', [UserController::class, 'activate'])->name(
 Route::resource('clubs', ClubController::class);
 
 Route::get('/livescores', [ScoreController::class, 'livescores'])->name('livescores');
+
+Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof.index');
 
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
     Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');
@@ -71,11 +74,6 @@ Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wed
             Route::get('/{toestel}/{group}', 'add')->name('add');
             Route::post('/{toestel}/{group}', 'store')->name('store');
             Route::get('/recalculate', 'recalculate')->name('recalculate');
-            // Route::get('/{toestel}', 'toestel')->name('toestel');
-            // Route::get('/{toestel}/group/{group}', 'group')->name('group');
-            // Route::get('/{toestel}/group/{group}/gymnast/{gymnast}', 'gymnast')->name('gymnast');
-            // Route::get('/{toestel}/group/{group}/gymnast/{gymnast}/edit', 'edit')->name('edit');
-            // Route::put('/{toestel}/group/{group}/gymnast/{gymnast}', 'update')->name('update');
         });
     });
 });

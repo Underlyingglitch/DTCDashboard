@@ -19,6 +19,10 @@ class Kernel extends ConsoleKernel
         if (env('APP_ENV') === 'local') {
             $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
         }
+
+        if (env('APP_ENV') === 'production') {
+            $schedule->job(new \App\Jobs\DGResources\UpdateList())->dailyAt('06:00');
+        }
     }
 
     /**

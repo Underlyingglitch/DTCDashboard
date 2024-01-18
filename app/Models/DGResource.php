@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DGResource extends Model
 {
@@ -19,4 +21,16 @@ class DGResource extends Model
         'old_hash',
         'status',
     ];
+
+    public function getUrlAttribute()
+    {
+        if ($this->status == 'deleted') {
+            if (Storage::exists('dg_resources/' . $this->id . '.pdf')) {
+                return URL::signedRoute('dg_resources.download', ['dg_resource' => $this->id]);
+            }
+            return null;
+        } else {
+            return $this->attributes['url'];
+        }
+    }
 }

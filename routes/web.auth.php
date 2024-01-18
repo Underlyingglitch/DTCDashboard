@@ -44,6 +44,7 @@ Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof
 
 Route::controller(DGResourceController::class)->group(function() {
     Route::get('/dg_resources', 'index')->name('dg_resources.index');
+    Route::get('/dg_resources/{dg_resource}/download', 'download')->name('dg_resources.download');
 });
 
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {

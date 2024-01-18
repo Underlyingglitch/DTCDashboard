@@ -16,4 +16,17 @@ class Gymnast extends Model implements Auditable
         'birthdate',
         'photo'
     ];
+
+    public function getFirstNameAttribute()
+    {
+        return explode(' ', $this->name)[0];
+    }
+
+    public function getLastNameAttribute()
+    {
+        // Explode return everything after the first space
+        $lastName = explode(' ', $this->name);
+        array_shift($lastName);
+        return implode(' ', $lastName);
+    }
 }

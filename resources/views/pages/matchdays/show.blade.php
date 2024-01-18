@@ -4,11 +4,33 @@
 
 @section('content')
     <h4>Wedstrijden</h4>
-    <a href="{{ route('competitions.show', $matchday->competition) }}" class="btn btn-sm btn-primary">Terug naar
-        competitie</a>
-    <a href="{{ route('wedstrijden.create', $matchday) }}" class="btn btn-sm btn-success">Nieuwe wedstrijd</a>
-    <a href="{{ route('import.index', ['matchday' => $matchday]) }}"
-        class="btn btn-sm {{ $matchday->imported ? 'btn-warning' : 'btn-info' }}">Importeren</a>
+
+    <div class="d-flex flex-row justify-content-between">
+        <div>
+            <a href="{{ route('competitions.show', $matchday->competition) }}" class="btn btn-sm btn-primary">Terug naar
+                competitie</a>
+            <a href="{{ route('wedstrijden.create', $matchday) }}" class="btn btn-sm btn-success">Nieuwe wedstrijd</a>
+            <a href="{{ route('import.index', ['matchday' => $matchday]) }}"
+                class="btn btn-sm {{ $matchday->imported ? 'btn-warning' : 'btn-info' }}">Importeren</a>
+        </div>
+        <div class="col-md-4">
+            <form action="{{ route('matchdays.export.select', $matchday) }}" method="post" target="_blank">
+                @csrf
+                <div class="input-group">
+                    <select name="option" id="option"
+                        class="form-control form-control-sm @error('option') is-invalid @enderror">
+                        <option value="--">--</option>
+                        @foreach ($matchday_export_options as $key => $option)
+                            <option value="{{ $key }}">
+                                {{ $option }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <input type="submit" value="Exporteren" class="btn btn-sm btn-info">
+                </div>
+            </form>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <tr>

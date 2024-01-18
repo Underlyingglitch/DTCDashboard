@@ -17,6 +17,7 @@ use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\OefenstofController;
 use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\CompetitionController;
+use App\Http\Controllers\MatchDaysExportController;
 use App\Http\Controllers\WedstrijdExportController;
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
@@ -43,10 +44,16 @@ Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
     Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');
     Route::post('competitions/{competition}/matchdays', 'store')->name('store');
-    Route::get('matchdays/{matchday}', 'show')->name('show');
-    Route::get('matchdays/{matchday}/edit', 'edit')->name('edit');
-    Route::put('matchdays/{matchday}', 'update')->name('update');
-    Route::delete('matchdays/{matchday}', 'destroy')->name('destroy');
+    Route::prefix('matchdays/{matchday}/')->group(function (){
+        Route::get('/', 'show')->name('show');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+        Route::controller(MatchDaysExportController::class)->name('export.')->prefix('export')->group(function () {
+            Route::post('/', 'select')->name('select');
+            Route::get('/diplomas', 'diplomas')->name('diplomas');
+        });
+    });
 });
 
 Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wedstrijden')->group(function () {

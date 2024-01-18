@@ -28,6 +28,10 @@ class ConstantsServiceProvider extends ServiceProvider
             'scores.individual' => 'Individuele scores',
         ]);
 
+        View::share('matchday_export_options', [
+            'diplomas' => 'Diploma export'
+        ]);
+
         View::share('import_options', [
             'registrations' => 'Inschrijvingen',
             'registrations_match' => 'Inschrijvingen (andere wedstrijddag)',

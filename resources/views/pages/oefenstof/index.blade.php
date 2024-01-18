@@ -15,5 +15,5 @@
         </div>
     @endif
 
-    
+    <i>Aan deze functie wordt momenteel hard gewerkt. </i>
 @endsection

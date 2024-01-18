@@ -74,7 +74,8 @@ class UpdateList implements ShouldQueue
                     'category' => $category,
                     'name' => $title,
                     'type' => $type,
-                    'url' => $url
+                    'url' => $url,
+                    'status' => 'idle'
                 ]);
                 $jobs[] = new FetchResource($dg_resource);
             }

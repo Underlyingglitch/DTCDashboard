@@ -22,6 +22,26 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
+        Informatie
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('dg_resources.index') }}">
+            <i class="fas fa-fw fa-file-lines"></i>
+            <span>KNGU Bronnen</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('oefenstof.index') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Oefenstof</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
         Scoresysteem
     </div>
 

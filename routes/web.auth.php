@@ -16,6 +16,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\OefenstofController;
 use App\Http\Controllers\WedstrijdController;
+use App\Http\Controllers\DGResourceController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\MatchDaysExportController;
 use App\Http\Controllers\WedstrijdExportController;
@@ -40,6 +41,10 @@ Route::resource('clubs', ClubController::class);
 Route::get('/livescores', [ScoreController::class, 'livescores'])->name('livescores');
 
 Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof.index');
+
+Route::controller(DGResourceController::class)->group(function() {
+    Route::get('/dg_resources', 'index')->name('dg_resources.index');
+});
 
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
     Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');

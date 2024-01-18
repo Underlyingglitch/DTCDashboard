@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class UserObserver
 {
@@ -13,11 +14,6 @@ class UserObserver
                 'email_verified_at' => now(),
             ]);
             $user->notify(new \App\Notifications\AccountActivated($user));
-        }
-        if ($user->isDirty('email')) {
-            $user->update([
-                'email_verified_at' => null,
-            ]);
         }
         if ($user->isDirty('last_seen_at')) {
             $user->timestamps = false;

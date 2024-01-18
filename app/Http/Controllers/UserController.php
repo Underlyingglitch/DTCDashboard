@@ -62,11 +62,12 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
+        $user->syncRoles($request->roles);
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
-        $user->syncRoles($request->roles);
 
         return redirect()->route('users.index');
     }

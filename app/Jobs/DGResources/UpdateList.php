@@ -7,8 +7,10 @@ use Illuminate\Bus\Batch;
 use App\Models\DGResource;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use App\Jobs\DGResources\FetchResource;
+use Illuminate\Support\Facades\Storage;
 use App\Jobs\DGResources\ProcessUpdates;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,6 +34,17 @@ class UpdateList implements ShouldQueue
      */
     public function handle(): void
     {
+        // Remove all documents from the storage that are not in the database
+        $files = Storage::files('dg_resources');
+        Log::info('Files in storage: ' . implode(', ', $files));
+        foreach ($files as $file) {
+            $filename = explode('.', basename($file))[0];
+            if (!DGResource::where('id', $filename)->exists()) {
+                Log::info('Deleting ' . $filename);
+                Storage::delete($file);
+            }
+        }
+
         // Retrieving DOCUMENTEN TURNEN HEREN
         $dom = new Dom;
         $dom->loadFromUrl('https://dutchgymnastics.nl/trainers-en-coaches/wedstrijdzaken/turnen-heren/documenten/');

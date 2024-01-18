@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Support\Facades\Storage;
 
 class FetchResource implements ShouldQueue
 {
@@ -40,13 +41,10 @@ class FetchResource implements ShouldQueue
 
         $url = $dg_resource->url;
         // Create the storage path if it does not exist
-        if (!file_exists(storage_path('app/public/dg_resources'))) {
-            mkdir(storage_path('app/public/dg_resources'), 0777, true);
-        }
-        $path = storage_path('app/public/dg_resources/' . $dg_resource->id . '.pdf');
-        $pdf = file_get_contents($url);
-        file_put_contents($path, $pdf);
-        $hash = md5_file($path);
+        Storage::makeDirectory('dg_resources');
+        $path = 'dg_resources/' . $dg_resource->id . '.pdf';
+        Storage::write($path, file_get_contents($url));
+        $hash = md5_file(Storage::path($path));
 
         if ($dg_resource->status === 'new') {
             $dg_resource->old_hash = $hash;

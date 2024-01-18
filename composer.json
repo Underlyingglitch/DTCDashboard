@@ -13,9 +13,9 @@
         "dyrynda/laravel-cascade-soft-deletes": "^4.3",
         "fedeisas/laravel-mail-css-inliner": "^5.2",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^10.41",
         "laravel/sanctum": "^3.2",
-        "laravel/tinker": "^2.8",
+        "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.3",
         "owen-it/laravel-auditing": "^13.6",
         "phpoffice/phpspreadsheet": "^1.29",
@@ -28,11 +28,11 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
         "fakerphp/faker": "^1.9.1",
-        "laravel/pint": "^1.0",
-        "laravel/sail": "^1.18",
+        "laravel/pint": "^1.13",
+        "laravel/sail": "^1.27",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.1",
+        "phpunit/phpunit": "^10.5",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {

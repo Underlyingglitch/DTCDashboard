@@ -14,6 +14,13 @@
             <a href="{{ route('dg_resources.index') }}">Bekijk deze wijzigingen</a>
         </div>
     @endif
+    <div class="alert alert-info">
+        <b>DISCLAIMER: </b>
+        Deze pagina is bedoeld om oefenstof en reglementen op een overzichtelijke manier aan te bieden. Dit is geen
+        vervanging van de officiele website van de KNGU. De officiele oefenstof is altijd leidend en kan gevonden worden bij
+        de <a href="{{ route('dg_resources.index') }}">KNGU Bronnen</a> of op de website van de KNGU. Niet alle informatie
+        wordt overgenomen uit het reglement. Mist er iets? Laat het ons weten!
+    </div>
 
     <i>Aan deze functie wordt momenteel hard gewerkt. </i>
 @endsection

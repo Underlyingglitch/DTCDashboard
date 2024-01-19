@@ -61,12 +61,30 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
 
     public function getIsTrainerAttribute()
     {
-        return Trainer::where('email', $this->email)->count() == 1;
+        return $this->trainers()->count() > 0;
+    }
+
+    public function trainers()
+    {
+        return $this->hasMany(Trainer::class, 'email', 'email');
     }
 
     public function getIsJuryAttribute()
     {
-        return Jury::where('email', $this->email)->count() == 1;
+        return !is_null($this->jury);
+    }
+
+    public function jury()
+    {
+        return $this->hasOne(Jury::class, 'email', 'email');
+    }
+
+    public function clubs()
+    {
+        if ($this->is_trainer) {
+            return $this->hasManyThrough(Club::class, Trainer::class, 'email', 'id', 'email', 'club_id');
+        }
+        return null;
     }
 
     public function sendEmailVerificationNotification()

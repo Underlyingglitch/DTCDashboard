@@ -27,7 +27,7 @@
                 <tr>
                     <td>{{ $trainer->name }}</td>
                     <td>{{ $trainer->club->name }}</td>
-                    <td>{{ $trainer->email }}</td>
+                    <td class="@if ($trainer->user) text-green @else text-red @endif">{{ $trainer->email }}</td>
                     <td>{{ $trainer->phone }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>

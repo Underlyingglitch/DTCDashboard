@@ -28,7 +28,7 @@
                     <td>{{ $jury->name }}</td>
                     <td>{{ $jury->function }}</td>
                     <td>{{ $jury->club->name ?? '' }}</td>
-                    <td>{{ $jury->email }}</td>
+                    <td class="@if ($jury->user) text-green @else text-red @endif">{{ $jury->email }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                         <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pencil"></i></a>

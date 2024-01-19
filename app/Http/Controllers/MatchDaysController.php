@@ -22,6 +22,7 @@ class MatchDaysController extends Controller
      */
     public function create(Competition $competition)
     {
+        $this->authorize('create', MatchDay::class);
         // dd(Location::all()->pluck('name', 'id')->toArray());
         return view('pages.matchdays.create', [
             'competition' => $competition,
@@ -34,6 +35,8 @@ class MatchDaysController extends Controller
      */
     public function store(Competition $competition, Request $request)
     {
+        $this->authorize('create', MatchDay::class);
+
         $this->validate($request, [
             'date' => 'required|date',
             'location_id' => 'required|exists:locations,id',
@@ -49,6 +52,8 @@ class MatchDaysController extends Controller
      */
     public function show(MatchDay $matchday)
     {
+        $this->authorize('view', $matchday);
+
         return view('pages.matchdays.show', [
             'matchday' => $matchday,
             'activeWedstrijd' => Setting::getValue('current_wedstrijd'),
@@ -61,6 +66,8 @@ class MatchDaysController extends Controller
      */
     public function edit(MatchDay $matchday)
     {
+        $this->authorize('update', $matchday);
+
         return view('pages.matchdays.edit', [
             'matchday' => $matchday,
             'locations' => Location::all()->pluck('name', 'id')->toArray()
@@ -72,6 +79,8 @@ class MatchDaysController extends Controller
      */
     public function update(Request $request, MatchDay $matchday)
     {
+        $this->authorize('update', $matchday);
+
         $this->validate($request, [
             'date' => 'required|date',
             'location_id' => 'required|exists:locations,id',
@@ -87,6 +96,8 @@ class MatchDaysController extends Controller
      */
     public function destroy(MatchDay $matchday)
     {
+        $this->authorize('delete', $matchday);
+
         $competition_id = $matchday->competition_id;
         $matchday->delete();
 
@@ -95,6 +106,8 @@ class MatchDaysController extends Controller
 
     public function setactive(MatchDay $matchday)
     {
+        $this->authorize('update', $matchday);
+
         Setting::setValue('current_match_day', $matchday->id);
 
         return redirect()->route('competitions.show', $matchday->competition_id);

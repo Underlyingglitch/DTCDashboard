@@ -4,7 +4,10 @@
 
 @section('content')
     <h4>Wedstrijddagen</h4>
-    <a href="{{ route('matchdays.create', $competition) }}" class="btn btn-sm btn-success">Nieuwe wedstrijddag</a>
+    <a href="{{ route('competitions.index') }}" class="btn btn-sm btn-primary">Terug naar competities</a>
+    @can('create', \App\Models\MatchDay::class)
+        <a href="{{ route('matchdays.create', $competition) }}" class="btn btn-sm btn-success">Nieuwe wedstrijddag</a>
+    @endcan
     <table class="table">
         <thead>
             <tr>
@@ -26,16 +29,22 @@
                     <td>{{ $matchday->date }}</td>
                     <td>{{ $matchday->location->name }}</td>
                     <td>
-                        <a href="{{ route('matchdays.show', $matchday) }}" class="btn btn-sm btn-info"><i
-                                class="fas fa-info-circle"></i></a>
-                        <a href="{{ route('matchdays.edit', $matchday) }}" class="btn btn-sm btn-warning"><i
-                                class="fas fa-pencil"></i></a>
-                        <form class="button-form" method="post" action="{{ route('matchdays.destroy', $matchday) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                        </form>
-                        @if ($matchday->id != $activeMatchDay)
+                        @can('view', $matchday)
+                            <a href="{{ route('matchdays.show', $matchday) }}" class="btn btn-sm btn-info"><i
+                                    class="fas fa-info-circle"></i></a>
+                        @endcan
+                        @can('update', $matchday)
+                            <a href="{{ route('matchdays.edit', $matchday) }}" class="btn btn-sm btn-warning"><i
+                                    class="fas fa-pencil"></i></a>
+                        @endcan
+                        @can('delete', $matchday)
+                            <form class="button-form" method="post" action="{{ route('matchdays.destroy', $matchday) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        @endcan
+                        @if ($matchday->id != $activeMatchDay && Auth::user()->can('update', $matchday))
                             <a href="{{ route('matchdays.setactive', $matchday) }}" class="btn btn-sm btn-success"><i
                                     class="fas fa-check"></i></a>
                         @endif

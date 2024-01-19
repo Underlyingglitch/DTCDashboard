@@ -22,6 +22,8 @@ class TeamController extends Controller
      */
     public function create(Wedstrijd $wedstrijd)
     {
+        $this->authorize('create', \App\Models\Team::class);
+
         return view('pages.teams.create', [
             'wedstrijd' => $wedstrijd,
             'niveaus' => $wedstrijd->niveaus->pluck('full_name', 'id'),
@@ -33,6 +35,8 @@ class TeamController extends Controller
      */
     public function store(Request $request, Wedstrijd $wedstrijd)
     {
+        $this->authorize('create', \App\Models\Team::class);
+
         $this->validate($request, [
             'name' => 'required|string',
             'niveau_id' => 'required|exists:niveaus,id',
@@ -60,6 +64,8 @@ class TeamController extends Controller
      */
     public function edit(Wedstrijd $wedstrijd, Team $team)
     {
+        $this->authorize('update', $team);
+
         return view('pages.teams.edit', [
             'team' => $team,
             'niveaus' => $wedstrijd->niveaus->pluck('full_name', 'id'),
@@ -72,6 +78,8 @@ class TeamController extends Controller
      */
     public function update(Request $request, Wedstrijd $wedstrijd, Team $team)
     {
+        $this->authorize('update', $team);
+
         $this->validate($request, [
             'name' => 'required|string',
             'niveau_id' => 'required|exists:niveaus,id'
@@ -82,7 +90,7 @@ class TeamController extends Controller
             'niveau_id' => $request->input('niveau_id'),
         ]);
 
-        foreach($team->registrations as $registration) {
+        foreach ($team->registrations as $registration) {
             if ($registration->niveau_id != $team->niveau_id) {
                 $registration->team_id = null;
                 $registration->save();
@@ -97,6 +105,8 @@ class TeamController extends Controller
      */
     public function destroy(Wedstrijd $wedstrijd, Team $team)
     {
+        $this->authorize('delete', $team);
+
         if ($team->registrations()->count() > 0) {
             return redirect()->route('wedstrijden.show', $wedstrijd)->withErrors([
                 'team' => 'Dit team kan niet verwijderd worden omdat er nog inschrijvingen aan gekoppeld zijn.'
@@ -109,6 +119,8 @@ class TeamController extends Controller
 
     public function registration_remove(Wedstrijd $wedstrijd, Registration $registration)
     {
+        $this->authorize('manage', $registration);
+
         $registration->team_id = null;
         $registration->save();
 
@@ -117,6 +129,8 @@ class TeamController extends Controller
 
     public function registration_add(Wedstrijd $wedstrijd, Registration $registration)
     {
+        $this->authorize('manage', $registration);
+
         return view('pages.teams.registration_add', [
             'wedstrijd' => $wedstrijd,
             'registration' => $registration,
@@ -126,6 +140,8 @@ class TeamController extends Controller
 
     public function registration_add_store(Request $request, Wedstrijd $wedstrijd, Registration $registration)
     {
+        $this->authorize('manage', $registration);
+
         $this->validate($request, [
             'team_id' => 'required|exists:teams,id'
         ]);

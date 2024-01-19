@@ -22,7 +22,9 @@ class ScoreController extends Controller
 
     public function index(Wedstrijd $wedstrijd)
     {
-        $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team')->get();
+        $this->authorize('process_scores', $wedstrijd);
+
+        $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team', 'group')->get();
         $group_count = explode(', ', $wedstrijd->group_amount);
         $groups = [];
         $baans = [];
@@ -54,6 +56,8 @@ class ScoreController extends Controller
 
     public function add(Wedstrijd $wedstrijd, $toestel, Group $group)
     {
+        $this->authorize('process_scores', $wedstrijd);
+
         $registrations = $wedstrijd->registrations()->where('group_id', $group->id)->with('gymnast', 'club', 'niveau')->get();
 
         return view('pages.wedstrijden.scores.add', [
@@ -66,6 +70,8 @@ class ScoreController extends Controller
 
     public function store(Wedstrijd $wedstrijd, $toestel, Group $group, Request $request)
     {
+        $this->authorize('process_scores', $wedstrijd);
+
         if (!is_null($request->ids)) {
             foreach (explode(',', $request->ids) as $id) if (!in_array($id, $request->s ?? [])) Score::firstOrCreate(
                 [
@@ -96,6 +102,8 @@ class ScoreController extends Controller
 
     public function correct(Wedstrijd $wedstrijd, Request $request)
     {
+        $this->authorize('process_scores', $wedstrijd);
+
         $this->validate($request, [
             'startnumber' => 'required|numeric',
             'toestel' => 'required|numeric',
@@ -124,32 +132,6 @@ class ScoreController extends Controller
 
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Score is bijgewerkt.');
     }
-
-    // public function recalculate(Wedstrijd $wedstrijd)
-    // {
-    //     // // Get all startnumbers for this wedstrijd
-    //     // $startnumbers = $wedstrijd->registrations()->pluck('startnumber')->toArray();
-    //     // // Get all scores for this wedstrijd
-    //     // $scores = Score::where('match_day_id', $wedstrijd->match_day_id)->whereIn('startnumber', $startnumbers)->get();
-
-    //     // foreach ($scores as $score) {
-    //     //     if ($score->registration->team) {
-    //     //         // Check which scores count for this team
-    //     //         CheckCountedScores::dispatch($score);
-    //     //     }
-    //     // }
-    //     Cache::put('counter' . $wedstrijd->id, 0, 600);
-    //     foreach ($wedstrijd->teams as $team) {
-    //         $jobs = [];
-    //         for ($i = 1; $i <= 6; $i++) {
-    //             $jobs[] = new CalculateTeamScore($team, $i, $wedstrijd->match_day_id);
-    //         }
-    //         $jobs[] = new IncrementCounterJob(Auth::user(), count($wedstrijd->teams), $wedstrijd->id);
-    //         Bus::chain($jobs)->dispatch();
-    //     }
-    //     Notification::send(Auth::user(), new UserNotification("Scoreberekening gestart", "De scoreberekening is gestart."));
-    //     return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores worden herberekend.');
-    // }
 
     public function livescores()
     {

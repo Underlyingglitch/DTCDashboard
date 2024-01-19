@@ -66,6 +66,6 @@ class Wedstrijd extends Model implements Auditable
 
     public function getGroupsAttribute()
     {
-        return Group::find($this->registrations()->pluck('group_id')->unique());
+        return $this->registrations->load('group')->pluck('group')->unique('id');
     }
 }

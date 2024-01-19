@@ -25,6 +25,8 @@ class WedstrijdController extends Controller
      */
     public function create(MatchDay $matchday)
     {
+        $this->authorize('create', Wedstrijd::class);
+
         return view('pages.wedstrijden.create', [
             'matchday' => $matchday,
             'niveaus' => Niveau::all()
@@ -36,6 +38,8 @@ class WedstrijdController extends Controller
      */
     public function store(MatchDay $matchday, Request $request)
     {
+        $this->authorize('create', Wedstrijd::class);
+
         $this->validate($request, [
             'index' => 'required|integer',
             'niveaus' => 'required|array|min:1|exists:niveaus,id',
@@ -52,10 +56,12 @@ class WedstrijdController extends Controller
      */
     public function show(Wedstrijd $wedstrijd)
     {
+        $this->authorize('view', $wedstrijd);
+
         $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club');
         }, 'niveau'])->get()->groupBy('niveau_id');
-        
+
         return view('pages.wedstrijden.show', [
             'wedstrijd' => $wedstrijd,
             'niveaus' => $niveaus,
@@ -67,6 +73,8 @@ class WedstrijdController extends Controller
      */
     public function edit(Wedstrijd $wedstrijd)
     {
+        $this->authorize('update', $wedstrijd);
+
         return view('pages.wedstrijden.edit', [
             'wedstrijd' => $wedstrijd,
             'niveaus' => Niveau::all()
@@ -78,6 +86,8 @@ class WedstrijdController extends Controller
      */
     public function update(Request $request, Wedstrijd $wedstrijd)
     {
+        $this->authorize('update', $wedstrijd);
+
         $this->validate($request, [
             'index' => 'required|integer',
             'niveaus' => 'required|array|min:1|exists:niveaus,id',
@@ -94,6 +104,8 @@ class WedstrijdController extends Controller
      */
     public function destroy(Wedstrijd $wedstrijd)
     {
+        $this->authorize('delete', $wedstrijd);
+
         $wedstrijd->delete();
 
         return redirect()->route('matchdays.show', $wedstrijd->match_day_id)->with('success', 'Wedstrijd is verwijderd.');
@@ -101,6 +113,8 @@ class WedstrijdController extends Controller
 
     public function move_group(Wedstrijd $wedstrijd, Registration $registration)
     {
+        $this->authorize('update', $wedstrijd);
+
         return view('pages.wedstrijden.move_group', [
             'wedstrijd' => $wedstrijd,
             'registration' => $registration
@@ -109,6 +123,8 @@ class WedstrijdController extends Controller
 
     public function move_group_store(Request $request, Wedstrijd $wedstrijd, Registration $registration)
     {
+        $this->authorize('update', $wedstrijd);
+
         $this->validate($request, [
             'baan' => 'required|integer|min:0|max:3',
             'group' => 'required|integer|min:0|max:9',
@@ -122,6 +138,8 @@ class WedstrijdController extends Controller
 
     public function signoff(Wedstrijd $wedstrijd, Registration $registration)
     {
+        $this->authorize('signoff', $registration);
+
         $registration->update(['signed_off' => !$registration->signed_off]);
 
         return redirect()->route('wedstrijden.show', $wedstrijd)->with('success', 'Registratie is aangepast.');
@@ -129,6 +147,8 @@ class WedstrijdController extends Controller
 
     public function setactive(Wedstrijd $wedstrijd)
     {
+        $this->authorize('update', $wedstrijd);
+
         Setting::setValue('current_wedstrijd', $wedstrijd->id);
 
         return redirect()->route('matchdays.show', $wedstrijd->match_day_id);

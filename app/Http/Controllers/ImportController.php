@@ -10,12 +10,15 @@ use App\Models\Gymnast;
 use App\Models\MatchDay;
 use App\Models\Registration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 class ImportController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('import', \App\Models\Wedstrijd::class);
+
         return view('pages.import.index', [
             'type' => $request->has('matchday') ? "registrations" : null,
             'matchdays' => MatchDay::all()->pluck('name', 'id'),
@@ -25,6 +28,8 @@ class ImportController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('import', \App\Models\Wedstrijd::class);
+
         $this->validate($request, [
             'type' => 'required',
         ]);

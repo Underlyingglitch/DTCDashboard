@@ -26,6 +26,8 @@ class CompetitionController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Competition::class);
+
         return view('pages.competitions.create');
     }
 
@@ -34,6 +36,8 @@ class CompetitionController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Competition::class);
+
         $this->validate($request, [
             'name' => 'required|string',
         ]);
@@ -48,6 +52,8 @@ class CompetitionController extends Controller
      */
     public function show(Competition $competition)
     {
+        $this->authorize('view', $competition);
+
         return view('pages.competitions.show', [
             'competition' => $competition,
             'activeMatchDay' => Setting::getValue('current_match_day'),
@@ -60,6 +66,8 @@ class CompetitionController extends Controller
      */
     public function edit(Competition $competition)
     {
+        $this->authorize('update', Competition::class);
+
         return view('pages.competitions.edit', [
             'competition' => $competition,
         ]);
@@ -70,6 +78,8 @@ class CompetitionController extends Controller
      */
     public function update(Request $request, Competition $competition)
     {
+        $this->authorize('update', Competition::class);
+
         $this->validate($request, [
             'name' => 'required|string',
         ]);
@@ -84,6 +94,8 @@ class CompetitionController extends Controller
      */
     public function destroy(Competition $competition)
     {
+        $this->authorize('delete', Competition::class);
+
         $competition->delete();
 
         return redirect()->route('competitions.index');
@@ -91,6 +103,8 @@ class CompetitionController extends Controller
 
     public function setactive(Competition $competition)
     {
+        $this->authorize('update', Competition::class);
+
         Setting::setValue('current_competition', $competition->id);
 
         return redirect()->route('competitions.index');

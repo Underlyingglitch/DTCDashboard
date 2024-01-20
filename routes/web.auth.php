@@ -11,6 +11,7 @@ use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\GymnastController;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
@@ -35,6 +36,7 @@ Route::resource('trainers', TrainerController::class);
 Route::resource('juries', JuryController::class);
 Route::resource('gymnasts', GymnastController::class);
 Route::resource('users', UserController::class);
+Route::resource('feedback', FeedbackController::class);
 Route::get('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
 Route::resource('clubs', ClubController::class);
 

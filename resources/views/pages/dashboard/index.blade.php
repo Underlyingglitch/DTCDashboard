@@ -33,10 +33,15 @@
         </div>
 
         <div class="col-md-6">
-            <h2>Wedstrijden</h2>
-            <p>Op deze website vind je alle informatie over de wedstrijden die wij organiseren.</p>
-            <p>Deze website is nog in ontwikkeling. Mocht je een fout tegenkomen, laat dit mij dan weten via <a
-                    href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>.</p>
+            <h2>DTC Dashboard</h2>
+            <div class="alert alert-primary">Deze website is nog in ontwikkeling. Mocht je een fout tegenkomen, laat dit mij
+                dan weten via <a href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>, of gebruik het feedback
+                veld.</div>
+            <form action="{{ route('feedback.store') }}" method="post">
+                @csrf
+                <textarea class="form-control" name="feedback" placeholder="Laat hier uw feedback achter" cols="30" rows="5"></textarea>
+                <input type="submit" class="btn btn-primary" value="Insturen" />
+            </form>
         </div>
     </div>
 @endsection

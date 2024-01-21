@@ -27,22 +27,15 @@ class Setting extends Model
     public static function getValue($key)
     {
         $setting = Setting::where('key', $key)->first();
-        if ($setting) return $setting->value;
-        return null;
+        return $setting->value ?? null;
     }
 
     public static function setValue($key, $value)
     {
-        $setting = Setting::where('key', $key)->first();
-        if ($setting) {
-            $setting->value = $value;
-            $setting->save();
-        } else {
-            Setting::create([
-                'key' => $key,
-                'value' => $value,
-            ]);
-        }
+        Setting::updateOrCreate(
+            ['key' => $key],
+            ['value' => $value]
+        );
     }
 
     public static function getValues(array $keys)

@@ -119,7 +119,7 @@ class WedstrijdExportController extends Controller
     public function teamscores(Wedstrijd $wedstrijd)
     {
         $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
-            $query->where('match_day_id', $wedstrijd->match_day_id)
+            $query->where('signed_off', 0)->where('match_day_id', $wedstrijd->match_day_id)
                 ->with(['gymnast', 'club', 'scores' => function ($query) use ($wedstrijd) {
                     $query->where('match_day_id', $wedstrijd->match_day_id);
                 }]);
@@ -141,7 +141,7 @@ class WedstrijdExportController extends Controller
         $pdf = Pdf::loadView('pdf.scores.teams', [
             'wedstrijd' => $wedstrijd,
             'niveaus' => $niveaus
-        ])->setPaper('a4', 'landscape');
+        ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' teams.pdf"',
@@ -150,7 +150,7 @@ class WedstrijdExportController extends Controller
 
     public function individualscores(Wedstrijd $wedstrijd)
     {
-        $niveaus = $wedstrijd->registrations()->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
+        $niveaus = $wedstrijd->registrations()->where('signed_off', 0)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day_id);
         }])->get()->groupBy('niveau_id')->map(function ($group) {
             return $group->sortByDesc(function ($registration) {
@@ -168,7 +168,7 @@ class WedstrijdExportController extends Controller
         $pdf = Pdf::loadView('pdf.scores.individual', [
             'wedstrijd' => $wedstrijd,
             'niveaus' => $niveaus
-        ])->setPaper('a4', 'landscape');
+        ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' individueel.pdf"',

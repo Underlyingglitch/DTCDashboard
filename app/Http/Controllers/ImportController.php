@@ -191,5 +191,6 @@ class ImportController extends Controller
             $trainers[] = $trainer->id;
         }
         $competition->trainers()->sync($trainers);
+        return redirect()->back()->with('success', 'Registraties geimporteerd');
     }
 }

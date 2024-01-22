@@ -8,7 +8,7 @@
     <div class="d-flex flex-row justify-content-between">
         <div>
             <a href="{{ route('competitions.show', $matchday->competition) }}" class="btn btn-sm btn-primary">Terug naar
-                wedstrijddag</a>
+                competitie</a>
             @can('create', \App\Models\Wedstrijd::class)
                 <a href="{{ route('wedstrijden.create', $matchday) }}" class="btn btn-sm btn-success">Nieuwe wedstrijd</a>
             @endcan

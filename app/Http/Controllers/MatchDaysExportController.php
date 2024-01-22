@@ -57,4 +57,35 @@ class MatchDaysExportController extends Controller
         $writer->save(storage_path('app/public/exports/diplomas.xlsx'));
         return response()->download(storage_path('app/public/exports/diplomas.xlsx'), 'Diplomas ' . $matchday->location->name . ' ' . $matchday->date . '.xlsx');
     }
+
+    public function trainer_emails(MatchDay $matchday)
+    {
+        // Create empty xlsx and fill with export data
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Naam');
+        $sheet->setCellValue('B1', 'Vereniging');
+        $sheet->setCellValue('C1', 'Vereniging email');
+        $sheet->setCellValue('D1', 'Trainer email');
+        $sheet->setCellValue('E1', 'Telefoonnummer');
+
+        $trainers = $matchday->competition->trainers()->with('club')->get();
+        foreach ($trainers as $row => $trainer) {
+            $sheet->setCellValue('A' . $row + 2, $trainer->name);
+            $sheet->setCellValue('B' . $row + 2, $trainer->club->name);
+            $sheet->setCellValue('C' . $row + 2, $trainer->club->email);
+            $sheet->setCellValue('D' . $row + 2, $trainer->email);
+            $sheet->setCellValue('E' . $row + 2, $trainer->phone);
+        }
+
+        // Create the excel file
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        // Create export folder if it doesn't exist
+        if (!file_exists(storage_path('app/public/exports'))) {
+            mkdir(storage_path('app/public/exports'), 0777, true);
+        }
+        // Store and download the file
+        $writer->save(storage_path('app/public/exports/trainer_emails.xlsx'));
+        return response()->download(storage_path('app/public/exports/trainer_emails.xlsx'), 'Emailadressen trainers ' . $matchday->location->name . ' ' . $matchday->date . '.xlsx');
+    }
 }

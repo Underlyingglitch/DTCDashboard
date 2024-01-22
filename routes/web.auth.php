@@ -60,6 +60,7 @@ Route::controller(MatchDaysController::class)->name('matchdays.')->group(functio
         Route::controller(MatchDaysExportController::class)->name('export.')->prefix('export')->group(function () {
             Route::post('/', 'select')->name('select');
             Route::get('/diplomas', 'diplomas')->name('diplomas');
+            Route::get('/trainer_emails', 'trainer_emails')->name('trainer_emails');
         });
     });
 });

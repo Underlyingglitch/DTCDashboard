@@ -29,7 +29,8 @@ class ConstantsServiceProvider extends ServiceProvider
         ]);
 
         View::share('matchday_export_options', [
-            'diplomas' => 'Diploma export'
+            'diplomas' => 'Diploma export',
+            'trainer_emails' => 'Trainer emails',
         ]);
 
         View::share('import_options', [

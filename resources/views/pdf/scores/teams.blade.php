@@ -17,9 +17,13 @@
     @foreach ($niveaus as $teams)
         <b>{{ $teams->first()->niveau->full_name }}</b>
         <table class="group-table">
-            @foreach ($teams as $i => $team)
+            @php($i = 0)
+            @php($previous = null)
+            @foreach ($teams as $team)
                 <tr style="break-after: avoid">
-                    <th colspan="2">{{ $i + 1 }}. {{ $team->name }}</th>
+                    <th colspan="2">{{ $previous == $team->team_scores->first()->total_score ?? 0 ? $i : ++$i }}.
+                        {{ $team->name }}</th>
+                    @php($previous = $team->team_scores->first()->total_score ?? 0)
                     @foreach ($toestellen as $toestel)
                         <th colspan="2">{{ $toestel }}</th>
                     @endforeach

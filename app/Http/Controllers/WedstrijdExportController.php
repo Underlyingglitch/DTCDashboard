@@ -141,7 +141,7 @@ class WedstrijdExportController extends Controller
         $pdf = Pdf::loadView('pdf.scores.teams', [
             'wedstrijd' => $wedstrijd,
             'niveaus' => $niveaus
-        ]);
+        ])->setPaper('a4', 'landscape');
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' teams.pdf"',
@@ -150,23 +150,25 @@ class WedstrijdExportController extends Controller
 
     public function individualscores(Wedstrijd $wedstrijd)
     {
-        $registrations = $wedstrijd->registrations()->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
+        $niveaus = $wedstrijd->registrations()->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day_id);
-        }])->get()->sortByDesc(function ($registration) {
-            return $registration->scores->sum('total');
+        }])->get()->groupBy('niveau_id')->map(function ($group) {
+            return $group->sortByDesc(function ($registration) {
+                return $registration->scores->sum('total');
+            });
         });
 
         // If debug is enabled, return the view instead of downloading the pdf
         if (config('app.debug')) {
             return view('pdf.scores.individual', [
                 'wedstrijd' => $wedstrijd,
-                'registrations' => $registrations
+                'niveaus' => $niveaus
             ]);
         }
         $pdf = Pdf::loadView('pdf.scores.individual', [
             'wedstrijd' => $wedstrijd,
-            'registrations' => $registrations
-        ]);
+            'niveaus' => $niveaus
+        ])->setPaper('a4', 'landscape');
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' individueel.pdf"',

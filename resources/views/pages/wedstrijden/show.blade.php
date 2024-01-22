@@ -59,18 +59,18 @@
             </tr>
         </tfoot>
         <tbody>
-            @foreach ($wedstrijd->groups as $group)
+            @foreach ($groups as $registrations)
                 <tr>
                     <th></th>
                     <th colspan="4">
-                        @if ($wedstrijd->baans() > 1)
-                            Baan {{ $group->baan }} -
+                        @if ($wedstrijd_baans > 1)
+                            Baan {{ $registrations->first()->group->baan }} -
                         @endif
-                        {{ $group->name }}
+                        {{ $registrations->first()->group->name }}
                     </th>
                 </tr>
                 {{-- @foreach ($wedstrijd->registrations()->where('group_id', $group->id)->get() ?? [] as $registration) --}}
-                @foreach ($wedstrijd->registrations()->where('group_id', $group->id)->with('gymnast', 'club', 'niveau')->get() ?? [] as $registration)
+                @foreach ($registrations ?? [] as $registration)
                     <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
                         <td>{{ $registration->startnumber }}</td>
                         <td>{{ $registration->gymnast->name }}</td>
@@ -125,8 +125,9 @@
             </tr>
         </tfoot>
         <tbody>
-            @foreach ($niveaus ?? [] as $teams)
-                @foreach ($teams ?? [] as $team)
+            @foreach ($niveaus ?? [] as $team_list)
+                @foreach ($team_list ?? [] as $team_members)
+                    @php($team = $team_members->first()->team)
                     <tr>
                         <th></th>
                         <th colspan="5">
@@ -145,13 +146,13 @@
                             @endcan
                         </th>
                     </tr>
-                    @foreach ($team->registrations ?? [] as $registration)
+                    @foreach ($team_members ?? [] as $registration)
                         <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
                             <td>{{ $registration->startnumber }}</td>
                             <td>{{ $registration->gymnast->name }}</td>
                             <td>{{ $registration->club->name }}</td>
                             <td>{{ $registration->niveau->name }} {{ $registration->niveau->supplement }}</td>
-                            <td>{{ $wedstrijd->baans() > 1 ? $registration->group->full_name : $registration->group->name }}
+                            <td>{{ $wedstrijd_baans > 1 ? $registration->group->full_name : $registration->group->name }}
                             </td>
                             <td>
                                 @can('manager', $registration)
@@ -178,7 +179,7 @@
                 <th></th>
                 <th colspan="5">Zonder team</th>
             </tr>
-            @foreach ($wedstrijd->registrations()->whereNull('team_id')->with('gymnast', 'club', 'niveau')->get() ?? [] as $registration)
+            @foreach ($wedstrijd_no_team ?? [] as $registration)
                 <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
                     <td>{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}</td>

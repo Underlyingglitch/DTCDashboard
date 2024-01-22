@@ -58,13 +58,33 @@ class WedstrijdController extends Controller
     {
         $this->authorize('view', $wedstrijd);
 
-        $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
-            $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club');
-        }, 'niveau'])->get()->groupBy('niveau_id');
+        $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team', 'group')->get();
+
+        $groups = $registrations->groupBy('group_id')->sortBy(function ($group, $key) {
+            return $group->first()->group->nr;
+        })->sortBy(function ($group, $key) {
+            return $group->first()->group->baan;
+        });
+
+        $niveaus = $registrations->groupBy('niveau_id')->map(function ($niveau, $key) {
+            return $niveau->groupBy('team_id');
+        });
+
+        $teams = $wedstrijd->teams()->get();
+        // dd($niveaus);
+
+        // $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
+        //     $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club');
+        // }, 'niveau'])->get()->groupBy('niveau_id');
+
+        //$groups = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'group')->get()->groupBy('group_id');
 
         return view('pages.wedstrijden.show', [
             'wedstrijd' => $wedstrijd,
+            'wedstrijd_baans' => $wedstrijd->baans(),
             'niveaus' => $niveaus,
+            'teams' => $teams,
+            'groups' => $groups
         ]);
     }
 

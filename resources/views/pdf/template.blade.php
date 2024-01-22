@@ -57,6 +57,10 @@
             font-size: 10px
         }
 
+        .not-counted {
+            font-style: italic;
+        }
+
         @media print {
 
             .no-print,

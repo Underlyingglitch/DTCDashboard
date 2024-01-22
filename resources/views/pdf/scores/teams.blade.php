@@ -20,10 +20,11 @@
             @php($i = 0)
             @php($previous = null)
             @foreach ($teams as $team)
+                @php($team_total = $team->team_scores->first()->total_score ?? 0)
                 <tr style="break-after: avoid">
-                    <th colspan="2">{{ $previous == $team->team_scores->first()->total_score ?? 0 ? $i : ++$i }}.
+                    <th colspan="2">{{ $previous == $team_total ? $i : ++$i }}.
                         {{ $team->name }}</th>
-                    @php($previous = $team->team_scores->first()->total_score ?? 0)
+                    @php($previous = $team_total)
                     @foreach ($toestellen as $toestel)
                         <th colspan="2">{{ $toestel }}</th>
                     @endforeach
@@ -34,25 +35,27 @@
                         <td>
                             {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                         @foreach ($toestellen as $key => $toestel)
+                            @php($score = $registration->scores->where('toestel', $key + 1)->first())
                             <td style="width: fit-content; border-right: none; font-size: 8px">
                                 d:
-                                {{ number_format($registration->scores->where('toestel', $key + 1)->first()->d ?? 0, 3) }}<br>
+                                {{ number_format($score->d ?? 0, 3) }}<br>
                                 e:
-                                {{ number_format($registration->scores->where('toestel', $key + 1)->first()->e ?? 0, 3) }}<br>
-                                @if ($registration->scores->where('toestel', $key + 1)->first()->n ?? 0 != 0)
+                                {{ number_format($score->e ?? 0, 3) }}<br>
+                                @if ($score->n ?? 0 != 0)
                                     n:
-                                    -{{ number_format($registration->scores->where('toestel', $key + 1)->first()->n ?? 0, 1) }}
+                                    -{{ number_format($score->n ?? 0, 1) }}
                                 @endif
                             </td>
-                            <td style="width: fit-content; border-left:none">
-                                {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
+                            <td @if ($score->counted ?? null) @else class="not-counted" @endif
+                                style="width: fit-content; border-left:none">
+                                {{ number_format($score->total ?? 0, 3) }}
                             </td>
                         @endforeach
                     </tr>
                 @endforeach
                 <tr style="break-after: auto">
                     <td style="width: min-content"></td>
-                    <td>Totaal: {{ $team->team_scores->first()->total_score ?? 0 }}</td>
+                    <td>Totaal: {{ $team_total }}</td>
                     @foreach ($toestellen as $key => $toestel)
                         <td colspan="2" style="width: fit-content">
                             {{ number_format($team->team_scores->first()->toestel_scores[$key] ?? 0, 3) }}

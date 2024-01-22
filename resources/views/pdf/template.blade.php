@@ -39,8 +39,6 @@
         td {
             border: 1px solid #000;
             border-collapse: collapse;
-            page-break-inside: avoid;
-            page-break-after: auto
         }
 
         main {

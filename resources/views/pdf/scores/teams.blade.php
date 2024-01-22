@@ -16,21 +16,21 @@
 @section('main')
     @foreach ($niveaus as $teams)
         <b>{{ $teams->first()->niveau->full_name }}</b>
-        @foreach ($teams as $i => $team)
-            <table class="group-table">
-                <tr>
-                    <th colspan="3">{{ $i + 1 }}. {{ $team->name }}</th>
+        <table class="group-table">
+            @foreach ($teams as $i => $team)
+                <tr style="break-after: avoid">
+                    <th colspan="2">{{ $i + 1 }}. {{ $team->name }}</th>
                     @foreach ($toestellen as $toestel)
                         <th colspan="2">{{ $toestel }}</th>
                     @endforeach
                 </tr>
                 @foreach ($team->registrations as $registration)
-                    <tr
-                        @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
-                        <td style="width: 5%">{{ $registration->startnumber }}</td>
-                        <td>{{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
+                    <tr style="break-after: avoid">
+                        <td style="width: fit-content">{{ $registration->startnumber }}</td>
+                        <td style="width: fit-content">
+                            {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                         @foreach ($toestellen as $key => $toestel)
-                            <td style="width: 5%; border-right: none; font-size: 8px">
+                            <td style="width: fit-content; border-right: none; font-size: 8px">
                                 d:
                                 {{ number_format($registration->scores->where('toestel', $key + 1)->first()->d ?? 0, 3) }}<br>
                                 e:
@@ -40,23 +40,23 @@
                                     -{{ number_format($registration->scores->where('toestel', $key + 1)->first()->n ?? 0, 1) }}
                                 @endif
                             </td>
-                            <td style="width: 5%; border-left:none">
+                            <td style="width: fit-content; border-left:none">
                                 {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
                             </td>
                         @endforeach
                     </tr>
                 @endforeach
-                <tr>
+                <tr style="break-after: auto">
                     <td></td>
                     <td>Totaal: {{ $team->team_scores->first()->total_score ?? 0 }}</td>
                     @foreach ($toestellen as $key => $toestel)
-                        <td colspan="2" style="width: 10%">
+                        <td colspan="2" style="width: fit-content">
                             {{ number_format($team->team_scores->first()->toestel_scores[$key] ?? 0, 3) }}
                         </td>
                     @endforeach
                 </tr>
-            </table>
-        @endforeach
+            @endforeach
+        </table>
         <div style="page-break-after: always"></div>
     @endforeach
 @endsection

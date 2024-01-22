@@ -28,10 +28,10 @@
             @foreach ($registrations as $registration)
                 <tr
                     @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
-                    <td style="width: 5%">{{ $registration->startnumber }}</td>
+                    <td style="width: fit-content">{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                     @foreach ($toestellen as $key => $toestel)
-                        <td style="width: 5%; border-right: none; font-size: 8px">
+                        <td style="width: fit-content; border-right: none; font-size: 8px">
                             d:
                             {{ number_format($registration->scores->where('toestel', $key + 1)->first()->d ?? 0, 3) }}<br>
                             e:
@@ -41,12 +41,12 @@
                                 -{{ number_format($registration->scores->where('toestel', $key + 1)->first()->n ?? 0, 1) }}
                             @endif
                         </td>
-                        <td style="width: 5%; border-left:none">
+                        <td style="width: fit-content; border-left:none">
                             {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
                         </td>
                     @endforeach
                     <td>{{ number_format($registration->scores->sum('total') ?? 0, 3) }}</td>
-                    <td>{{ $i++ }}</td>
+                    <td style="width: fit-content">{{ $i++ }}</td>
                 </tr>
             @endforeach
             <tr style="page-break-after: always; border:none">

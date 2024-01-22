@@ -20,7 +20,7 @@ class RefreshProcessedScoresButton extends Component
 
     public function refresh()
     {
-        $groups = $this->wedstrijd->groups;
+        $groups = $this->wedstrijd->groups->get();
         foreach ($groups as $group) {
             for ($toestel = 1; $toestel <= 6; $toestel++) {
                 $registrations = $this->wedstrijd->registrations()->where('group_id', $group->id)->where('signed_off', 0)->pluck('startnumber');

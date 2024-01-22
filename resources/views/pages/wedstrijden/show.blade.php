@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('page_title', 'Wedstrijd ' . $wedstrijd->index)
+@section('page_title', $wedstrijd->match_day->location->name . ' | ' . $wedstrijd->match_day->date . ' | Wedstrijd ' .
+    $wedstrijd->index)
 
 @section('content')
     <div class="d-flex flex-row justify-content-between">
@@ -95,7 +96,7 @@
             @endforeach
         </tbody>
     </table>
-    
+
     <hr>
     <h4>Teams</h4>
     @can('create', \App\Models\Team::class)

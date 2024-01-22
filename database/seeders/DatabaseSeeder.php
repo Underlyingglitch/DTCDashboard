@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Carbon\Carbon;
+use App\Models\Club;
 use App\Models\User;
+use App\Models\Trainer;
 use App\Models\Location;
 use App\Models\MatchDay;
 use App\Models\Competition;
@@ -18,8 +20,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create(['name' => 'admin', 'email' => 'admin@admin.com', 'password' => bcrypt('admin'), 'active' => true, 'email_verified_at' => Carbon::now()]);
-        $user->assignRole('admin');
+        $admin_user = User::create(['name' => 'admin', 'email' => 'admin@test.dev', 'password' => bcrypt('admin'), 'active' => true, 'email_verified_at' => Carbon::now()]);
+        $admin_user->assignRole('admin');
         $competition = Competition::create(['name' => 'Test competition']);
         $location = Location::create(['name' => 'Test location', 'address' => 'Test address']);
         $matchday = MatchDay::create(['competition_id' => $competition->id, 'location_id' => $location->id, 'date' => Carbon::now()]);
@@ -28,5 +30,13 @@ class DatabaseSeeder extends Seeder
         UserSetting::create(['user_id' => null, 'key' => 'current_match_day', 'value' => $matchday->id]);
         UserSetting::create(['user_id' => null, 'key' => 'current_wedstrijd', 'value' => 1]);
         UserSetting::create(['user_id' => null, 'key' => 'current_round', 'value' => 1]);
+        UserSetting::create(['user_id' => null, 'key' => 'oefenstof_last_updated', 'value' => Carbon::now()]);
+
+        $club = Club::create(['id' => 1, 'name' => 'Test club', 'email' => 'club@test.dev', 'place' => 'test', 'district' => 'test']);
+        $trainer = Trainer::create(['name' => 'Test trainer', 'email' => 'trainer@test.dev', 'phone' => '0123456789', 'club_id' => 1]);
+        $trainer->competitions()->attach($competition->id);
+
+        $trainer_user = User::create(['name' => 'trainer', 'email' => 'trainer@test.dev', 'password' => bcrypt('trainer'), 'active' => true, 'email_verified_at' => Carbon::now()]);
+        $trainer_user->assignRole('trainer');
     }
 }

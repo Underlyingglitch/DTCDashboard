@@ -13,7 +13,7 @@ class Club extends Model implements Auditable
 
     protected $cascadeDeletes = ['trainers'];
 
-    protected $fillable = ['id', 'name'];
+    protected $fillable = ['id', 'name', 'email'];
 
     public function trainers()
     {

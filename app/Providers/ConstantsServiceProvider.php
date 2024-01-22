@@ -35,6 +35,7 @@ class ConstantsServiceProvider extends ServiceProvider
         View::share('import_options', [
             'registrations' => 'Inschrijvingen',
             'registrations_match' => 'Inschrijvingen (andere wedstrijddag)',
+            'trainers' => 'Trainers',
         ]);
 
         View::share('toestellen', ['Vloer', 'Voltige', 'Ringen', 'Sprong', 'Brug', 'Rek']);

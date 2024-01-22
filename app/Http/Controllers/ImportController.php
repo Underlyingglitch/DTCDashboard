@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Models\Group;
 use App\Models\Niveau;
 use App\Models\Gymnast;
+use App\Models\Trainer;
 use App\Models\MatchDay;
 use App\Models\Registration;
 use Illuminate\Http\Request;
@@ -43,6 +44,11 @@ class ImportController extends Controller
                 'import_matchday' => 'required|exists:match_days,id',
             ]);
             return $this->import_from_match_day($request);
+        } else if ($request->type == 'trainers') {
+            $this->validate($request, [
+                'matchday' => 'required|exists:match_days,id',
+            ]);
+            return $this->import_trainers($request);
         } else {
             return redirect()->back()->with('error', 'Onbekend type import');
         }
@@ -140,5 +146,50 @@ class ImportController extends Controller
             $new_registration->save();
         }
         return redirect()->back()->with('success', 'Registraties geimporteerd');
+    }
+
+    public function import_trainers(Request $request)
+    {
+        $reader = new Xlsx();
+        // 0 competitiecode
+        // 1 competitienaam
+        // 2 relatienummer club
+        // 3 naam club
+        // 4 club email
+        // 5 naam trainer
+        // 6 trainer telefoonnummer
+        // 7 
+        // 8 trainer email
+        $spreadsheet = $reader->load($request->file);
+        $array = $spreadsheet->getSheet(0)->toArray();
+
+        $competition = MatchDay::find($request->matchday)->competition;
+        $trainers = [];
+        foreach ($array as $i => $row) {
+            if (!is_numeric($row[2])) {
+                continue;
+            }
+            Club::updateOrCreate(
+                ['id' =>  $row[2]],
+                [
+                    'id' => $row[2],
+                    'name' => $row[3],
+                    'email' => $row[4]
+                ]
+            );
+            $trainer = Trainer::updateOrCreate(
+                [
+                    'email' =>  $row[8],
+                    'club_id' => $row[2]
+                ],
+                [
+                    'name' => $row[5],
+                    'phone' => $row[6],
+                    'email' => $row[8]
+                ]
+            );
+            $trainers[] = $trainer->id;
+        }
+        $competition->trainers()->sync($trainers);
     }
 }

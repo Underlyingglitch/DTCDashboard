@@ -29,4 +29,9 @@ class Competition extends Model implements Auditable
     {
         return $this->matchDays->pluck('date');
     }
+
+    public function trainers()
+    {
+        return $this->belongsToMany(Trainer::class);
+    }
 }

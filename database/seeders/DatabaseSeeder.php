@@ -9,7 +9,9 @@ use App\Models\User;
 use App\Models\Trainer;
 use App\Models\Location;
 use App\Models\MatchDay;
+use App\Models\Wedstrijd;
 use App\Models\Competition;
+use App\Models\Niveau;
 use App\Models\UserSetting;
 use Illuminate\Database\Seeder;
 
@@ -22,9 +24,13 @@ class DatabaseSeeder extends Seeder
     {
         $admin_user = User::create(['name' => 'admin', 'email' => 'admin@test.dev', 'password' => bcrypt('admin'), 'active' => true, 'email_verified_at' => Carbon::now()]);
         $admin_user->assignRole('admin');
+
+        NiveauSeeder::run();
         $competition = Competition::create(['name' => 'Test competition']);
         $location = Location::create(['name' => 'Test location', 'address' => 'Test address']);
         $matchday = MatchDay::create(['competition_id' => $competition->id, 'location_id' => $location->id, 'date' => Carbon::now()]);
+        $wedstrijd = Wedstrijd::create(['match_day_id' => $matchday->id, 'index' => 1]);
+        $wedstrijd->niveaus()->attach(1);
 
         UserSetting::create(['user_id' => null, 'key' => 'current_competition', 'value' => $competition->id]);
         UserSetting::create(['user_id' => null, 'key' => 'current_match_day', 'value' => $matchday->id]);

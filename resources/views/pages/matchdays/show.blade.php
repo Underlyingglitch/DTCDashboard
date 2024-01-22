@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-4">
             @can('export', \App\Models\Wedstrijd::class)
-                <form action="{{ route('matchdays.export.select', $matchday) }}" method="post" target="_blank">
+                <form action="{{ route('matchdays.export.select', $matchday) }}" method="post">
                     @csrf
                     <div class="input-group">
                         <select name="option" id="option"

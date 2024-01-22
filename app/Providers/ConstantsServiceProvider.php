@@ -39,6 +39,6 @@ class ConstantsServiceProvider extends ServiceProvider
             'trainers' => 'Trainers',
         ]);
 
-        View::share('toestellen', ['Vloer', 'Voltige', 'Ringen', 'Sprong', 'Brug', 'Rek']);
+        View::share('toestellen', ['Vloer', 'Voltige', 'Ringen', 'Sprong', 'Brug', 'Rekstok']);
     }
 }

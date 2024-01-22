@@ -26,7 +26,7 @@
                 </tr>
                 @foreach ($team->registrations as $registration)
                     <tr style="break-after: avoid">
-                        <td style="width: min-content">{{ $registration->startnumber }}</td>
+                        <td style="width: 10">{{ $registration->startnumber }}</td>
                         <td>
                             {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                         @foreach ($toestellen as $key => $toestel)
@@ -47,7 +47,7 @@
                     </tr>
                 @endforeach
                 <tr style="break-after: auto">
-                    <td></td>
+                    <td style="width: min-content"></td>
                     <td>Totaal: {{ $team->team_scores->first()->total_score ?? 0 }}</td>
                     @foreach ($toestellen as $key => $toestel)
                         <td colspan="2" style="width: fit-content">

@@ -5,6 +5,7 @@
 @section('content')
     <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-primary">Terug naar wedstrijd</a>
     @livewire('recalculate-scores-button', ['wedstrijd' => $wedstrijd])
+    @livewire('refresh-processed-scores-button', ['wedstrijd' => $wedstrijd])
     <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date }} | {{ $wedstrijd->match_day->location->name }}
         | {{ $wedstrijd->niveaus_list }}</h4>
 

@@ -63,6 +63,7 @@ class ScoreTableButton extends Component
         }
         if ($data['completed']) {
             $this->class = "btn-success";
+            $this->href = "#";
         } else {
             $this->class = "btn-warning";
         }

@@ -59,11 +59,15 @@ class WedstrijdController extends Controller
         $this->authorize('view', $wedstrijd);
 
         $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team', 'group')->get();
-        
+
         $groups = $registrations->groupBy('group_id')->sortBy(function ($group, $key) {
             return $group->first()->group->nr;
         })->sortBy(function ($group, $key) {
             return $group->first()->group->baan;
+        });
+
+        list($no_team, $registrations) = $registrations->partition(function ($registration) {
+            return is_null($registration->team_id);
         });
 
         $niveaus = $registrations->groupBy('niveau_id')->map(function ($niveau, $key) {
@@ -71,13 +75,14 @@ class WedstrijdController extends Controller
         });
 
         $teams = $wedstrijd->teams()->get();
-        
+
         return view('pages.wedstrijden.show', [
             'wedstrijd' => $wedstrijd,
             'wedstrijd_baans' => $wedstrijd->baans(),
             'niveaus' => $niveaus,
             'teams' => $teams,
-            'groups' => $groups
+            'groups' => $groups,
+            'no_team' => $no_team
         ]);
     }
 

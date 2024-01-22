@@ -128,6 +128,9 @@
             @foreach ($niveaus ?? [] as $team_list)
                 @foreach ($team_list ?? [] as $team_members)
                     @php($team = $team_members->first()->team)
+                    @if ($team == null)
+                        @php(dd($team_members))
+                    @endif
                     <tr>
                         <th></th>
                         <th colspan="5">
@@ -179,7 +182,7 @@
                 <th></th>
                 <th colspan="5">Zonder team</th>
             </tr>
-            @foreach ($wedstrijd_no_team ?? [] as $registration)
+            @foreach ($no_team ?? [] as $registration)
                 <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
                     <td>{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}</td>

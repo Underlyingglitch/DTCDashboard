@@ -24,10 +24,9 @@ class Wedstrijd extends Model implements Auditable
 
     public function getGroupAmountAttribute()
     {
-        return implode(', ', $this->groups->groupBy('baan')
-            ->map(function ($item, $key) {
-                return $item->count();
-            })->toArray());
+        return implode(', ', $this->groups->get()->groupBy('baan')->map(function ($item, $key) {
+            return $item->count();
+        })->toArray());
     }
 
     public function getNiveausListAttribute()
@@ -66,7 +65,6 @@ class Wedstrijd extends Model implements Auditable
 
     public function getGroupsAttribute()
     {
-        // return $this->registrations->load('group')->pluck('group')->unique('id');
-        return $this->hasManyThrough(Group::class, Registration::class, 'match_day_id', 'id', 'match_day_id', 'group_id')->distinct();
+        return $this->hasManyThrough(Group::class, Registration::class, 'match_day_id', 'id', 'match_day_id', 'group_id')->whereIn('niveau_id', $this->niveaus->pluck('id'))->distinct();
     }
 }

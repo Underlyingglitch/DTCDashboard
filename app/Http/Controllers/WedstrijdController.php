@@ -59,7 +59,7 @@ class WedstrijdController extends Controller
         $this->authorize('view', $wedstrijd);
 
         $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team', 'group')->get();
-
+        
         $groups = $registrations->groupBy('group_id')->sortBy(function ($group, $key) {
             return $group->first()->group->nr;
         })->sortBy(function ($group, $key) {
@@ -71,14 +71,7 @@ class WedstrijdController extends Controller
         });
 
         $teams = $wedstrijd->teams()->get();
-        // dd($niveaus);
-
-        // $niveaus = $wedstrijd->teams()->with(['registrations' => function ($query) use ($wedstrijd) {
-        //     $query->where('match_day_id', $wedstrijd->match_day_id)->with('gymnast', 'club');
-        // }, 'niveau'])->get()->groupBy('niveau_id');
-
-        //$groups = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'group')->get()->groupBy('group_id');
-
+        
         return view('pages.wedstrijden.show', [
             'wedstrijd' => $wedstrijd,
             'wedstrijd_baans' => $wedstrijd->baans(),

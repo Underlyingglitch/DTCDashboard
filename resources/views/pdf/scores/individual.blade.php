@@ -24,7 +24,8 @@
                 <th>Totaal</th>
                 <th>Plaats</th>
             </tr>
-            @php($i = 1)
+            @php($i = 0)
+            @php($previous = null)
             @foreach ($registrations as $registration)
                 <tr
                     @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
@@ -46,7 +47,8 @@
                         </td>
                     @endforeach
                     <td>{{ number_format($registration->scores->sum('total') ?? 0, 3) }}</td>
-                    <td style="width: fit-content">{{ $i++ }}</td>
+                    <td style="width: fit-content">{{ $previous == $registration->scores->sum('total') ? $i : ++$i }}</td>
+                    @php($previous = $registration->scores->sum('total'))
                 </tr>
             @endforeach
             <tr style="page-break-after: always; border:none">

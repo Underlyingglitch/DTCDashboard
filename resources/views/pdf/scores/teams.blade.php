@@ -19,14 +19,14 @@
         <table class="group-table">
             @foreach ($teams as $i => $team)
                 <tr style="break-after: avoid">
-                    <th style="width: fit-content" colspan="2">{{ $i + 1 }}. {{ $team->name }}</th>
+                    <th colspan="2">{{ $i + 1 }}. {{ $team->name }}</th>
                     @foreach ($toestellen as $toestel)
                         <th colspan="2">{{ $toestel }}</th>
                     @endforeach
                 </tr>
                 @foreach ($team->registrations as $registration)
                     <tr style="break-after: avoid">
-                        <td>{{ $registration->startnumber }}</td>
+                        <td style="width: min-content">{{ $registration->startnumber }}</td>
                         <td>
                             {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                         @foreach ($toestellen as $key => $toestel)

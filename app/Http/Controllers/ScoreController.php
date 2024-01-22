@@ -58,8 +58,10 @@ class ScoreController extends Controller
     {
         $this->authorize('process_scores', $wedstrijd);
 
-        $registrations = $wedstrijd->registrations()->where('group_id', $group->id)->with('gymnast', 'club', 'niveau')->get();
-
+        $registrations = $wedstrijd->registrations()->where('group_id', $group->id)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
+            $query->where('match_day_id', $wedstrijd->match_day->id);
+        }])->get();
+        
         return view('pages.wedstrijden.scores.add', [
             'wedstrijd' => $wedstrijd,
             'registrations' => $registrations,

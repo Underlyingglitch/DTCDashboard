@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Scores;
 
 use Livewire\Component;
 use App\Jobs\CalculateTeamScore;
@@ -36,6 +36,6 @@ class RecalculateScoresButton extends Component
 
     public function render()
     {
-        return view('livewire.recalculate-scores-button');
+        return view('livewire.scores.recalculate-scores-button');
     }
 }

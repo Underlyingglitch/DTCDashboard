@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Scores;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
@@ -70,6 +70,6 @@ class ScoreTableButton extends Component
 
     public function render()
     {
-        return view('livewire.score-table-button');
+        return view('livewire.scores.score-table-button');
     }
 }

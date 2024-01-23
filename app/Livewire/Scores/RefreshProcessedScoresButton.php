@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Scores;
 
 use App\Models\Score;
 use Livewire\Component;
@@ -21,9 +21,10 @@ class RefreshProcessedScoresButton extends Component
     public function refresh()
     {
         $groups = $this->wedstrijd->groups->get();
+        $wedstrijd_registrations = $this->wedstrijd->registrations()->get();
         foreach ($groups as $group) {
             for ($toestel = 1; $toestel <= 6; $toestel++) {
-                $registrations = $this->wedstrijd->registrations()->where('group_id', $group->id)->where('signed_off', 0)->pluck('startnumber');
+                $registrations = $wedstrijd_registrations->where('group_id', $group->id)->where('signed_off', 0)->pluck('startnumber');
                 $score_count = Score::where('match_day_id', $this->wedstrijd->match_day_id)->whereIn('startnumber', $registrations)->where('toestel', $toestel)->count();
 
                 if ($score_count == count($registrations)) {
@@ -56,6 +57,6 @@ class RefreshProcessedScoresButton extends Component
 
     public function render()
     {
-        return view('livewire.refresh-processed-scores-button');
+        return view('livewire.scores.refresh-processed-scores-button');
     }
 }

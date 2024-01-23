@@ -15,7 +15,7 @@ class ScoreObserver
     public function created(Score $score): void
     {
         // Check if score belongs to a team
-        if ($score->registration->team) {
+        if ($score->registration->team ?? null) {
             // Check which scores count for this team
             CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
         }
@@ -26,7 +26,7 @@ class ScoreObserver
      */
     public function updated(Score $score): void
     {
-        if ($score->registration->team) {
+        if ($score->registration->team ?? null) {
             if ($score->isDirty('total')) {
                 CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
             }
@@ -38,7 +38,7 @@ class ScoreObserver
      */
     public function deleted(Score $score): void
     {
-        if ($score->registration->team) {
+        if ($score->registration->team ?? null) {
             CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
         }
     }
@@ -48,7 +48,7 @@ class ScoreObserver
      */
     public function restored(Score $score): void
     {
-        if ($score->registration->team) {
+        if ($score->registration->team ?? null) {
             CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
         }
     }
@@ -58,7 +58,7 @@ class ScoreObserver
      */
     public function forceDeleted(Score $score): void
     {
-        if ($score->registration->team) {
+        if ($score->registration->team ?? null) {
             CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
         }
     }

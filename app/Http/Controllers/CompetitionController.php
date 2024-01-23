@@ -16,7 +16,7 @@ class CompetitionController extends Controller
     public function index()
     {
         return view('pages.competitions.index', [
-            'competitions' => Competition::all(),
+            'competitions' => Competition::orderBy('id', 'desc')->get(),
             'activeCompetition' => Setting::getValue('current_competition'),
         ]);
     }

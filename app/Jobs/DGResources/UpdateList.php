@@ -36,11 +36,9 @@ class UpdateList implements ShouldQueue
     {
         // Remove all documents from the storage that are not in the database
         $files = Storage::files('dg_resources');
-        Log::info('Files in storage: ' . implode(', ', $files));
         foreach ($files as $file) {
             $filename = explode('.', basename($file))[0];
             if (!DGResource::where('id', $filename)->exists()) {
-                Log::info('Deleting ' . $filename);
                 Storage::delete($file);
             }
         }

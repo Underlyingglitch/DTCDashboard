@@ -32,7 +32,6 @@ class FetchResource implements ShouldQueue
     {
         $dg_resource = $this->dg_resource;
         if ($dg_resource->status === 'deleted') {
-            Log::info('Resource ' . $dg_resource->id . ' is deleted');
             return;
         }
         if ($dg_resource->type !== 'file') {

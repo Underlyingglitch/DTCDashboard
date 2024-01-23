@@ -57,7 +57,6 @@ class ScoreTableButton extends Component
 
     public function update($data)
     {
-        Log::info('Update method called with data: ', $data);
         if ($data['wedstrijd_id'] != $this->wedstrijd || $data['toestel'] != $this->toestel || $data['groupnr'] != $this->groupnr) {
             return;
         }

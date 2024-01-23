@@ -46,7 +46,7 @@
                                     -{{ number_format($score->n ?? 0, 1) }}
                                 @endif
                             </td>
-                            <td @if ($score->counted ?? null) @else class="not-counted" @endif
+                            <td @if (($score->counted ?? 0) == 0) class="not-counted" @endif
                                 style="width: fit-content; border-left:none">
                                 {{ number_format($score->total ?? 0, 3) }}
                             </td>

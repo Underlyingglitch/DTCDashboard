@@ -36,14 +36,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(function (QueueBusy $event) {
-            Notification::route('mail', 'dev@example.com')
-                ->notify(new EmailNotification(
-                    "rickokkersen@gmail.com",
-                    "Queue is busy",
-                    "The current queue is backed up with " . $event->size . " jobs"
-                ));
-        });
+        
     }
 
     /**

@@ -15,7 +15,7 @@ class CheckAPIToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->header('X-API-KEY') !== env('API_KEY')) {
+        if ($request->header('X-API-KEY') !== config('app.api_key')) {
             abort(403);
         }
         return $next($request);

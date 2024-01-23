@@ -64,6 +64,8 @@
                 </tr>
             @endforeach
         </table>
-        <div style="page-break-after: always"></div>
+        @if (!$loop->last)
+            <div style="page-break-after: always"></div>
+        @endif
     @endforeach
 @endsection

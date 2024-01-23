@@ -51,8 +51,10 @@
                     @php($previous = $registration->scores->sum('total'))
                 </tr>
             @endforeach
-            <tr style="page-break-after: always; border:none">
-            </tr>
+            @if (!$loop->last)
+                <tr style="page-break-after: always; border:none">
+                </tr>
+            @endif
         @endforeach
     </table>
 @endsection

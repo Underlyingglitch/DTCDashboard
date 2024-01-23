@@ -15,4 +15,14 @@ class ProcessedScore extends Model implements Auditable
         'toestel',
         'completed',
     ];
+
+    public function wedstrijd()
+    {
+        return $this->belongsTo(Wedstrijd::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
 }

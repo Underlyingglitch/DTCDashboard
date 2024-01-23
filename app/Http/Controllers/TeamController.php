@@ -85,9 +85,19 @@ class TeamController extends Controller
             'niveau_id' => 'required|exists:niveaus,id'
         ]);
 
+        if ($request->competition_type == 3) {
+            $performing = 5;
+            $counting = 3;
+        } else {
+            $performing = 3;
+            $counting = 2;
+        }
+
         $team->update([
             'name' => $request->input('name'),
             'niveau_id' => $request->input('niveau_id'),
+            'performing' => $performing,
+            'counting' => $counting,
         ]);
 
         foreach ($team->registrations as $registration) {

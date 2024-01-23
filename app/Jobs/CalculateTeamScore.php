@@ -35,7 +35,7 @@ class CalculateTeamScore implements ShouldQueue, ShouldBeUnique
     public function handle(): void
     {
         $scores = $this->team->registrations->where('match_day_id', $this->match_day_id)->pluck('scores')->flatten()->where('match_day_id', $this->match_day_id)->where('toestel', $this->toestel);
-        $topScores = $scores->sortByDesc('total')->take(3);
+        $topScores = $scores->sortByDesc('total')->take($this->team->counting);
         foreach ($scores as $score) {
             // Set counted to true if score is among the 3 highest scores for this toestel, otherwise set to false
             $score->counted = $topScores->contains($score);

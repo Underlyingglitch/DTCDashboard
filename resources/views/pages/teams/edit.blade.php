@@ -9,6 +9,7 @@
         @method('PUT')
         <x-form.text name="name" label="Teamnaam" placeholder="Naam" :value="$team->name" />
         <x-form.select name="niveau_id" label="Niveau" :options="$niveaus" :value="$team->niveau_id" />
+        <x-form.select name="competition_type" label="Competitie soort" :options="['3' => '5-3', '2' => '6-3-2']" :value="$team->counting" />
         <input class="btn btn-sm btn-primary" type="submit" value="Opslaan" />
     </form>
 @endsection

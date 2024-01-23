@@ -10,7 +10,7 @@ class Team extends Model implements Auditable
 {
     use SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    public $fillable = ['name', 'competition_id', 'niveau_id'];
+    public $fillable = ['name', 'competition_id', 'niveau_id', 'performing', 'counting'];
 
     public function competition()
     {

@@ -26,7 +26,7 @@ class ProcessedScoreUpdated implements ShouldBroadcastNow
     {
         $this->data = [
             'wedstrijd_id' => $ps->wedstrijd_id,
-            'groupnr' => Group::find($ps->group_id)->nr,
+            'groupnr' => $ps->group_id,
             'toestel' => $ps->toestel,
             'completed' => $ps->completed,
         ];

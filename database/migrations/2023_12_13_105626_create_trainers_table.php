@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('trainers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('club_id')->nullable()->constrained()->onDelete('restrict');
+            $table->foreignId('club_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->timestamps();

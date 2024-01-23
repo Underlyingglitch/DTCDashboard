@@ -64,7 +64,7 @@ class RegistrationPolicy
         return false;
     }
 
-    public function manage(User $user, Registration $registration): bool
+    public function manage(User $user): bool
     {
         if ($user->hasRole('dtc')) return true;
         return false;

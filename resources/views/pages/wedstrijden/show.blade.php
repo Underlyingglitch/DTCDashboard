@@ -39,14 +39,17 @@
 
     <h4>Groepen</h4>
 
-    <table class="table">
+    <table class="table table-sm">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Naam</th>
                 <th>Club</th>
                 <th>Niveau</th>
-                <th>Acties</th>
+                <th>Aangemeld</th>
+                @can('manage', \App\Models\Registration::class)
+                    <th>Groep</th>
+                @endcan
             </tr>
         </thead>
         <tfoot>
@@ -55,7 +58,10 @@
                 <th>Naam</th>
                 <th>Club</th>
                 <th>Niveau</th>
-                <th>Acties</th>
+                <th>Aangemeld</th>
+                @can('manage', \App\Models\Registration::class)
+                    <th>Groep</th>
+                @endcan
             </tr>
         </tfoot>
         <tbody>
@@ -69,29 +75,8 @@
                         {{ $registrations->first()->group->name }}
                     </th>
                 </tr>
-                {{-- @foreach ($wedstrijd->registrations()->where('group_id', $group->id)->get() ?? [] as $registration) --}}
                 @foreach ($registrations ?? [] as $registration)
-                    <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
-                        <td>{{ $registration->startnumber }}</td>
-                        <td>{{ $registration->gymnast->name }}</td>
-                        <td>{{ $registration->club->name }}</td>
-                        <td>{{ $registration->niveau->name }} {{ $registration->niveau->supplement }}</td>
-                        <td>
-                            @can('manage', $registration)
-                                <a href="{{ route('wedstrijden.registration.move_group', [$wedstrijd, $registration]) }}"
-                                    class="btn btn-sm btn-primary">Verplaatsen</a>
-                            @endcan
-                            @can('signoff', $registration)
-                                @if ($registration->signed_off)
-                                    <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                        class="btn btn-sm btn-success">Aanmelden</a>
-                                @else
-                                    <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                        class="btn btn-sm btn-warning">Afmelden</a>
-                                @endif
-                            @endcan
-                        </td>
-                    </tr>
+                    @livewire('wedstrijd.group-table-item', ['registration' => $registration], key($registration->id))
                 @endforeach
             @endforeach
         </tbody>
@@ -103,14 +88,13 @@
         <a href="{{ route('teams.create', $wedstrijd) }}" class="btn btn-sm btn-success">Team aanmaken</a>
     @endcan
 
-    <table class="table">
+    <table class="table table-sm">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Naam</th>
                 <th>Club</th>
                 <th>Niveau</th>
-                <th>Groep</th>
                 <th>Acties</th>
             </tr>
         </thead>
@@ -120,7 +104,6 @@
                 <th>Naam</th>
                 <th>Club</th>
                 <th>Niveau</th>
-                <th>Groep</th>
                 <th>Acties</th>
             </tr>
         </tfoot>
@@ -150,31 +133,7 @@
                         </th>
                     </tr>
                     @foreach ($team_members ?? [] as $registration)
-                        <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
-                            <td>{{ $registration->startnumber }}</td>
-                            <td>{{ $registration->gymnast->name }}</td>
-                            <td>{{ $registration->club->name }}</td>
-                            <td>{{ $registration->niveau->name }} {{ $registration->niveau->supplement }}</td>
-                            <td>{{ $wedstrijd_baans > 1 ? $registration->group->full_name : $registration->group->name }}
-                            </td>
-                            <td>
-                                @can('manager', $registration)
-                                    <a href="{{ route('teams.registration.add', [$wedstrijd, $registration]) }}"
-                                        class="btn btn-sm btn-info">Verplaatsen</a>
-                                    <a href="{{ route('teams.registration.remove', [$wedstrijd, $registration]) }}"
-                                        class="btn btn-sm btn-danger">Verwijderen</a>
-                                @endcan
-                                @can('signoff', $registration)
-                                    @if ($registration->signed_off)
-                                        <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                            class="btn btn-sm btn-success">Aanmelden</a>
-                                    @else
-                                        <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                            class="btn btn-sm btn-warning">Afmelden</a>
-                                    @endif
-                                @endcan
-                            </td>
-                        </tr>
+                        @livewire('wedstrijd.team-table-item', ['registration' => $registration, 'wedstrijd' => $wedstrijd, 'wedstrijd_baans' => $wedstrijd_baans])
                     @endforeach
                 @endforeach
             @endforeach
@@ -183,27 +142,7 @@
                 <th colspan="5">Zonder team</th>
             </tr>
             @foreach ($no_team ?? [] as $registration)
-                <tr @if ($registration->signed_off) style="text-decoration: line-through" @endif>
-                    <td>{{ $registration->startnumber }}</td>
-                    <td>{{ $registration->gymnast->name }}</td>
-                    <td>{{ $registration->club->name }}</td>
-                    <td>{{ $registration->niveau->name }} {{ $registration->niveau->supplement }}</td>
-                    <td>
-                        @can('manage', $registration)
-                            <a href="{{ route('teams.registration.add', [$wedstrijd, $registration]) }}"
-                                class="btn btn-sm btn-primary">Toevoegen (team)</a>
-                        @endcan
-                        @can('signoff', $registration)
-                            @if ($registration->signed_off)
-                                <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                    class="btn btn-sm btn-success">Aanmelden</a>
-                            @else
-                                <a href="{{ route('wedstrijden.registration.signoff', [$wedstrijd, $registration]) }}"
-                                    class="btn btn-sm btn-warning">Afmelden</a>
-                            @endif
-                        @endcan
-                    </td>
-                </tr>
+                @livewire('wedstrijd.team-table-item', ['registration' => $registration, 'wedstrijd' => $wedstrijd, 'wedstrijd_baans' => $wedstrijd_baans])
             @endforeach
         </tbody>
     </table>

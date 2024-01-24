@@ -73,7 +73,7 @@ chown -R www-data:www-data /var/www/
 # Reload PHP to update opcache
 # NOTE: This will only work if you have php-fpm installed
 #       and if you change the line below to match your version
-echo "" | sudo -S service php8.2-fpm reload
+echo "" | sudo -S service php8.3-fpm reload
 
 # Restart queue workers
 php artisan queue:restart

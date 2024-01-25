@@ -22,9 +22,9 @@ class ScoreTableButton extends Component
 
     public function mount(
         $wedstrijd,
-        $groupnr = null,
         $toestel,
-        $pc
+        $pc,
+        $groupnr = null
     ) {
         $this->groupnr = $groupnr;
         $this->toestel = $toestel;

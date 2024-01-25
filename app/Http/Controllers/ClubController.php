@@ -61,8 +61,10 @@ class ClubController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Club $club)
     {
-        //
+        $this->authorize('delete', $club);
+        $club->delete();
+        return redirect()->route('clubs.index');
     }
 }

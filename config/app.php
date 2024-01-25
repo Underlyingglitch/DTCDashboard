@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ConstantsServiceProvider::class,
         App\Providers\DatabaseWriteServiceProvider::class,
+        App\Providers\DatabaseSyncServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
     ])->toArray(),
 

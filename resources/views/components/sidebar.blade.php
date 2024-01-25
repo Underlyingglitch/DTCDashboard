@@ -106,6 +106,12 @@
         <div class="sidebar-heading">
             Administratie
         </div>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('settings.index') }}">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Instellingen</span></a>
+        </li>
     @endif
 
     @can('viewAny', App\Models\User::class)

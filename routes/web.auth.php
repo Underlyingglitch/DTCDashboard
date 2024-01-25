@@ -13,6 +13,7 @@ use App\Http\Controllers\GymnastController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\OefenstofController;
@@ -44,7 +45,7 @@ Route::get('/livescores', [ScoreController::class, 'livescores'])->name('livesco
 
 Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof.index');
 
-Route::controller(DGResourceController::class)->group(function() {
+Route::controller(DGResourceController::class)->group(function () {
     Route::get('/dg_resources', 'index')->name('dg_resources.index');
     Route::get('/dg_resources/{dg_resource}/download', 'download')->name('dg_resources.download');
 });
@@ -52,7 +53,7 @@ Route::controller(DGResourceController::class)->group(function() {
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
     Route::get('competitions/{competition}/matchdays/create', 'create')->name('create');
     Route::post('competitions/{competition}/matchdays', 'store')->name('store');
-    Route::prefix('matchdays/{matchday}/')->group(function (){
+    Route::prefix('matchdays/{matchday}/')->group(function () {
         Route::get('/', 'show')->name('show');
         Route::get('/edit', 'edit')->name('edit');
         Route::put('/', 'update')->name('update');
@@ -110,4 +111,11 @@ Route::controller(TeamController::class)->name('teams.')->prefix('wedstrijden/{w
 Route::controller(ImportController::class)->name('import.')->prefix('import')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store');
+});
+
+Route::controller(SettingsController::class)->name('settings.')->prefix('settings')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/set/{setting}/{value}', 'set')->name('set');
+    Route::get('/database', 'database')->name('database');
+    Route::get('/database/process', 'database_process')->name('database.process');
 });

@@ -54,6 +54,10 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    protected $auditExclude = [
+        'last_seen_at',
+    ];
+
     public function settings()
     {
         return $this->hasMany(UserSetting::class);

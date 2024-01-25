@@ -4,6 +4,7 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
+use App\Models\Setting;
 use App\Mail\EmailVerification;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Gate;
@@ -30,6 +31,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user, $ability) {
+            if ($ability == 'delete' && Setting::getValue('db_write') == 'off') {
+                return false;
+            }
             return $user->hasRole('admin') ? true : null;
         });
     }

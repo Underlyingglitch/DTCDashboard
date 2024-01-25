@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use App\Models\MatchDay;
 use App\Models\Competition;
 use App\Models\PendingChange;
 use Illuminate\Support\Facades\Log;
@@ -33,6 +34,9 @@ class DatabaseWriteServiceProvider extends ServiceProvider
         $models = [Competition::class];
         foreach ($models as $model) {
             $model::creating(function ($model) {
+                if (request()->is('api/*')) {
+                    return true;
+                }
                 PendingChange::create([
                     'model_type' => get_class($model),
                     'model_id' => $model->id,
@@ -42,6 +46,9 @@ class DatabaseWriteServiceProvider extends ServiceProvider
                 return false; // Cancel the operation
             });
             $model::updating(function ($model) {
+                if (request()->is('api/*')) {
+                    return true;
+                }
                 PendingChange::create([
                     'model_type' => get_class($model),
                     'model_id' => $model->id,

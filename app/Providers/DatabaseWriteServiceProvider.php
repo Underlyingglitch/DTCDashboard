@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Score;
 use App\Models\Setting;
 use App\Models\MatchDay;
-use App\Models\Competition;
-use App\Models\PendingChange;
 use App\Models\Wedstrijd;
+use App\Models\Competition;
+use App\Models\Registration;
+use App\Models\PendingChange;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,7 +34,7 @@ class DatabaseWriteServiceProvider extends ServiceProvider
         if (Setting::getValue('db_write') == 'on') {
             return;
         }
-        $models = [Competition::class, MatchDay::class, Wedstrijd::class];
+        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class];
         foreach ($models as $model) {
             $model::creating(function ($model) {
                 if (request()->is('api/*')) {

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Setting;
 use App\Models\Wedstrijd;
 use App\Models\Registration;
 use Illuminate\Auth\Access\Response;
@@ -81,6 +82,7 @@ class WedstrijdPolicy
 
     public function process_scores(User $user, Wedstrijd $wedstrijd): bool
     {
+        if (Setting::getValue('db_write') == 'off') return false;
         if ($user->hasRole('dtc')) return true;
         return false;
     }

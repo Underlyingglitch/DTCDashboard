@@ -3,8 +3,8 @@
 @section('page_title', $competition->name)
 
 @section('content')
-    <h4>Wedstrijddagen</h4>
     <a href="{{ route('competitions.index') }}" class="btn btn-sm btn-primary">Terug naar competities</a>
+    <h4>Wedstrijddagen</h4>
     @can('create', \App\Models\MatchDay::class)
         <a href="{{ route('matchdays.create', $competition) }}" class="btn btn-sm btn-success">Nieuwe wedstrijddag</a>
     @endcan
@@ -26,7 +26,7 @@
         <tbody>
             @foreach ($matchdays as $matchday)
                 <tr>
-                    <td>{{ $matchday->date }}</td>
+                    <td>{{ $matchday->date->format('d-m-Y') }}</td>
                     <td>{{ $matchday->location->name }}</td>
                     <td>
                         @can('view', $matchday)

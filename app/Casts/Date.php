@@ -15,7 +15,7 @@ class Date implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return ($value) ? date('d-m-Y', strtotime($value)) : null;
+        return ($value) ? Carbon::parse($value) : null;
     }
 
     /**

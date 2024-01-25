@@ -31,7 +31,7 @@ class DatabaseWriteServiceProvider extends ServiceProvider
         if (Setting::getValue('db_write') == 'on') {
             return;
         }
-        $models = [Competition::class];
+        $models = [Competition::class, MatchDay::class];
         foreach ($models as $model) {
             $model::creating(function ($model) {
                 if (request()->is('api/*')) {

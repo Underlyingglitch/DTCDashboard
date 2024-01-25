@@ -27,7 +27,9 @@ class Competition extends Model implements Auditable
 
     public function getDatesAttribute()
     {
-        return $this->matchDays->pluck('date');
+        return $this->matchDays->pluck('date')->map(function ($date) {
+            return $date->format('d-m-Y');
+        });
     }
 
     public function trainers()

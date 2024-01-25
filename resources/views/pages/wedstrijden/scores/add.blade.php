@@ -3,7 +3,7 @@
 @section('page_title', 'Scoreverwerking')
 
 @section('content')
-    <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date }} | {{ $toestellen[$toestel - 1] }} | Baan
+    <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date->format('d-m-Y') }} | {{ $toestellen[$toestel - 1] }} | Baan
         {{ $group->baan }} Groep
         {{ $group->nr }}</h4>
 

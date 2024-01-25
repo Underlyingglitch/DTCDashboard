@@ -56,6 +56,6 @@ class MatchDay extends Model implements Auditable
 
     public function getNameAttribute()
     {
-        return $this->location->name . " " . $this->date;
+        return $this->location->name . " " . $this->date->format('d-m-Y');
     }
 }

@@ -15,7 +15,7 @@
             @endif
             @if ($current_match_day)
                 <p>De huidige/aankomende wedstrijd is op <a
-                        href="{{ route('matchdays.show', $current_match_day) }}">{{ $current_match_day->date }}
+                        href="{{ route('matchdays.show', $current_match_day) }}">{{ $current_match_day->date->format('d-m-Y') }}
                         in
                         {{ $current_match_day->location->name }}</a>.
                 </p>

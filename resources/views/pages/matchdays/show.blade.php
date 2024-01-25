@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('page_title', $matchday->competition->name . ' | ' . $matchday->date . ' | ' . $matchday->location->name)
+@section('page_title', $matchday->competition->name . ' | ' . $matchday->date->format('d-m-Y') . ' | ' .
+    $matchday->location->name)
 
 @section('content')
     <h4>Wedstrijden</h4>

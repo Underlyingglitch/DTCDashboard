@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page_title', $wedstrijd->match_day->location->name . ' | ' . $wedstrijd->match_day->date . ' | Wedstrijd ' .
-    $wedstrijd->index)
+@section('page_title', $wedstrijd->match_day->location->name . ' | ' . $wedstrijd->match_day->date->format('d-m-Y') . '
+    | Wedstrijd ' . $wedstrijd->index)
 
 @section('content')
     <div class="d-flex flex-row justify-content-between">

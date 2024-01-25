@@ -44,7 +44,7 @@ class MatchDaysExportController extends Controller
             $sheet->setCellValue('H' . $row + 2, $registration->team ? $registration->team->name : '');
 
             $sheet->setCellValue('J' . $row + 2, $matchday->location->name);
-            $sheet->setCellValue('K' . $row + 2, $matchday->date);
+            $sheet->setCellValue('K' . $row + 2, $matchday->date->format('d-m-Y'));
         }
 
         // Create the excel file
@@ -55,7 +55,7 @@ class MatchDaysExportController extends Controller
         }
         // Store and download the file
         $writer->save(storage_path('app/public/exports/diplomas.xlsx'));
-        return response()->download(storage_path('app/public/exports/diplomas.xlsx'), 'Diplomas ' . $matchday->location->name . ' ' . $matchday->date . '.xlsx');
+        return response()->download(storage_path('app/public/exports/diplomas.xlsx'), 'Diplomas ' . $matchday->location->name . ' ' . $matchday->date->format('d-m-Y') . '.xlsx');
     }
 
     public function trainer_emails(MatchDay $matchday)
@@ -86,6 +86,6 @@ class MatchDaysExportController extends Controller
         }
         // Store and download the file
         $writer->save(storage_path('app/public/exports/trainer_emails.xlsx'));
-        return response()->download(storage_path('app/public/exports/trainer_emails.xlsx'), 'Emailadressen trainers ' . $matchday->location->name . ' ' . $matchday->date . '.xlsx');
+        return response()->download(storage_path('app/public/exports/trainer_emails.xlsx'), 'Emailadressen trainers ' . $matchday->location->name . ' ' . $matchday->date->format('d-m-Y') . '.xlsx');
     }
 }

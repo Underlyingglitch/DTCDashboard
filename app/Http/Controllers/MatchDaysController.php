@@ -43,8 +43,12 @@ class MatchDaysController extends Controller
         ]);
 
         $competition->matchDays()->create($request->only('date', 'location_id'));
-
-        return redirect()->route('competitions.show', $competition)->with('success', 'Wedstrijddag is aangemaakt.');
+        if (Setting::getValue('db_write') == 'off') {
+            $message = ['warning', 'Wedstrijddag toegevoegd aan wachtrij'];
+        } else {
+            $message = ['success', 'Wedstrijddag succesvol aangemaakt'];
+        }
+        return redirect()->route('competitions.show', $competition)->with($message[0], $message[1]);
     }
 
     /**
@@ -88,7 +92,13 @@ class MatchDaysController extends Controller
 
         $matchday->update($request->only('date', 'location_id'));
 
-        return redirect()->route('competitions.show', $matchday->competition_id)->with('success', 'Wedstrijddag is aangepast.');
+        if (Setting::getValue('db_write') == 'off') {
+            $message = ['warning', 'Wedstrijddag wijziging toegevoegd aan wachtrij'];
+        } else {
+            $message = ['success', 'Wedstrijddag succesvol bijgewerkt'];
+        }
+
+        return redirect()->route('competitions.show', $matchday->competition_id)->with($message[0], $message[1]);
     }
 
     /**

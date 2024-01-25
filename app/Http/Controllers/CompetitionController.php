@@ -16,7 +16,7 @@ class CompetitionController extends Controller
     public function index()
     {
         return view('pages.competitions.index', [
-            'competitions' => Competition::orderBy('id', 'desc')->get(),
+            'competitions' => Competition::orderBy('id', 'desc')->with('matchDays')->get(),
             'activeCompetition' => Setting::getValue('current_competition'),
         ]);
     }
@@ -43,8 +43,12 @@ class CompetitionController extends Controller
         ]);
 
         Competition::create($request->only('name'));
-
-        return redirect()->route('competitions.index');
+        if (Setting::getValue('db_write') == 'off') {
+            $message = ['warning', 'Competitie toegevoegd aan wachtrij'];
+        } else {
+            $message = ['success', 'Competitie succesvol aangemaakt'];
+        }
+        return redirect()->route('competitions.index')->with($message[0], $message[1]);
     }
 
     /**
@@ -85,8 +89,12 @@ class CompetitionController extends Controller
         ]);
 
         $competition->update($request->only('name'));
-
-        return redirect()->route('competitions.index');
+        if (Setting::getValue('db_write') == 'off') {
+            $message = ['warning', 'Competitie wijziging toegevoegd aan wachtrij'];
+        } else {
+            $message = ['success', 'Competitie succesvol bijgewerkt'];
+        }
+        return redirect()->route('competitions.index')->with($message[0], $message[1]);
     }
 
     /**

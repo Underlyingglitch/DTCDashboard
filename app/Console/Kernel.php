@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:monitor database --max=100')->everyMinute();
 
         if (config('app.env') === 'local') {
-            // $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
+            $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
         }
 
         if (config('app.env') === 'production') {

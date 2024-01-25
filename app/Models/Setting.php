@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Setting extends Model
 {
@@ -26,8 +27,12 @@ class Setting extends Model
 
     public static function getValue($key)
     {
-        $setting = Setting::where('key', $key)->first();
-        return $setting->value ?? null;
+        $value = Cache::get($key);
+        if ($value === null) {
+            $value = Setting::where('key', $key)->first()->value ?? null;
+        }
+        Cache::put($key, $value, 60 * 60 * 24 * 7);
+        return $value;
     }
 
     public static function setValue($key, $value)
@@ -36,6 +41,7 @@ class Setting extends Model
             ['key' => $key],
             ['value' => $value]
         );
+        Cache::put($key, $value, 60 * 60 * 24 * 7);
     }
 
     public static function getValues(array $keys)

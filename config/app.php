@@ -169,6 +169,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ConstantsServiceProvider::class,
+        App\Providers\DatabaseWriteServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
     ])->toArray(),
 
@@ -186,7 +187,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
-        
+
     'api_key' => env('API_KEY'),
 
 ];

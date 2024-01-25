@@ -48,7 +48,13 @@ class WedstrijdController extends Controller
         $wedstrijd = $matchday->wedstrijden()->create($request->only('index'));
         $wedstrijd->niveaus()->attach($request->input('niveaus'));
 
-        return redirect()->route('matchdays.show', $matchday)->with('success', 'Wedstrijd is aangemaakt.');
+        if (Setting::getValue('db_write') == 'off') {
+            $message = ['warning', 'Wedstrijd toegevoegd aan wachtrij'];
+        } else {
+            $message = ['success', 'Wedstrijd succesvol aangemaakt'];
+        }
+
+        return redirect()->route('matchdays.show', $matchday)->with($message[0], $message[1]);
     }
 
     /**
@@ -114,7 +120,13 @@ class WedstrijdController extends Controller
         $wedstrijd->update($request->only('index'));
         $wedstrijd->niveaus()->sync($request->input('niveaus'));
 
-        return redirect()->route('matchdays.show', $wedstrijd->match_day_id)->with('success', 'Wedstrijd is aangepast.');
+        if (Setting::getValue('db_write') == 'off') {
+            $message = ['warning', 'Wedstrijd wijziging toegevoegd aan wachtrij'];
+        } else {
+            $message = ['success', 'Wedstrijd succesvol bijgewerkt'];
+        }
+
+        return redirect()->route('matchdays.show', $wedstrijd->match_day_id)->with($message[0], $message[1]);
     }
 
     /**

@@ -38,7 +38,7 @@ window.Echo = new Echo({
     wsPort: import.meta.env.VITE_PUSHER_PORT,
     wssPort: import.meta.env.VITE_PUSHER_PORT,
     cluster: import.meta.env.VITE_PUSHER_CLUSTER,
-    forceTLS: false,
+    forceTLS: import.meta.env.VITE_APP_ENV == 'local' ? false : true,
     encrypted: true,
     disableStats: true,
     enabledTransports: ['ws', 'wss'],

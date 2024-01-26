@@ -18,7 +18,8 @@ class Score extends Model implements Auditable
         'd',
         'e',
         'n',
-        'total'
+        'total',
+        'counted'
     ];
 
     public function match_day()

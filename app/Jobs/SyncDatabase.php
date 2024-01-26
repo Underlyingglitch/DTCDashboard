@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use Hamcrest\Core\Set;
+use App\Models\Setting;
 use App\Models\SyncTask;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Bus\Queueable;
@@ -29,23 +31,13 @@ class SyncDatabase implements ShouldQueue
      */
     public function handle(): void
     {
-        // $audits = Audit::where('synced', false)->get(['id', 'event', 'auditable_type', 'auditable_id', 'old_values', 'new_values'])->toArray();
-        // // Send to API
-        // $client = new \GuzzleHttp\Client();
-        // $response = $client->request('POST', env('API_BASE_URL') . '/audits', [
-        //     'headers' => [
-        //         'Content-Type' => 'application/json',
-        //         'X-API-KEY' => env('API_KEY')
-        //     ],
-        //     'body' => json_encode(['audits' => $audits]),
-        // ]);
-        // // Update synced based on response
-        // Log::info($response->getBody());
+        if (Setting::get('sync_enabled') !== 'true') {
+            return;
+        }
 
         $changes = SyncTask::where('synced', false)->get(['id', 'model_type', 'model_id', 'operation', 'data'])->toArray();
 
         if (count($changes) === 0) {
-            Log::info("No changes to sync");
             return;
         }
 

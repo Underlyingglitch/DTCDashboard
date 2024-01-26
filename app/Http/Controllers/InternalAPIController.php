@@ -94,15 +94,12 @@ class InternalAPIController extends Controller
                         $success_ids[] = $change['id'];
                     } catch (\Throwable $th) {
                         $error_ids[] = $change['id'];
-                        Log::error($th);
                     }
                     break;
                 case 'update':
                     // Update the model on the current database
                     try {
-                        $result = $model::find($change['model_id']);
-                        Log::info($result);
-                        $result->update(json_decode($change['data'], true));
+                        $model::find($change['model_id'])->update(json_decode($change['data'], true));
                         SyncTask::updateOrCreate(['id' => $change['id']], [
                             'id' => $change['id'],
                             'model_type' => $change['model_type'],
@@ -114,7 +111,6 @@ class InternalAPIController extends Controller
                         $success_ids[] = $change['id'];
                     } catch (\Throwable $th) {
                         $error_ids[] = $change['id'];
-                        Log::error($th);
                     }
                     break;
                 default:

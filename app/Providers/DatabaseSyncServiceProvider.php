@@ -7,8 +7,9 @@ use App\Models\Setting;
 use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use App\Models\Competition;
+use App\Models\ProcessedScore;
 use App\Models\Registration;
-use App\Models\PendingChange;
+use App\Models\SyncTask;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,13 +31,13 @@ class DatabaseSyncServiceProvider extends ServiceProvider
         if (config('app.env') != 'local') {
             return;
         }
-        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class];
+        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class, ProcessedScore::class];
         foreach ($models as $model) {
             $model::creating(function ($model) {
                 if (request()->is('api/*')) {
                     return true;
                 }
-                PendingChange::create([
+                SyncTask::create([
                     'model_type' => get_class($model),
                     'model_id' => $model->id,
                     'operation' => 'create',
@@ -47,7 +48,7 @@ class DatabaseSyncServiceProvider extends ServiceProvider
                 if (request()->is('api/*')) {
                     return true;
                 }
-                PendingChange::create([
+                SyncTask::create([
                     'model_type' => get_class($model),
                     'model_id' => $model->id,
                     'operation' => 'update',

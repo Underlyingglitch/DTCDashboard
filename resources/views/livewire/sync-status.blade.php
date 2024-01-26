@@ -1,4 +1,4 @@
-<div wire:click="sync">
+<div wire:click="sync()">
     @switch($status)
         @case(0)
             <div class="alert alert-primary">

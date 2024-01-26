@@ -24,6 +24,7 @@ class SyncStatus extends Component
 
     public function sync()
     {
+        $this->status = 2;
         \App\Jobs\SyncDatabase::dispatch();
     }
 

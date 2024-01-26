@@ -29,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
         \App\Models\Score::class => [\App\Observers\ScoreObserver::class],
         \App\Models\ProcessedScore::class => [\App\Observers\ProcessedScoreObserver::class],
         \App\Models\User::class => [\App\Observers\UserObserver::class],
+        \App\Models\SyncTask::class => [\App\Observers\SyncTasksObserver::class],
     ];
 
     /**
@@ -36,7 +37,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
     }
 
     /**

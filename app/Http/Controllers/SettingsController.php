@@ -20,6 +20,11 @@ class SettingsController extends Controller
 
         Setting::setValue($setting, $value);
 
+        // If the setting is the sync_enabled setting, and the value is true, also send an event
+        if ($setting == 'sync_enabled') {
+            event(new \App\Events\DataSync\UpdateSyncStatus($value == 'true' ? 1 : 0));
+        }
+
         return redirect()->back()->with('success', 'Instellingen opgeslagen');
     }
 

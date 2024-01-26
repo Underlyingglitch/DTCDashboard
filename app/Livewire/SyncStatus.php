@@ -8,18 +8,30 @@ use Illuminate\Support\Facades\Cache;
 class SyncStatus extends Component
 {
     public $status = 0;
+    // 0 = Disabled
+    // 1 = Enabled, has items to sync
+    // 2 = Enabled, syncing
+    // 3 = Enabled, no items to sync
+    // 4 = Enabled, error syncing
+    public $message = null;
 
-    protected $listeners = ['echo:sync_data,.SyncStarted' => 'sync', 'echo:sync_data,.SyncFinished' => 'sync', 'echo:sync_data,.SyncFailed' => 'sync'];
+    protected $listeners = ['echo:sync_data,.UpdateSyncStatus' => 'updateStatus'];
 
     public function mount()
     {
         $this->status = Cache::get('sync_status', 0);
     }
 
-    public function sync($input)
+    public function sync()
+    {
+        \App\Jobs\SyncDatabase::dispatch();
+    }
+
+    public function updateStatus($input)
     {
         Cache::put('sync_status', $input[0]);
         $this->status = $input[0];
+        $this->message = $input[1];
     }
 
     public function render()

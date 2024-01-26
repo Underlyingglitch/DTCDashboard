@@ -35,6 +35,8 @@ class SyncDatabase implements ShouldQueue
             return;
         }
 
+        event(new \App\Events\DataSync\UpdateSyncStatus(2));
+
         $changes = SyncTask::where('synced', false)->get(['id', 'model_type', 'model_id', 'operation', 'data'])->toArray();
 
         if (count($changes) === 0) {
@@ -54,6 +56,9 @@ class SyncDatabase implements ShouldQueue
         SyncTask::whereIn('id', $data['success'])->update(['synced' => true]);
         if (count($data['error']) > 0) {
             Log::error("Failed syncs: " . implode(', ', $data['error']));
+            event(new \App\Events\DataSync\UpdateSyncStatus(4, count($data['error'])));
+        } else {
+            event(new \App\Events\DataSync\UpdateSyncStatus(3));
         }
     }
 }

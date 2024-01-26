@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Score;
+use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
@@ -61,7 +62,7 @@ class ScoreController extends Controller
         $registrations = $wedstrijd->registrations()->where('group_id', $group->id)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day->id);
         }])->get();
-        
+
         return view('pages.wedstrijden.scores.add', [
             'wedstrijd' => $wedstrijd,
             'registrations' => $registrations,
@@ -137,6 +138,9 @@ class ScoreController extends Controller
 
     public function livescores()
     {
-        return view('pages.livescores.index');
+        $matchdays = MatchDay::orderBy('date', 'desc')->with(['location', 'competition'])->get();
+        return view('pages.livescores.index', [
+            'matchdays' => $matchdays,
+        ]);
     }
 }

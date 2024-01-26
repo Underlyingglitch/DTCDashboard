@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\SyncTask;
+use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
+use App\Jobs\CalculateTeamScore;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Facades\Auditor;
 
@@ -119,7 +123,15 @@ class InternalAPIController extends Controller
                     break;
             }
         }
-
+        // Recalculate team scores
+        $active_wedstrijd = Wedstrijd::find(Setting::getValue('current_wedstrijd'));
+        foreach ($active_wedstrijd->teams as $team) {
+            $jobs = [];
+            for ($i = 1; $i <= 6; $i++) {
+                $jobs[] = new CalculateTeamScore($team, $i, $active_wedstrijd->match_day_id);
+            }
+            Bus::chain($jobs)->dispatch();
+        }
         return response()->json(['success' => $success_ids, 'error' => $error_ids]);
     }
 }

@@ -7,9 +7,10 @@
         @foreach ($toestellen as $key => $toestel)
             @foreach (array_reverse($group_nrs) as $i => $group_nr)
                 @if ($group_nr[$key])
-                    <table class="group-table">
+                    <table class="group-table" style="page-break-inside: avoid;">
                         <tr>
-                            <th colspan="3" class="group-name">{{ $wedstrijd->match_day->date->format('d-m-Y') }} | Wedstrijd
+                            <th colspan="3" class="group-name">{{ $wedstrijd->match_day->date->format('d-m-Y') }} |
+                                Wedstrijd
                                 {{ $wedstrijd->index }} | @if (count($baans) > 1)
                                     Baan {{ $baan + 1 }} |
                                 @endif Groep {{ $group_nr[$key] - $baan * 10 }} |

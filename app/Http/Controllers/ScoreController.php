@@ -61,7 +61,7 @@ class ScoreController extends Controller
         $registrations = $wedstrijd->registrations()->where('group_id', $group->id)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($wedstrijd) {
             $query->where('match_day_id', $wedstrijd->match_day->id);
         }])->get();
-        
+
         return view('pages.wedstrijden.scores.add', [
             'wedstrijd' => $wedstrijd,
             'registrations' => $registrations,
@@ -75,20 +75,24 @@ class ScoreController extends Controller
         $this->authorize('process_scores', $wedstrijd);
 
         if (!is_null($request->ids)) {
-            foreach (explode(',', $request->ids) as $id) if (!in_array($id, $request->s ?? [])) Score::firstOrCreate(
-                [
+            foreach (explode(',', $request->ids) as $id) if (!in_array($id, $request->s ?? [])) {
+                $total = $request['d-' . $id] > 0 ? (($request['d-' . $id] + (10 - $request['e-' . $id])) - $request['n-' . $id]) : 0;
+                if ($total < 0) $total = 0;
+                Score::firstOrCreate(
+                    [
 
-                    'match_day_id' => $wedstrijd->match_day->id,
-                    'startnumber' => $id,
-                    'toestel' => $toestel,
-                ],
-                [
-                    'd' => $request['d-' . $id],
-                    'e' => $request['e-' . $id],
-                    'n' => $request['n-' . $id],
-                    'total' => $request['d-' . $id] > 0 ? (($request['d-' . $id] + (10 - $request['e-' . $id])) - $request['n-' . $id]) : 0,
-                ]
-            );
+                        'match_day_id' => $wedstrijd->match_day->id,
+                        'startnumber' => $id,
+                        'toestel' => $toestel,
+                    ],
+                    [
+                        'd' => $request['d-' . $id],
+                        'e' => $request['e-' . $id],
+                        'n' => $request['n-' . $id],
+                        'total' => $total,
+                    ]
+                );
+            }
         }
 
         ProcessedScore::updateOrCreate([
@@ -122,6 +126,9 @@ class ScoreController extends Controller
         // If not found, create new
         $score = $score ?? new Score();
 
+        $total = ($request->d + (10 - $request->e)) - $request->n;
+        if ($total < 0) $total = 0;
+
         $score->update([
             'match_day_id' => $wedstrijd->match_day->id,
             'startnumber' => $request->startnumber,
@@ -129,7 +136,7 @@ class ScoreController extends Controller
             'd' => $request->d,
             'e' => $request->e,
             'n' => $request->n,
-            'total' => ($request->d + (10 - $request->e)) - $request->n,
+            'total' => $total,
         ]);
 
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Score is bijgewerkt.');

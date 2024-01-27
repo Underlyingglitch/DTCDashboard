@@ -18,7 +18,7 @@
                             <th style="width: 80px">Niveau</th>
                             <th style="width: 50px">D-score</th>
                             <th style="width: 50px">E-aftrek</th>
-                            <th style="width: 50px">N-score</th>
+                            <th style="width: 50px">N-aftrek</th>
                             <th style="width: 50px">Totaal</th>
                         </tr>
                         @foreach ($registrations->where('group_id', $group_nr[$key]) as $registration)

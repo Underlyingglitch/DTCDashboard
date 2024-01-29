@@ -27,7 +27,10 @@
                                 <td style="width: 20px">{{ $registration->startnumber }}</td>
                                 <td>{{ $registration->gymnast->name }}</td>
                                 <td style="width: 30%">{{ $registration->club->name }}</td>
-                                <td>{{ $registration->niveau->full_name }}</td>
+                                <td>{{ $registration->niveau->full_name }} @if ($registration->niveau->niveau_number)
+                                        ({{ $registration->niveau->niveau_number }})
+                                    @endif
+                                </td>
                                 <td>{{ $registration->signed_off ? '-' : '' }}</td>
                                 <td>{{ $registration->signed_off ? '-' : '' }}</td>
                                 <td>{{ $registration->signed_off ? '-' : '' }}</td>

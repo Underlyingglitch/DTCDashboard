@@ -13,11 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        // $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
-        $schedule->command('queue:monitor database --max=100')->everyMinute();
 
         if (config('app.env') === 'local') {
-            $schedule->job(new \App\Jobs\SyncDatabase())->everyMinute();
+            $schedule->job(new \App\Jobs\SyncDatabase())->onQueue('sync')->everyMinute();
         }
 
         if (config('app.env') === 'production') {

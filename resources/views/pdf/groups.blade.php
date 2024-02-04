@@ -16,7 +16,7 @@
 @section('main')
     @foreach ($groups as $group)
         <table class="group-table">
-            <tr>
+            <tr style="page-break-after: avoid">
                 <th colspan="3" class="group-name">
                     {{ $wedstrijd->baans($groups) > 1 ? $group->full_name : $group->name }}
                 </th>
@@ -25,7 +25,7 @@
             </tr>
             @foreach ($registrations->where('group_id', $group->id) as $registration)
                 <tr
-                    @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
+                    @if ($registration->signed_off) style="page-break-after:avoid;text-decoration:line-through;text-decoration-thickness:2px" @else style="page-break-after:avoid;" @endif>
                     <td style="width: 20px">{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}</td>
                     <td style="width: 30%">{{ $registration->club->name }}</td>

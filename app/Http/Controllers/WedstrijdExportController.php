@@ -23,7 +23,7 @@ class WedstrijdExportController extends Controller
     public function groups(Wedstrijd $wedstrijd)
     {
         $registrations = Registration::where('match_day_id', $wedstrijd->match_day_id)->whereIn('niveau_id', $wedstrijd->niveaus->pluck('id'))->with('gymnast', 'club', 'niveau', 'team')->get();
-        $groups = $wedstrijd->groups;
+        $groups = $wedstrijd->groups->get();
         $teams = [];
         foreach ($groups as $group) {
             foreach ($registrations->where('group_id', $group->id) as $registration) {

@@ -4,11 +4,12 @@
 
 @section('content')
     @if (request()->has('show_deleted'))
-        Verwijderde bronnen <a class="btn btn-sm btn-success" href="{{ route('dg_resources.index') }}">Aan</a>
+        Verwijderde bronnen weergeven <a class="btn btn-sm btn-success" href="{{ route('dg_resources.index') }}">Aan</a>
     @else
-        Verwijderde bronnen <a class="btn btn-sm btn-danger"
+        Verwijderde bronnen weergeven <a class="btn btn-sm btn-danger"
             href="{{ route('dg_resources.index', ['show_deleted']) }}">Uit</a>
     @endif
+    Email meldingen @livewire('dg-resources.email-toggle')
     @foreach ($dg_resources as $category => $resources)
         <h2>{{ $category }}</h2>
         <ul>

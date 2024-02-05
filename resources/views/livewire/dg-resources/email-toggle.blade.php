@@ -1,0 +1,1 @@
+<a class="btn btn-sm {{ $class }}" wire:click="toggle()">{{ $value }}</a>

@@ -41,7 +41,10 @@ Route::resource('feedback', FeedbackController::class);
 Route::get('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
 Route::resource('clubs', ClubController::class);
 
-Route::get('/livescores', [ScoreController::class, 'livescores'])->name('livescores');
+Route::controller(ScoreController::class)->name('livescores.')->prefix('livescores')->group(function () {
+    Route::get('/', 'livescores')->name('index');
+    Route::get('/{matchday}/{niveau}', 'livescores_show')->name('show');
+});
 
 Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof.index');
 

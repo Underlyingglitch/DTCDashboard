@@ -11,6 +11,7 @@ class SettingsController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Setting::class);
         return view('pages.settings.index');
     }
 

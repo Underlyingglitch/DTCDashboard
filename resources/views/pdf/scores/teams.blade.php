@@ -1,6 +1,6 @@
 @extends('pdf.template')
 
-@section('title', 'Teamindeling W' . $wedstrijd->index . ' - ' . $wedstrijd->match_day->location->name)
+@section('title', 'Teamuitslag W' . $wedstrijd->index . ' - ' . $wedstrijd->match_day->location->name)
 
 @section('header')
     <img class="header-img"
@@ -21,7 +21,7 @@
             @php($previous = null)
             @foreach ($teams as $team)
                 @php($team_total = $team->team_scores->first()->total_score ?? 0)
-                <tr style="break-after: avoid">
+                <tr style="page-break-after: avoid">
                     <th colspan="2">{{ $previous == $team_total ? $i : ++$i }}.
                         {{ $team->name }}</th>
                     @php($previous = $team_total)

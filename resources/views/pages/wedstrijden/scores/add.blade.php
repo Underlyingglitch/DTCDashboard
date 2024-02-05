@@ -3,7 +3,8 @@
 @section('page_title', 'Scoreverwerking')
 
 @section('content')
-    <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date->format('d-m-Y') }} | {{ $toestellen[$toestel - 1] }} | Baan
+    <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date->format('d-m-Y') }} |
+        {{ $toestellen[$toestel - 1] }} | Baan
         {{ $group->baan }} Groep
         {{ $group->nr }}</h4>
 
@@ -13,7 +14,7 @@
             <th>Naam</th>
             <th>D-score</th>
             <th>E-aftrek</th>
-            <th>N-score</th>
+            <th>N-aftrek</th>
             <th>Totaal</th>
             <th>Overslaan</th>
         </tr>

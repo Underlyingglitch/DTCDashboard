@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Score;
+use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
@@ -144,6 +145,9 @@ class ScoreController extends Controller
 
     public function livescores()
     {
-        return view('pages.livescores.index');
+        $matchdays = MatchDay::orderBy('date', 'desc')->with(['location', 'competition'])->get();
+        return view('pages.livescores.index', [
+            'matchdays' => $matchdays,
+        ]);
     }
 }

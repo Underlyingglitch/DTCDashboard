@@ -33,3 +33,7 @@
 .text-invisible {
     display: none;
 }
+
+.card .card-header[data-toggle=collapse]::after {
+    font-family: 'Font Awesome 6 Free';
+}

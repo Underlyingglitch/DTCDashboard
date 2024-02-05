@@ -7,7 +7,6 @@
         <thead>
             <tr>
                 <th>Naam</th>
-                <th>Club</th>
                 <th>Geboortedatum</th>
                 <th>Foto</th>
                 <th>Acties</th>
@@ -16,7 +15,6 @@
         <tfoot>
             <tr>
                 <th>Naam</th>
-                <th>Club</th>
                 <th>Geboortedatum</th>
                 <th>Foto</th>
                 <th>Acties</th>
@@ -26,7 +24,6 @@
             @foreach ($gymnasts as $gymnast)
                 <tr>
                     <td>{{ $gymnast->name }}</td>
-                    <td>{{ $gymnast->club->name }}</td>
                     <td>{{ $gymnast->birthdate }}</td>
                     <td>{{ $gymnast->photo ? 'Ja' : 'Nee' }}</td>
                     <td>

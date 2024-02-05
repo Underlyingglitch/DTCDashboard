@@ -39,6 +39,11 @@ class MatchDay extends Model implements Auditable
         return $this->hasMany(Wedstrijd::class);
     }
 
+    public function getNiveausAttribute()
+    {
+        return $this->wedstrijden->pluck('niveaus')->flatten()->unique('id');
+    }
+
     public function registrations()
     {
         return $this->hasMany(Registration::class);

@@ -15,6 +15,7 @@ class MatchDay extends Model implements Auditable
     protected $cascadeDeletes = ['wedstrijden', 'registrations', 'scores', 'declarations'];
 
     protected $fillable = [
+        'name',
         'date',
         'location_id',
         'competition_id',
@@ -57,10 +58,5 @@ class MatchDay extends Model implements Auditable
     public function declarations()
     {
         return $this->hasMany(Declaration::class);
-    }
-
-    public function getNameAttribute()
-    {
-        return $this->location->name . " " . $this->date->format('d-m-Y');
     }
 }

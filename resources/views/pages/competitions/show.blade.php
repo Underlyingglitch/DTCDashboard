@@ -11,6 +11,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Naam</th>
                 <th>Datum</th>
                 <th>Locatie</th>
                 <th>Acties</th>
@@ -18,6 +19,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th>Naam</th>
                 <th>Datum</th>
                 <th>Locatie</th>
                 <th>Acties</th>
@@ -26,6 +28,7 @@
         <tbody>
             @foreach ($matchdays as $matchday)
                 <tr>
+                    <td>{{ $matchday->name }}</td>
                     <td>{{ $matchday->date->format('d-m-Y') }}</td>
                     <td>{{ $matchday->location->name }}</td>
                     <td>

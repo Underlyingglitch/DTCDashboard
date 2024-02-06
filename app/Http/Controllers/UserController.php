@@ -92,6 +92,8 @@ class UserController extends Controller
             'active' => $user->active ? false : true,
         ]);
 
+        if ($user->active) $user->notify(new \App\Notifications\AccountActivated($user));
+
         return redirect()->route('users.index');
     }
 }

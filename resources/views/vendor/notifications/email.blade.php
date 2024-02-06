@@ -40,7 +40,7 @@
 {{ $salutation }}
 @else
 Met vriendelijke groet,<br>
-{{ config('app.name') }}
+DTC Zuid
 @endif
 
 {{-- Subcopy --}}

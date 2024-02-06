@@ -21,7 +21,7 @@
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-© {{ date('Y') }} {{ config('app.name') }}. Alle rechten voorbehouden.
+© {{ date('Y') }} Rick Okkersen. Alle rechten voorbehouden.
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>

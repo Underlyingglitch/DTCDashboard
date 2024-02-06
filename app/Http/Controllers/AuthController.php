@@ -68,6 +68,8 @@ class AuthController extends Controller
             $user->active = true;
         }
 
+        if (!$user->active) User::where('email', 'rickokkersen@gmail.com')->first()->notify(new \App\Notifications\AccountWaitingActivation());
+
         return $user->active ? redirect()->route('auth.login')->with('success', 'Uw account is geactiveerd! U kunt nu inloggen') : redirect()->route('auth.register')->with('success', 'We konden niet verifieren of u een jurylid of trainer bent. Uw account is aangemaakt, maar moet nog geactiveerd worden door een beheerder. U ontvangt een email zodra uw account is geactiveerd.');
     }
 

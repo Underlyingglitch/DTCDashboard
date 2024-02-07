@@ -73,10 +73,11 @@ class RegistrationPolicy
     public function signoff(User $user, Registration $registration): bool
     {
         if ($user->hasRole('dtc')) return true;
-        //TODO : Implement logic for trainer to sign off
-        // if ($user->hasRole('trainer')) {
-        //     if ($user->id == $registration->team->trainer_id) return true;
-        // }
+        if ($user->hasRole('trainer') && $user->trainers->count() > 0) {
+            if ($user->trainers->pluck('club_id')->contains($registration->club_id)) {
+                return true;
+            }
+        }
         return false;
     }
 }

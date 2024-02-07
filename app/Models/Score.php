@@ -31,4 +31,9 @@ class Score extends Model implements Auditable
     {
         return Registration::where([['startnumber', $this->startnumber], ['match_day_id', $this->match_day_id]])->first();
     }
+
+    public function getEScoreAttribute()
+    {
+        return 10 - $this->e;
+    }
 }

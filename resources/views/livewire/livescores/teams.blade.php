@@ -32,7 +32,7 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="2" style="text-align: center">{{ $team['total'] }}</td>
+                                    <td colspan="2" style="text-align: center">Totaal: {{ $team['total'] }}</td>
                                 </tr>
                             </table>
 

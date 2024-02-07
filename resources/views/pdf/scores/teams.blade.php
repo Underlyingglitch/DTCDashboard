@@ -41,7 +41,7 @@
                                 d:
                                 {{ number_format($score->d ?? 0, 3) }}<br>
                                 e:
-                                {{ number_format($score->e ?? 0, 3) }}<br>
+                                {{ number_format($score->e_score ?? 0, 3) }}<br>
                                 @if ($score->n ?? 0 != 0)
                                     n:
                                     -{{ number_format($score->n ?? 0, 1) }}

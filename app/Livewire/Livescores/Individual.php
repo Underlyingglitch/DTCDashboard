@@ -46,7 +46,7 @@ class Individual extends Component
                         'id' => $score->id,
                         'toestel' => $score->toestel,
                         'd' => $score->d,
-                        'e' => $score->e,
+                        'e' => $score->e_score,
                         'n' => $score->n,
                         'total' => $score->total,
                         'counted' => $score->counted

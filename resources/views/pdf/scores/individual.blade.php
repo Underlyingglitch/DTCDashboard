@@ -37,7 +37,7 @@
                             d:
                             {{ number_format($registration->scores->where('toestel', $key + 1)->first()->d ?? 0, 3) }}<br>
                             e:
-                            {{ number_format($registration->scores->where('toestel', $key + 1)->first()->e ?? 0, 3) }}<br>
+                            {{ number_format($registration->scores->where('toestel', $key + 1)->first()->e_score ?? 0, 3) }}<br>
                             @if ($registration->scores->where('toestel', $key + 1)->first()->n ?? 0 != 0)
                                 n:
                                 -{{ number_format($registration->scores->where('toestel', $key + 1)->first()->n ?? 0, 1) }}

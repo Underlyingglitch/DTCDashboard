@@ -33,12 +33,16 @@
                                 @foreach ($registration['scores'] as $score)
                                     <tr>
                                         <td>{{ $toestellen[$score['toestel'] - 1] }}</td>
-                                        <td>{{ $score['d'] }}</td>
-                                        <td>{{ $score['e'] }}</td>
-                                        <td>{{ $score['n'] }}</td>
+                                        <td>{{ number_format($score['d'], 3) }}</td>
+                                        <td>{{ number_format($score['e'], 3) }}</td>
+                                        <td>{{ number_format($score['n'], 1) }}</td>
                                         <td>{{ $score['total'] }}</td>
                                     </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="5" style="text-align: center">Totaal:
+                                        {{ number_format($registration['total'], 3) }}</td>
+                                </tr>
                             </table>
 
                         </div>

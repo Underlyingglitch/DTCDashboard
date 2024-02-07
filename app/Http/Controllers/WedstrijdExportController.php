@@ -49,7 +49,7 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Groepsindeling W' . $wedstrijd->index . '.pdf"',
+            'Content-Disposition' => 'inline; filename="' . $wedstrijd->match_day->location->name . ' ' . $wedstrijd->match_day->date->format('d-m-Y') . ' W' . $wedstrijd->index . '.pdf"',
         ]);
     }
 
@@ -72,7 +72,8 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Teamindeling W' . $wedstrijd->index . '.pdf"',
+            'Content-Disposition' => 'inline; filename="' . $wedstrijd->match_day->location->name . ' ' . $wedstrijd->match_day->date->format('d-m-Y') . ' W' .
+                $wedstrijd->index . ' teams.pdf"',
         ]);
     }
 
@@ -144,7 +145,8 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' teams.pdf"',
+            'Content-Disposition' => 'inline; filename="Uitslag ' . $wedstrijd->match_day->location->name . ' ' . $wedstrijd->match_day->date->format('d-m-Y') . ' W' .
+                $wedstrijd->index . ' teams.pdf"',
         ]);
     }
 
@@ -171,7 +173,8 @@ class WedstrijdExportController extends Controller
         ]);
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Uitslag W' . $wedstrijd->index . ' individueel.pdf"',
+            'Content-Disposition' => 'inline; filename="Uitslag ' . $wedstrijd->match_day->location->name . ' ' . $wedstrijd->match_day->date->format('d-m-Y') . ' W' .
+                $wedstrijd->index . '.pdf"',
         ]);
     }
 }

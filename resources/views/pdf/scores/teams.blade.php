@@ -1,6 +1,7 @@
 @extends('pdf.template')
 
-@section('title', 'Teamuitslag W' . $wedstrijd->index . ' - ' . $wedstrijd->match_day->location->name)
+@section('title', 'Uitslag ' . $wedstrijd->match_day->location->name . ' ' .
+    $wedstrijd->match_day->date->format('d-m-Y') . ' W' . $wedstrijd->index . ' teams')
 
 @section('header')
     <img class="header-img"

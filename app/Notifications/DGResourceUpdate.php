@@ -47,6 +47,7 @@ class DGResourceUpdate extends Notification implements ShouldQueue
         if ($this->deleted->count() > 0) {
             $mail->line($this->deleted->count() . ' document(en) verwijderd.');
         }
+        $mail->line('Documenten hebben op deze pagina gedurende 5 dagen een statusbadge "Nieuw" of "Bijgewerkt".');
         $mail->action('Bekijk de wijzigingen', url('/dg-resources'));
         return $mail;
     }

@@ -19,6 +19,7 @@ class ScoreObserver
             // Check which scores count for this team
             CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
         }
+        event(new \App\Events\Scores\ScoreUpdated($score->match_day_id));
     }
 
     /**
@@ -31,6 +32,7 @@ class ScoreObserver
                 CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
             }
         }
+        event(new \App\Events\Scores\ScoreUpdated($score->match_day_id));
     }
 
     /**

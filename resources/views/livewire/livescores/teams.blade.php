@@ -1,23 +1,21 @@
 <div class="card-body">
     @php($i = 0)
     @php($previous = null)
-    @foreach ($registrations as $registration)
-        <div class="card mb-2" wire:click="toggleModal({{ $registration['id'] }})">
+    @foreach ($teams as $team)
+        <div class="card mb-2" wire:click="toggleModal({{ $team['id'] }})">
             <div class="card-header">
-                {{ $previous == $registration['total'] ? $i : ++$i }}. {{ $registration['name'] }}
-                ({{ $registration['club'] }})
-                <span class="float-right">{{ number_format($registration['total'], 3) }}</span>
+                {{ $previous == $team['total'] ? $i : ++$i }}. {{ $team['name'] }}
+                <span class="float-right">{{ number_format($team['total'], 3) }}</span>
             </div>
         </div>
 
-        @if ($modalShown == $registration['id'])
+        @if ($modalShown == $team['id'])
             <div class="modal modal-md" style="display:block; background-color:rgba(0,0,0,0.5);">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title">{{ $registration['name'] }} ({{ $registration['club'] }})
-                            </h4>
+                            <h4 class="modal-title">{{ $team['name'] }}</h4>
                             <button type="button" class="close" wire:click="toggleModal(0)">&times;</button>
                         </div>
                         <!-- Modal body -->
@@ -25,20 +23,17 @@
                             <table style="width: 100%">
                                 <tr>
                                     <th>Toestel</th>
-                                    <th>D</th>
-                                    <th>E</th>
-                                    <th>N</th>
                                     <th>Totaal</th>
                                 </tr>
-                                @foreach ($registration['scores'] as $score)
+                                @foreach ($team['toestel_scores'] as $i => $score)
                                     <tr>
-                                        <td>{{ $toestellen[$score['toestel'] - 1] }}</td>
-                                        <td>{{ $score['d'] }}</td>
-                                        <td>{{ $score['e'] }}</td>
-                                        <td>{{ $score['n'] }}</td>
-                                        <td>{{ $score['total'] }}</td>
+                                        <td>{{ $toestellen[$i] }}</td>
+                                        <td>{{ number_format($score, 3) }}</td>
                                     </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="2" style="text-align: center">{{ $team['total'] }}</td>
+                                </tr>
                             </table>
 
                         </div>

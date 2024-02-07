@@ -57,12 +57,6 @@
             </div>
         </form>
     </div>
-    <script type="module">
-        window.Echo.channel('scorepage.16.2.2')
-            .listen('.ProcessedScoreUpdated', (e) => {
-                console.log(e)
-            })
-    </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script>

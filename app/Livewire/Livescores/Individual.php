@@ -3,6 +3,7 @@
 namespace App\Livewire\Livescores;
 
 use Livewire\Component;
+use App\Models\MatchDay;
 
 class Individual extends Component
 {
@@ -11,18 +12,30 @@ class Individual extends Component
     public $niveau;
     public $modalShown;
 
+    public function getListeners()
+    {
+        return
+            ['echo:livescores.' . $this->matchday . ',.ScoreUpdated' => 'hydrate'];
+    }
+
     public function mount($matchday, $niveau)
     {
         $this->matchday = $matchday;
         $this->niveau = $niveau;
         $this->modalShown = 0;
+        $this->hydrate();
+    }
 
-        $matchday_registrations = $matchday->registrations()->where('signed_off', 0)->where('niveau_id', $this->niveau->id)->with(['gymnast', 'club', 'scores' => function ($query) use ($matchday) {
-            $query->where('match_day_id', $matchday->id);
+    public function hydrate()
+    {
+        $matchday = $this->matchday;
+        $matchday_registrations = MatchDay::find($matchday)->registrations()->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'scores' => function ($query) use ($matchday) {
+            $query->where('match_day_id', $matchday);
         }])->get()->sortByDesc(function ($registration) {
             return $registration->scores->sum('total');
         });
 
+        $this->registrations = [];
         foreach ($matchday_registrations as $registration) {
             $this->registrations[] = [
                 'id' => $registration->id,

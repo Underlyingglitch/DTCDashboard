@@ -8,6 +8,15 @@
 
     @vite(['resources/scss/livescores.scss', 'resources/js/app.js'])
 
+    <script type="module" defer>
+        console.log('Subscribing to channel')
+        window.Echo.channel('livescores.6.teams')
+            .listen('.TeamScoresUpdated', (data) => {
+                console.log(data);
+            });
+        console.log('Subscribed to channel')
+    </script>
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;

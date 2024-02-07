@@ -157,7 +157,7 @@ class ScoreController extends Controller
         if (is_null($niveau->id)) {
             $niveau = $matchday->niveaus->first();
         }
-        $teams = $matchday->teams($niveau->id);
+        $teams = $matchday->competition->teams->where('niveau_id', $niveau->id);
         if (count($teams) == 0 && $request->tab == 'teams') {
             return redirect()->route('livescores.show', [$matchday, $niveau]);
         }

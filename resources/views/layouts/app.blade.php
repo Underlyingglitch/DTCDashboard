@@ -20,14 +20,6 @@
     </script>
     {{-- <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script> --}}
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    {{-- <script type="module" defer>
-        console.log('Subscribing to channel')
-        window.Echo.channel('test-channel')
-            .listen('.TestEvent', (data) => {
-                console.log(data.title);
-            });
-        console.log('Subscribed to channel')
-    </script> --}}
     @livewireStyles
 </head>
 

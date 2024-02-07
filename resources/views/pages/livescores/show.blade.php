@@ -19,7 +19,11 @@
                 </li>
             </ul>
         </div>
-        @livewire('livescores.individual', ['matchday' => $matchday, 'niveau' => $niveau], key($matchday->id . $niveau->id))
+        @if (request()->tab == 'teams')
+            @livewire('livescores.teams', ['matchday' => $matchday->id, 'niveau' => $niveau->id], key($matchday->id . $niveau->id))
+        @else
+            @livewire('livescores.individual', ['matchday' => $matchday->id, 'niveau' => $niveau->id], key($matchday->id . $niveau->id))
+        @endif
     </div>
 
 @endsection

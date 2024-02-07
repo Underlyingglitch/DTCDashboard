@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Score;
+use App\Models\Niveau;
 use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
@@ -148,6 +149,22 @@ class ScoreController extends Controller
         $matchdays = MatchDay::orderBy('date', 'desc')->with(['location', 'competition'])->get();
         return view('pages.livescores.index', [
             'matchdays' => $matchdays,
+        ]);
+    }
+
+    public function livescores_show(MatchDay $matchday, Niveau $niveau, Request $request)
+    {
+        if (is_null($niveau->id)) {
+            $niveau = $matchday->niveaus->first();
+        }
+        $teams = $matchday->teams($niveau->id);
+        if (count($teams) == 0 && $request->tab == 'teams') {
+            return redirect()->route('livescores.show', [$matchday, $niveau]);
+        }
+        return view('pages.livescores.show', [
+            'matchday' => $matchday,
+            'niveau' => $niveau,
+            'teams' => $teams,
         ]);
     }
 }

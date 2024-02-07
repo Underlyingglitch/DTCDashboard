@@ -59,4 +59,9 @@ class MatchDay extends Model implements Auditable
     {
         return $this->hasMany(Declaration::class);
     }
+
+    public function teams($niveau_id)
+    {
+        return $this->competition->teams->where('niveau_id', $niveau_id);
+    }
 }

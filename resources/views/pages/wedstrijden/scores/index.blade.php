@@ -6,7 +6,8 @@
     <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-primary">Terug naar wedstrijd</a>
     @livewire('scores.recalculate-scores-button', ['wedstrijd' => $wedstrijd])
     @livewire('scores.refresh-processed-scores-button', ['wedstrijd' => $wedstrijd])
-    <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date->format('d-m-Y') }} | {{ $wedstrijd->match_day->location->name }}
+    <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date->format('d-m-Y') }} |
+        {{ $wedstrijd->match_day->location->name }}
         | {{ $wedstrijd->niveaus_list }}</h4>
 
     {{-- @php(dd($baans)) --}}
@@ -42,11 +43,11 @@
             <label for="">Toestel</label>
             <input class="form-control" name="toestel" type="number" placeholder="Toestel" />
             <label for="">D-score</label>
-            <input class="form-control" data-type="score" name="d" type="number" value="0" step=".01" />
+            <input class="form-control" data-type="score" name="d" type="number" step=".01" />
             <label for="">E-after</label>
-            <input class="form-control" data-type="score" name="e" type="number" value="0" step=".001" />
+            <input class="form-control" data-type="score" name="e" type="number" step=".001" />
             <label for="">N-score</label>
-            <input class="form-control" data-type="score" name="n" type="number" value="0" step=".01" />
+            <input class="form-control" data-type="score" name="n" type="number" step=".01" />
             <label for=""></label>
             <div class="input-group mb-3">
                 <input class="form-control" data-type="score" name="t" type="number" placeholder="Totaal"
@@ -61,17 +62,6 @@
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-            $(`.form-control[data-type='score']`).on('focus', function() {
-                if ($(this).val() == 0) {
-                    $(this).val('')
-                }
-            })
-            $(`.form-control[data-type='score']`).on('blur', function() {
-                if ($(this).val() == '') {
-                    $(this).val(0)
-                    put_total()
-                }
-            })
             $(`.form-control[data-type='score']`).on('change', function() {
                 put_total()
             })
@@ -80,7 +70,9 @@
                 var d = $(`.form-control[name='d']`).val()
                 var e = $(`.form-control[name='e']`).val()
                 var n = $(`.form-control[name='n']`).val()
-                if (d == 0 && e == 0 && n == 0) {
+                if (d == '' && e == '' && n == '') {
+                    var total = ''
+                } else if (d == 0 && e == 0 && n == 0) {
                     var total = ''
                 } else {
                     var total = Math.round(((parseFloat(d) + (10 - parseFloat(e))) - parseFloat(n)) * 1000) / 1000

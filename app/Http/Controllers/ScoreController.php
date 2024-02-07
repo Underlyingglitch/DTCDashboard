@@ -115,9 +115,6 @@ class ScoreController extends Controller
         $this->validate($request, [
             'startnumber' => 'required|numeric',
             'toestel' => 'required|numeric',
-            'd' => 'required|numeric',
-            'e' => 'required|numeric',
-            'n' => 'required|numeric',
         ]);
 
         $score = Score::where('match_day_id', $wedstrijd->match_day->id)
@@ -127,17 +124,19 @@ class ScoreController extends Controller
 
         // If not found, create new
         $score = $score ?? new Score();
-
-        $total = ($request->d + (10 - $request->e)) - $request->n;
+        $d = $request->d ?? $score->d;
+        $e = $request->e ?? $score->e;
+        $n = $request->n ?? $score->n;
+        $total = ($d + (10 - $e)) - $n;
         if ($total < 0) $total = 0;
 
         $score->update([
             'match_day_id' => $wedstrijd->match_day->id,
             'startnumber' => $request->startnumber,
             'toestel' => $request->toestel,
-            'd' => $request->d,
-            'e' => $request->e,
-            'n' => $request->n,
+            'd' => $d,
+            'e' => $e,
+            'n' => $n,
             'total' => $total,
         ]);
 

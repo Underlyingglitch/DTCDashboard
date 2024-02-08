@@ -99,6 +99,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
             Carbon::now()->addMinutes($minutes),
             [
                 'id' => $this->getKey(),
+                // deepcode ignore InsecureHash: Just a simple hash, no need for a secure one
                 'hash' => sha1($this->getEmailForVerification()),
             ]
         );

@@ -182,6 +182,7 @@ return [
     'attributes' => [
         'name' => 'naam',
         'email' => 'email adres',
+        // deepcode ignore HardcodedPassword: This is a translation file
         'password' => 'wachtwoord',
     ],
 

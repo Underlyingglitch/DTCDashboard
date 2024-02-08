@@ -44,8 +44,7 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
-// Subscribe to a user channel
-console.log('Subscribing')
+// Subscribe to a user notification channel
 window.Echo.private(`App.Models.User.${window.userId}`).notification((e) => {
     console.log(e);
     switch (e.style) {

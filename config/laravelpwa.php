@@ -5,7 +5,7 @@ return [
     'manifest' => [
         'name' => 'DTC Zuid livescores',
         'short_name' => 'DTCLive',
-        'start_url' => '/livescores',
+        'start_url' => env('APP_URL') . '/livescores',
         'background_color' => '#ffffff',
         'theme_color' => '#000000',
         'display' => 'standalone',

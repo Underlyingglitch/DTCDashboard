@@ -6,15 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page_title')</title>
 
+    <script>
+        window.userId = @json(auth()->id());
+    </script>
     @vite(['resources/scss/livescores.scss', 'resources/js/app.js'])
 
     <script type="module" defer>
-        console.log('Subscribing to channel')
-        window.Echo.channel('livescores.6.teams')
-            .listen('.TeamScoresUpdated', (data) => {
-                console.log(data);
-            });
-        console.log('Subscribed to channel')
+        let matchday = @json($matchday->id);
+        let online_count = document.getElementById('online_count');
+        let count = 0;
+        window.Echo.join(`livescores.${matchday}`)
+            .here((users) => {
+                console.log('here', users)
+                count = users.length;
+                online_count.textContent = count;
+            })
+            .joining((user) => {
+                console.log('joining', user)
+                count++;
+                online_count.textContent = count;
+            })
+            .leaving((user) => {
+                console.log('leaving', user)
+                count--;
+                online_count.textContent = count;
+            })
     </script>
 
     <style>
@@ -38,8 +54,12 @@
 </head>
 
 <body>
-
+    <div class="pt-2 pl-2">
+        <span class="badge badge-success" id="online_count">0</span> Gebruiker(s) online
+    </div>
     <div class="container" style="padding-bottom: 60px;">
+        {{-- Create a x number of users online indicator --}}
+
         @yield('content')
     </div>
     <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">

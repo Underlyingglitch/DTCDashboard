@@ -54,7 +54,7 @@
                 count = users.length;
                 warning.style.display = count > 1 ? 'block' : 'none';
                 if (count > 1) {
-                    alert('Er is al iemand anders aangemeld op dit toestel');
+                    window.toastr.warning('Dit toestel is al op een ander apparaat in gebruik', 'In gebruik');
                 }
             })
             .joining((user) => {

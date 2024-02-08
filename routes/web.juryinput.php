@@ -7,4 +7,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 Route::controller(JuryInputController::class)->prefix('juryinput')->name('juryinput.')->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::get('/{toestel}', 'toestel')->name('toestel');
 });

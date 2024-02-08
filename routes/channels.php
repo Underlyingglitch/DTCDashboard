@@ -20,3 +20,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('livescores.{id}', function ($user, $id) {
     return [$user->id];
 });
+
+Broadcast::channel('juryinput.{toestel}', function ($user, $toestel) {
+    return [$user->id];
+});

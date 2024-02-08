@@ -1,0 +1,6 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="360"  height="360" ><defs><g id="still-rings">
+			<path d="M11.25,30.25a6,6,0,1,1,6-6A6,6,0,0,1,11.25,30.25Zm0-9a3,3,0,1,0,3,3A3,3,0,0,0,11.25,21.25Z"></path>
+			<path d="M24.75,30.25a6,6,0,1,1,6-6A6,6,0,0,1,24.75,30.25Zm0-9a3,3,0,1,0,3,3A3,3,0,0,0,24.75,21.25Z"></path>
+			<rect x="9.75" y="5.75" width="3" height="11"></rect>
+			<rect x="23.25" y="5.75" width="3" height="11"></rect>
+		</g></defs><use xlink:href="#still-rings" fill="#3C96C8"></use></svg>

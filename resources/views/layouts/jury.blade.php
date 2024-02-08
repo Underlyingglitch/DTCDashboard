@@ -19,6 +19,7 @@
         window.userId = @json(auth()->id());
     </script>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    @yield('scripts')
     @livewireStyles
 </head>
 
@@ -26,7 +27,7 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-column" style="height: 100vh">
 
             <!-- Main Content -->
             <div id="content">

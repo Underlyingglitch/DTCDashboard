@@ -10,12 +10,11 @@
         window.userId = @json(auth()->id());
     </script>
     @vite(['resources/scss/livescores.scss', 'resources/js/app.js'])
-
+    @laravelPWA
     <script type="module" defer>
-        let matchday = @json($matchday->id);
         let online_count = document.getElementById('online_count');
         let count = 0;
-        window.Echo.join(`livescores.${matchday}`)
+        window.Echo.join(`livescores`)
             .here((users) => {
                 console.log('here', users)
                 count = users.length;
@@ -62,22 +61,7 @@
 
         @yield('content')
     </div>
-    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-            <ul class="navbar-nav">
-                @foreach ($matchday->niveaus as $n)
-                    <li class="nav-item">
-                        <a class="nav-link @if ($n->id == $niveau->id) active @endif"
-                            href="{{ route('livescores.show', [$matchday, $n]) }}">{{ $n->full_name }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    </nav>
+    @yield('nav')
     @livewireScripts()
 </body>
 

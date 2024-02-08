@@ -22,6 +22,7 @@
         "predis/predis": "^2.2",
         "pusher/pusher-php-server": "~7.0",
         "seyyedam7/laravel-html-parser": "^2.2",
+        "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-permission": "^6.1",
         "staudenmeir/eloquent-has-many-deep": "^1.19"
     },

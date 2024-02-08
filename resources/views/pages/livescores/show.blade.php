@@ -27,3 +27,22 @@
     </div>
 
 @endsection
+
+@section('nav')
+    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+            <ul class="navbar-nav">
+                @foreach ($matchday->niveaus as $n)
+                    <li class="nav-item">
+                        <a class="nav-link @if ($n->id == $niveau->id) active @endif"
+                            href="{{ route('livescores.show', [$matchday, $n]) }}">{{ $n->full_name }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </nav>
+@endsection

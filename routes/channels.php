@@ -21,6 +21,6 @@ Broadcast::channel('livescores.{id}', function ($user, $id) {
     return [$user->id];
 });
 
-Broadcast::channel('juryinput.{toestel}', function ($user, $toestel) {
+Broadcast::channel('juryinput', function ($user) {
     return [$user->id];
 });

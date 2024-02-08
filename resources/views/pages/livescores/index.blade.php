@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.livescores')
 
 @section('page_title', 'Livescores')
 
@@ -6,7 +6,6 @@
     {{-- @livewire('livescores.teams')
 
     @livewire('livescores.individual') --}}
-    <i>Aan deze functie wordt momenteel hard gewerkt. </i>
     <div id="accordion">
         @foreach ($matchdays as $matchday)
             <a href="{{ route('livescores.show', [$matchday]) }}">

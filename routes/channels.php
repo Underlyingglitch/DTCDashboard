@@ -17,10 +17,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('livescores.{id}', function ($user, $id) {
+Broadcast::channel('livescores', function ($user) {
     return [$user->id];
 });
 
-Broadcast::channel('juryinput', function ($user) {
+Broadcast::channel('juryinput.{toestel}', function ($user, $toestel) {
     return [$user->id];
 });

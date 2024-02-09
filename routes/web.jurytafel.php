@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\JuryInputController;
+use App\Http\Controllers\JuryTafelController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 
-Route::controller(JuryInputController::class)->prefix('juryinput')->name('juryinput.')->group(function () {
+Route::controller(JuryTafelController::class)->prefix('jurytafel')->name('jurytafel.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/{toestel}', 'toestel')->name('toestel');
 });

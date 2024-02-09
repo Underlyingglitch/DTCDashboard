@@ -29,5 +29,5 @@ Route::middleware(['auth'])->group(base_path('routes/web.email.php'));
 Route::middleware(['auth'])->get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 if (config('app.env') == 'local' || config('app.env') == 'development') {
-    Route::middleware(['auth'])->group(base_path('routes/web.juryinput.php'));
+    Route::middleware(['auth'])->group(base_path('routes/web.jurytafel.php'));
 }

@@ -48,7 +48,7 @@
         let toestel = @json($toestel);
         let warning = document.getElementById('warning-message');
         let count = 0;
-        window.Echo.join(`juryinput.${toestel}`)
+        window.Echo.join(`jurytafel.${toestel}`)
             .here((users) => {
                 console.log('here', users)
                 count = users.length;

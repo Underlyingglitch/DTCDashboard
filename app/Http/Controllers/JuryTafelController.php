@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Models\MatchDay;
 
-class JuryInputController extends Controller
+class JuryTafelController extends Controller
 {
     public function index()
     {
-        return view('pages.juryinput.index');
+        return view('pages.jurytafel.index');
     }
 
     public function toestel($toestel)
@@ -18,6 +18,6 @@ class JuryInputController extends Controller
             abort(404);
         }
         $matchday = MatchDay::find(Setting::getValue('current_match_day'));
-        return view('pages.juryinput.toestel', compact('toestel', 'matchday'));
+        return view('pages.jurytafel.toestel', compact('toestel', 'matchday'));
     }
 }

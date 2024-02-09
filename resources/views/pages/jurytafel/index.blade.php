@@ -1,12 +1,12 @@
 @extends('layouts.jury')
 
-@section('page_title', 'Jury invoer')
+@section('page_title', 'Jurytafel')
 
 @section('content')
     <div class="row">
         @foreach ($toestellen as $i => $toestel)
             <div class="col-md-4">
-                <a href="{{ route('juryinput.toestel', ['toestel' => $i + 1]) }}">
+                <a href="{{ route('jurytafel.toestel', ['toestel' => $i + 1]) }}">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title text-center">{{ ucfirst($toestel) }}</h3>

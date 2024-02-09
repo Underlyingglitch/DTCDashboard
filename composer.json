@@ -18,7 +18,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.3",
         "owen-it/laravel-auditing": "^13.6",
-        "phpoffice/phpspreadsheet": "^1.29",
+        "phpoffice/phpspreadsheet": "^2.0",
         "predis/predis": "^2.2",
         "pusher/pusher-php-server": "~7.0",
         "seyyedam7/laravel-html-parser": "^2.2",

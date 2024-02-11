@@ -77,8 +77,8 @@ class UpdateList implements ShouldQueue
                 ]);
                 $jobs[] = new FetchResource($dg_resource);
             }
-            // Mark the resources in the database that are not in the list as deleted
-            DGResource::where('category', $category)->whereNotIn('url', $urls)->update([
+            // Mark the resources in the database that are not in the list and not already deleted as deleted
+            DGResource::where('category', $category)->whereNotIn('url', $urls)->where('status', '=!', 'deleted')->update([
                 'status' => 'deleted'
             ]);
         }

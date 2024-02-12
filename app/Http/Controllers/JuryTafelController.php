@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use App\Models\MatchDay;
+use App\Models\Wedstrijd;
 
 class JuryTafelController extends Controller
 {
@@ -18,6 +19,7 @@ class JuryTafelController extends Controller
             abort(404);
         }
         $matchday = MatchDay::find(Setting::getValue('current_match_day'));
-        return view('pages.jurytafel.toestel', compact('toestel', 'matchday'));
+        $wedstrijd = Wedstrijd::find(Setting::getValue('current_wedstrijd'));
+        return view('pages.jurytafel.toestel', compact('toestel', 'wedstrijd'));
     }
 }

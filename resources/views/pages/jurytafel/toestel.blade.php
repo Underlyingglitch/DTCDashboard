@@ -1,6 +1,14 @@
 @extends('layouts.jury')
 
-@section('page_title', $toestellen[$toestel - 1] . ' | Wedstrijd x | {date} | {location}')
+@section('page_title',
+    $toestellen[$toestel - 1] .
+    ' | Wedstrijd ' .
+    $wedstrijd->index .
+    ' | ' .
+    $wedstrijd->match_day->date->format('d-m-Y') .
+    ' |
+    ' .
+    $wedstrijd->match_day->location->name)
 
 @section('content')
     <div class="alert alert-warning" id="warning-message" style="display: none">
@@ -36,7 +44,7 @@
             <div class="card">
                 <div class="card-header text-center">Score correctie</div>
                 <div class="card-body">
-                    @livewire('jury.score-correct-form', ['toestel' => $toestel, 'matchday' => $matchday])
+                    @livewire('jury.score-correct-form', ['toestel' => $toestel, 'matchday' => $wedstrijd->match_day])
                 </div>
             </div>
         </div>

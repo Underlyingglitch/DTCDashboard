@@ -9,6 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
+
     <title>@yield('page_title') | DTC Zuid</title>
 
     <link

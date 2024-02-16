@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page_title')</title>
 
+    <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
+
     <script>
         window.userId = @json(auth()->id());
     </script>

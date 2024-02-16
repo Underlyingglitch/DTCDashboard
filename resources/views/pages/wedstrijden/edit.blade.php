@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('page_title', 'Wedstrijd aanmaken')
+@section('page_title', 'Wedstrijd bewerken')
 
 @section('content')
 

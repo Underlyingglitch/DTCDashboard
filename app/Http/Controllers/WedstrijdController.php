@@ -145,10 +145,10 @@ class WedstrijdController extends Controller
     {
         $this->authorize('update', $wedstrijd);
         $this->validate($request, [
-            'baan1' => 'required|regex:/^\d(-\d)*$/',
-            'baan2' => 'nullable|regex:/^\d(-\d)*$/|same_length:baan1',
-            'baan3' => 'nullable|regex:/^\d(-\d)*$/|same_length:baan1',
-            'baan4' => 'nullable|regex:/^\d(-\d)*$/|same_length:baan1',
+            'baan1' => 'required|regex:/^[\d*](-[\d*])*$/',
+            'baan2' => 'nullable|regex:/^[\d*](-[\d*])*$/|same_length:baan1',
+            'baan3' => 'nullable|regex:/^[\d*](-[\d*])*$/|same_length:baan1',
+            'baan4' => 'nullable|regex:/^[\d*](-[\d*])*$/|same_length:baan1',
         ]);
 
         $settings = [[], []];
@@ -168,7 +168,7 @@ class WedstrijdController extends Controller
                 // For each round again, to go over toestellen and rust
                 for ($j = 0; $j < $rounds; $j++) {
                     // Assign the respective toestel or rust to the group for each baan
-                    $groups[$i][$j][$b] = $baans[$b][$j];
+                    $groups[$i][$j][$b] = $baans[$b][$j] == "*" ? 0 : 10 * $b + $baans[$b][$j];
                 }
                 // Shift the array for the next round
                 $last = array_pop($baans[$b]);

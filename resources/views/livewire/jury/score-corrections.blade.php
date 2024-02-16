@@ -35,6 +35,16 @@
                         {{ $correction['n'] }}
                     @endif
                 </td>
+                <td>
+                    <del>{{ $correction['score']['total'] }}</del>
+                    <ins>{{ $correction['total'] }}</ins>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-danger" wire:click="delete({{ $correction['id'] }})"><i
+                            class="fas fa-trash"></i></button>
+                    <button class="btn btn-sm btn-success" wire:click=approve({{ $correction['id'] }})><i
+                            class="fas fa-check"></i></button>
+                </td>
             </tr>
         @endforeach
     </table>

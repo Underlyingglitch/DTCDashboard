@@ -3,15 +3,16 @@
 namespace App\Events\Jury;
 
 use App\Models\ScoreCorrection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ScoreCorrectionAdded
+class ScoreCorrectionAdded implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,6 +21,7 @@ class ScoreCorrectionAdded
      */
     public function __construct(public ScoreCorrection $sc)
     {
+        Log::info('Broadcasting event');
     }
     /**
      * Get the channels the event should broadcast on.

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ScoreCorrection extends Model
+class ScoreCorrection extends Model implements Auditable
 {
-    use HasFactory;
+    use SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'score_id',
@@ -16,7 +18,8 @@ class ScoreCorrection extends Model
         'e2',
         'e3',
         'n',
-        'total'
+        'total',
+        'approved'
     ];
 
     public function score()

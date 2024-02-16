@@ -23,12 +23,13 @@ class ScoreCorrectForm extends Component
     public $t;
     public $delete = false;
 
-    public function mount($toestel = null, $matchday)
+    public function mount($toestel, $matchday)
     {
+        $this->toestel = $toestel;
         if ($toestel == null) {
             $this->jury = false;
+            $this->toestel = 1;
         }
-        $this->toestel = $toestel;
         $this->matchday = $matchday->id;
     }
 
@@ -101,10 +102,12 @@ class ScoreCorrectForm extends Component
             'total' => $this->t
         ]);
         event(new \App\Events\Jury\ScoreCorrectionAdded($sc));
-        if ($this->d == 0) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol verwijderd', 'success'));
-        } else {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol opgeslagen', 'success'));
+        if ($this->jury) {
+            if ($this->d == 0) {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol verwijderd', 'success'));
+            } else {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol opgeslagen', 'success'));
+            }
         }
         $this->d = '';
         $this->e1 = '';
@@ -113,6 +116,7 @@ class ScoreCorrectForm extends Component
         $this->e = '';
         $this->n = '';
         $this->t = '';
+        $this->startnumber = '';
         $this->delete = false;
         $this->locked = true;
         $this->toestel = $this->jury ? $this->toestel : null;

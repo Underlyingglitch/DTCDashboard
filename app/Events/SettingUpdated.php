@@ -20,7 +20,7 @@ class SettingUpdated implements ShouldBroadcastNow
 
     public function broadcastOn()
     {
-        return new Channel('settings.' . $this->key);
+        return ['settings.' . $this->key, 'settings.all'];
     }
 
     public function broadcastAs()

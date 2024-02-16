@@ -26,7 +26,7 @@ class Setting extends Model
         });
     }
 
-    public static function getValue($key)
+    public static function getValue(string $key)
     {
         $value = Cache::get($key);
         if ($value === null) {
@@ -36,7 +36,7 @@ class Setting extends Model
         return $value;
     }
 
-    public static function setValue($key, $value)
+    public static function setValue(string $key, mixed $value)
     {
         Setting::updateOrCreate(
             ['key' => $key],

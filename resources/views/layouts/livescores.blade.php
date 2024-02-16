@@ -20,18 +20,23 @@
             .here((users) => {
                 console.log('here', users)
                 count = users.length;
-                online_count.textContent = count;
+                updateCounter(count);
             })
             .joining((user) => {
                 console.log('joining', user)
                 count++;
-                online_count.textContent = count;
+                updateCounter(count);
             })
             .leaving((user) => {
                 console.log('leaving', user)
                 count--;
-                online_count.textContent = count;
+                updateCounter(count);
             })
+
+        function updateCounter(c) {
+            online_count.textContent = c;
+            online_text.textContent = c == 1 ? 'Gebruiker online' : 'Gebruikers online';
+        }
     </script>
 
     <style>
@@ -56,7 +61,7 @@
 
 <body>
     <div class="pt-2 pl-2">
-        <span class="badge badge-success" id="online_count">0</span> Gebruiker(s) online
+        <span class="badge badge-success" id="online_count">0</span> <span id="online_text">Gebruikers online</span>
     </div>
     <div class="container" style="padding-bottom: 60px;">
         {{-- Create a x number of users online indicator --}}

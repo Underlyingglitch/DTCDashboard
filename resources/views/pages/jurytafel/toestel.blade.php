@@ -33,7 +33,7 @@
             <div class="card">
                 <div class="card-header text-center">Score correctie</div>
                 <div class="card-body">
-                    @livewire('jury.score-correct-form', ['toestel' => $toestel, 'matchday' => $wedstrijd->match_day])
+                    @livewire('jury.score-correct-form', ['toestel' => $toestel, 'matchday' => $matchday])
                 </div>
             </div>
         </div>

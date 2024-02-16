@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\SettingUpdated;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,6 +43,7 @@ class Setting extends Model
             ['value' => $value]
         );
         Cache::put($key, $value, 60 * 60 * 24 * 7);
+        event(new SettingUpdated($key, $value));
     }
 
     public static function getValues(array $keys)

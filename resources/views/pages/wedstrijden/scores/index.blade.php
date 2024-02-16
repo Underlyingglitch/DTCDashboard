@@ -48,6 +48,7 @@
             <div class="card">
                 <div class="card-header text-center">Score correcties beheren</div>
                 <div class="card-body">
+                    Juryleden kunnen correcties invoeren: @livewire('jury.score-correction-enabled-button')
                     @livewire('jury.score-corrections', ['matchday' => $wedstrijd->match_day])
                 </div>
             </div>

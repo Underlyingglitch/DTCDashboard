@@ -20,6 +20,6 @@ class JuryTafelController extends Controller
         }
         $matchday = MatchDay::find(Setting::getValue('current_match_day'));
         $wedstrijd = Wedstrijd::find(Setting::getValue('current_wedstrijd'));
-        return view('pages.jurytafel.toestel', compact('toestel', 'wedstrijd'));
+        return view('pages.jurytafel.toestel', compact('toestel', 'matchday', 'wedstrijd'));
     }
 }

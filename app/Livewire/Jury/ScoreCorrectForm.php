@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Jury;
 
+use App\Models\Setting;
 use Livewire\Component;
 use App\Models\ScoreCorrection;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,13 @@ class ScoreCorrectForm extends Component
     public $n;
     public $t;
     public $delete = false;
+
+    public function getListeners()
+    {
+        return [
+            "echo:settings.score_correction_enabled,.SettingUpdated" => 'render',
+        ];
+    }
 
     public function mount($toestel, $matchday)
     {
@@ -124,6 +132,12 @@ class ScoreCorrectForm extends Component
 
     public function render()
     {
+        if (Setting::getValue('current_match_day') != $this->matchday) {
+            return view('livewire.jury.score-correct-form-disabled');
+        }
+        if (!Setting::getValue('score_correction_enabled') && $this->jury) {
+            return view('livewire.jury.score-correct-form-disabled');
+        }
         return view('livewire.jury.score-correct-form');
     }
 }

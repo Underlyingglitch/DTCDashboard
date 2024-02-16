@@ -11,8 +11,6 @@
     </script>
     @vite(['resources/scss/livescores.scss', 'resources/js/app.js'])
 
-    @laravelPWA()
-
     <script type="module" defer>
         let online_count = document.getElementById('online_count');
         let count = 0;

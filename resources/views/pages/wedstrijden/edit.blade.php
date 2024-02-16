@@ -22,4 +22,13 @@
         </div>
         <input class="btn btn-sm btn-primary" type="submit" value="Opslaan" />
     </form>
+    <hr>
+    <form method="post" action="{{ route('wedstrijden.groupsettings', $wedstrijd) }}">
+        @csrf
+        @for ($baan = 1; $baan <= $wedstrijd->baans(); $baan++)
+            <x-form.text name="baan{{ $baan }}" label="Baan {{ $baan }}" placeholder="Groepen volgorde"
+                :value="$wedstrijd->group_settings[0][$baan - 1] ?? null" />
+        @endfor
+        <input class="btn btn-sm btn-primary" type="submit" value="Groepen instellen" />
+    </form>
 @endsection

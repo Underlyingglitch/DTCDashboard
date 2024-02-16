@@ -77,6 +77,7 @@ Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wed
         Route::get('/edit', 'edit')->name('edit');
         Route::put('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('destroy');
+        Route::post('/groupsettings', 'groupsettings')->name('groupsettings');
         Route::get('/registration/{registration}/move_group', 'move_group')->name('registration.move_group');
         Route::post('/registration/{registration}/move_group', 'move_group_store')->name('registration.move_group.store');
         Route::get('/registration/{registration}/signoff', 'signoff')->name('registration.signoff');

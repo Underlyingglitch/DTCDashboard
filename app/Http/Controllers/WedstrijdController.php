@@ -141,6 +141,47 @@ class WedstrijdController extends Controller
         return redirect()->route('matchdays.show', $wedstrijd->match_day_id)->with('success', 'Wedstrijd is verwijderd.');
     }
 
+    public function groupsettings(Request $request, Wedstrijd $wedstrijd)
+    {
+        $this->authorize('update', $wedstrijd);
+        $this->validate($request, [
+            'baan1' => 'required|regex:/^\d(-\d)*$/',
+            'baan2' => 'nullable|regex:/^\d(-\d)*$/|same_length:baan1',
+            'baan3' => 'nullable|regex:/^\d(-\d)*$/|same_length:baan1',
+            'baan4' => 'nullable|regex:/^\d(-\d)*$/|same_length:baan1',
+        ]);
+
+        $settings = [[], []];
+
+        $baans = [];
+        for ($baan = 1; $baan <= $wedstrijd->baans(); $baan++) {
+            $settings[0][] = $request->input('baan' . $baan);
+            $baans[] = explode('-', $request->input('baan' . $baan));
+        }
+
+        $groups = [];
+        // For each round (based on the length of the first baan's array)
+        $rounds = count($baans[0]);
+        for ($i = 0; $i < $rounds; $i++) {
+            // For each baan
+            for ($b = 0; $b < $wedstrijd->baans(); $b++) {
+                // For each round again, to go over toestellen and rust
+                for ($j = 0; $j < $rounds; $j++) {
+                    // Assign the respective toestel or rust to the group for each baan
+                    $groups[$i][$j][$b] = $baans[$b][$j];
+                }
+                // Shift the array for the next round
+                $last = array_pop($baans[$b]);
+                array_unshift($baans[$b], $last);
+            }
+        }
+        $settings[1] = $groups;
+
+        $wedstrijd->update(['group_settings' => $settings]);
+
+        return redirect()->route('wedstrijden.show', $wedstrijd)->with('success', 'Groepsinstellingen opgeslagen.');
+    }
+
     public function move_group(Wedstrijd $wedstrijd, Registration $registration)
     {
         $this->authorize('update', $wedstrijd);

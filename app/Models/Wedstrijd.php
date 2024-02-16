@@ -13,6 +13,7 @@ class Wedstrijd extends Model implements Auditable
     protected $fillable = [
         'index',
         'match_day_id',
+        'group_settings',
     ];
 
     public function baans($groups = null)
@@ -20,6 +21,11 @@ class Wedstrijd extends Model implements Auditable
         if ($groups == null) $groups = $this->groups;
 
         return $groups->pluck('baan')->unique()->count();
+    }
+
+    public function getGroupSettingsAttribute($value)
+    {
+        return json_decode($value);
     }
 
     public function getGroupAmountAttribute()

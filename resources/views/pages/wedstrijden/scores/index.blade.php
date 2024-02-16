@@ -14,25 +14,37 @@
     <table class="table">
         <tr>
             <th>Ronde</th>
-            @for ($i = 0; $i < $rounds; $i++)
-                <th>{{ $i < 6 ? $toestellen[$i] : 'Rust' }}</th>
+            @for ($i = 0; $i < count($groups[0]); $i++)
+                <th>{{ $toestellen[$i] ?? 'Rust' }}</th>
             @endfor
+            {{-- @for ($i = 0; $i < $rounds; $i++)
+                <th>{{ $i < 6 ? $toestellen[$i] : 'Rust' }}</th>
+            @endfor --}}
         </tr>
-        @for ($i = 0; $i < $rounds; $i++)
+        @for ($i = 0; $i < count($groups); $i++)
             <tr>
                 <th>{{ $i + 1 }}</th>
-                @for ($j = 0; $j < $rounds; $j++)
+                @for ($j = 0; $j < count($groups[0]); $j++)
                     <td>
-                        @foreach ($baans as $baan => $groups)
-                            {{-- Group number = $baan[$i][$j] --}}
-                            {{-- <x-elements.score-table-button :wedstrijd="$wedstrijd->id" :groupnr="$groups[$i][$j] ?? null" :pc="$pc"
-                                :toestel="$j + 1" /> --}}
-                            @livewire('scores.score-table-button', ['wedstrijd' => $wedstrijd->id, 'groupnr' => $groups[$i][$j] ?? null, 'pc' => $pc, 'toestel' => $j + 1])
+                        @foreach ($groups[$i][$j] as $baan => $group)
+                            @livewire('scores.score-table-button', ['wedstrijd' => $wedstrijd->id, 'groupnr' => $group, 'pss' => $pss, 'toestel' => $j + 1])
                         @endforeach
                     </td>
                 @endfor
             </tr>
         @endfor
+        {{-- @for ($i = 0; $i < $rounds; $i++)
+            <tr>
+                <th>{{ $i + 1 }}</th>
+                @for ($j = 0; $j < $rounds; $j++)
+                    <td>
+                        @foreach ($baans as $baan => $groups)
+        @livewire('scores.score-table-button', ['wedstrijd' => $wedstrijd->id, 'groupnr' => $groups[$i][$j] ?? null, 'pc' => $pc, 'toestel' => $j + 1])
+        @endforeach
+        </td>
+        @endfor
+        </tr>
+        @endfor --}}
     </table>
 
     <div class="row">

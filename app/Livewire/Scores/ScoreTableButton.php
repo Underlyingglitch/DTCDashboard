@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 class ScoreTableButton extends Component
 {
     public $wedstrijd;
-    public $pc;
+    public $pss;
     public $groupnr;
     public $toestel;
     public $class = "btn-danger";
@@ -23,29 +23,29 @@ class ScoreTableButton extends Component
     public function mount(
         $wedstrijd,
         $toestel,
-        $pc,
-        $groupnr = null
+        $pss,
+        $groupnr = 0
     ) {
         $this->groupnr = $groupnr;
         $this->toestel = $toestel;
         $this->wedstrijd = $wedstrijd;
-        $this->pc = $pc;
+        $this->pss = $pss;
 
         if ($this->toestel > 6) {
             $this->class = "btn-secondary";
             return;
         }
-        if (is_null($this->groupnr)) {
+        if ($this->groupnr == 0) {
             $this->class = "btn-secondary";
         } else {
-            $pc = $this->pc
+            $ps = $this->pss
                 ->where('group_id', $this->groupnr)
                 ->where('toestel', $this->toestel)
                 ->first();
-            if ($pc->completed ?? null) {
+            if ($ps->completed ?? null) {
                 $this->class = "btn-success";
             } else {
-                $this->class = $pc ? "btn-warning" : "btn-danger";
+                $this->class = $ps ? "btn-warning" : "btn-danger";
                 $this->href = route('wedstrijden.score.add', [
                     'wedstrijd' => $this->wedstrijd,
                     'toestel' => $this->toestel,

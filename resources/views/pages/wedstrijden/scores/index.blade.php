@@ -35,50 +35,22 @@
         @endfor
     </table>
 
-    <h5>Scorecorrectie</h5>
-    <div class="col-md-3">
-        <form action="{{ route('wedstrijden.score.correct', $wedstrijd) }}" method="post">
-            @csrf
-            <input class="form-control" name="startnumber" type="number" placeholder="Startnummer" />
-            <label for="">Toestel</label>
-            <input class="form-control" name="toestel" type="number" placeholder="Toestel" />
-            <label for="">D-score</label>
-            <input class="form-control" data-type="score" name="d" type="number" step=".01" />
-            <label for="">E-after</label>
-            <input class="form-control" data-type="score" name="e" type="number" step=".001" />
-            <label for="">N-score</label>
-            <input class="form-control" data-type="score" name="n" type="number" step=".01" />
-            <label for=""></label>
-            <div class="input-group mb-3">
-                <input class="form-control" data-type="score" name="t" type="number" placeholder="Totaal"
-                    step=".001" readonly />
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Opslaan</button>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header text-center">Score correctie toevoegen</div>
+                <div class="card-body">
+                    @livewire('jury.score-correct-form', ['toestel' => null, 'matchday' => $wedstrijd->match_day])
                 </div>
             </div>
-        </form>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-center">Score correcties beheren</div>
+                <div class="card-body">
+                    @livewire('jury.score-corrections', ['matchday' => $wedstrijd->match_day])
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
-        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-            $(`.form-control[data-type='score']`).on('change', function() {
-                put_total()
-            })
-
-            function put_total() {
-                var d = $(`.form-control[name='d']`).val()
-                var e = $(`.form-control[name='e']`).val()
-                var n = $(`.form-control[name='n']`).val()
-                if (d == '' && e == '' && n == '') {
-                    var total = ''
-                } else if (d == 0 && e == 0 && n == 0) {
-                    var total = ''
-                } else {
-                    var total = Math.round(((parseFloat(d) + (10 - parseFloat(e))) - parseFloat(n)) * 1000) / 1000
-                }
-                $(`.form-control[name='t']`).val(total)
-            }
-        })
-    </script>
 @endsection

@@ -16,31 +16,20 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header text-center">Ronde x | Groep x</div>
-                <div class="card-body">
-                    <table class="table table-sm table-bordered">
-                        <tr>
-                            <th>Nr</th>
-                            <th>Naam</th>
-                            <th>Vereniging</th>
-                            <th>Niveau</th>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+            @livewire('jury.round-table', ['toestel' => $toestel])
+
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header text-center">Score invoer</div>
                 <div class="card-body">
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header text-center">Score correctie</div>
                 <div class="card-body">

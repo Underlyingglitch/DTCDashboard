@@ -1,20 +1,36 @@
 <div>
-    <input class="form-control" type="number" placeholder="Startnummer" wire:model="startnumber" wire:blur="sn_updated()" />
+    @if ($jury == false)
+        Toestel:
+        <select wire:model="toestel" class="form-control" wire:change="sn_updated()">
+            <option value="1">Vloer</option>
+            <option value="2">Voltige</option>
+            <option value="3">Ringen</option>
+            <option value="4">Sprong</option>
+            <option value="5">Brug</option>
+            <option value="6">Rekstok</option>
+        </select>
+    @endif
+    Startnummer: <input class="form-control" type="number" placeholder="Startnummer" wire:model="startnumber"
+        wire:keydown.debounce.500ms="sn_updated()" />
     <div class="row">
         <div class="col-md-6">
-            <input class="form-control" type="number" placeholder="D-score" wire:model="d" wire:blur="calculate()"
-                @if ($locked) disabled @endif />
-            <input class="form-control" type="number" placeholder="N-score" wire:model="n" wire:blur="calculate()"
-                @if ($locked) disabled @endif />
-            <input class="form-control" type="number" placeholder="E-score" wire:model="e" disabled />
+            D: <input class="form-control" type="number" step=".1" placeholder="D-score" wire:model="d"
+                wire:blur="calculate()" @if ($locked) disabled @endif />
+            N: <input class="form-control" type="number" step=".1" placeholder="N-score" wire:model="n"
+                wire:blur="calculate()" @if ($locked) disabled @endif />
+            E: <input class="form-control" type="number" step=".001" placeholder="E-score" wire:model="e"
+                readonly />
+            Totaal: <input class="form-control" type="number" step=".001" placeholder="Totaal" wire:model="t"
+                readonly />
         </div>
         <div class="col-md-6">
-            <input class="form-control" type="number" placeholder="E1-score" wire:model="e1" wire:blur="calculate()"
-                @if ($locked) disabled @endif />
-            <input class="form-control" type="number" placeholder="E2-score" wire:model="e2" wire:blur="calculate()"
-                @if ($locked) disabled @endif />
-            <input class="form-control" type="number" placeholder="E2-score" wire:model="e3" wire:blur="calculate()"
-                @if ($locked) disabled @endif />
+            E1: <input class="form-control" type="number" step=".001" placeholder="E1-score" wire:model="e1"
+                wire:blur="calculate()" @if ($locked) disabled @endif />
+            E2: <input class="form-control" type="number" step=".001" placeholder="E2-score" wire:model="e2"
+                wire:blur="calculate()" @if ($locked) disabled @endif />
+            E3: <input class="form-control" type="number" step=".001" placeholder="E3-score" wire:model="e3"
+                wire:blur="calculate()" @if ($locked) disabled @endif />
+            &nbsp;<input class="form-control btn btn-primary" type="submit" value="Opslaan" wire:click="save()" />
         </div>
     </div>
 

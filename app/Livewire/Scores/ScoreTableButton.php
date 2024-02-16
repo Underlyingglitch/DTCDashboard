@@ -37,6 +37,7 @@ class ScoreTableButton extends Component
         }
         if ($this->groupnr == 0) {
             $this->class = "btn-secondary";
+            $this->groupnr = null;
         } else {
             $ps = $this->pss
                 ->where('group_id', $this->groupnr)

@@ -28,7 +28,7 @@
                         {{ $team->name }}</th>
                     @php($previous = $team_total)
                     @foreach ($toestellen as $toestel)
-                        <th colspan="2" style="width: 10%">{{ $toestel }}</th>
+                        <th colspan="2" style="width: 7%">{{ $toestel }}</th>
                     @endforeach
                 </tr>
                 @foreach ($team->registrations as $registration)

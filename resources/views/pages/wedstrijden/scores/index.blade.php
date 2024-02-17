@@ -6,6 +6,9 @@
     <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-primary">Terug naar wedstrijd</a>
     @livewire('scores.recalculate-scores-button', ['wedstrijd' => $wedstrijd])
     @livewire('scores.refresh-processed-scores-button', ['wedstrijd' => $wedstrijd])
+    <div style="float:right">
+        @livewire('scores.set-round-button')
+    </div>
     <h4>Wedstrijd {{ $wedstrijd->index }} | {{ $wedstrijd->match_day->date->format('d-m-Y') }} |
         {{ $wedstrijd->match_day->location->name }}
         | {{ $wedstrijd->niveaus_list }}</h4>

@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         if (config('app.env') === 'local') {
-            $schedule->job(new \App\Jobs\SyncDatabase())->onQueue('sync')->everyMinute();
+            $schedule->job(new \App\Jobs\SyncDatabase(), 'sync')->everyMinute();
         }
 
         if (config('app.env') === 'production') {

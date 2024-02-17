@@ -113,13 +113,4 @@ class MatchDaysController extends Controller
 
         return redirect()->route('competitions.show', $competition_id)->with('success', 'Wedstrijddag is verwijderd.');
     }
-
-    public function setactive(MatchDay $matchday)
-    {
-        $this->authorize('update', $matchday);
-
-        Setting::setValue('current_match_day', $matchday->id);
-
-        return redirect()->route('competitions.show', $matchday->competition_id);
-    }
 }

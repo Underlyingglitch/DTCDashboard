@@ -42,6 +42,24 @@ class Setting extends Model
             ['key' => $key],
             ['value' => $value]
         );
+        if ($key == 'current_wedstrijd') {
+            $wedstrijd = Wedstrijd::find($value);
+            Setting::updateOrCreate(
+                ['key' => 'current_competition'],
+                ['value' => $wedstrijd->match_day->competition_id]
+            );
+            Cache::put('current_competition', $wedstrijd->match_day->competition_id, 60 * 60 * 24 * 7);
+            Setting::updateOrCreate(
+                ['key' => 'current_match_day'],
+                ['value' => $wedstrijd->match_day_id]
+            );
+            Cache::put('current_match_day', $wedstrijd->match_day_id, 60 * 60 * 24 * 7);
+            Setting::updateOrCreate(
+                ['key' => 'current_round'],
+                ['value' => 1]
+            );
+            Cache::put('current_round', 1, 60 * 60 * 24 * 7);
+        }
         Cache::put($key, $value, 60 * 60 * 24 * 7);
         event(new SettingUpdated($key, $value));
     }

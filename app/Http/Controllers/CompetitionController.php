@@ -108,13 +108,4 @@ class CompetitionController extends Controller
 
         return redirect()->route('competitions.index');
     }
-
-    public function setactive(Competition $competition)
-    {
-        $this->authorize('update', Competition::class);
-
-        Setting::setValue('current_competition', $competition->id);
-
-        return redirect()->route('competitions.index');
-    }
 }

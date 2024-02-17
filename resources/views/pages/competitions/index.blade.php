@@ -42,10 +42,6 @@
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         @endcan
-                        @if ($competition->id != $activeCompetition && Auth::user()->can('update', $competition))
-                            <a href="{{ route('competitions.setactive', $competition) }}" class="btn btn-sm btn-success"><i
-                                    class="fas fa-check"></i></a>
-                        @endif
                     </td>
                 </tr>
             @endforeach

@@ -3,9 +3,12 @@
 @section('page_title', 'Livescores')
 
 @section('content')
-    {{-- @livewire('livescores.teams')
-
-    @livewire('livescores.individual') --}}
+    <div class="alert alert-info">
+        <h4 class="alert-heading">Disclaimer</h4>
+        <p>De scores op deze pagina kunnen vertraging hebben. In zeer uitzonderlijke gevallen kunnen de scores fouten
+            bevatten. De gepubliceerde puntenlijsten zijn altijd leidend en aan deze scores kunnen geen rechten worden
+            ontleend.</p>
+    </div>
     <div id="accordion">
         @foreach ($matchdays as $matchday)
             <a href="{{ route('livescores.show', [$matchday]) }}">

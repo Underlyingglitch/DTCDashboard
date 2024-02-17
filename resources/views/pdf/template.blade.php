@@ -57,6 +57,19 @@
             font-size: 10px
         }
 
+        main .score-table {
+            table-layout: fixed;
+            width: 100%;
+            margin-bottom: 20px
+        }
+
+        main .score-table td,
+        main .score-table th {
+            padding: 3px;
+            text-align: left;
+            font-size: 10px
+        }
+
         .not-counted {
             font-style: italic;
         }

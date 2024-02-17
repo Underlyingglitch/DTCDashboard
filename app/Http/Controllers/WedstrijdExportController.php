@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Models\Wedstrijd;
 use App\Models\Registration;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Traits\FunctionsTrait;
 
 class WedstrijdExportController extends Controller
@@ -133,21 +133,26 @@ class WedstrijdExportController extends Controller
         });
 
         // If debug is enabled, return the view instead of downloading the pdf
+        $pdf = PDF::loadView('pdf.scores.teams', [
+            'wedstrijd' => $wedstrijd,
+            'niveaus' => $niveaus
+        ]);
+        return $pdf->stream('document.pdf');
         if (config('app.debug')) {
             return view('pdf.scores.teams', [
                 'wedstrijd' => $wedstrijd,
                 'niveaus' => $niveaus
             ]);
         }
-        $pdf = Pdf::loadView('pdf.scores.teams', [
-            'wedstrijd' => $wedstrijd,
-            'niveaus' => $niveaus
-        ]);
-        return response($pdf->output(), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Uitslag ' . $wedstrijd->match_day->location->name . ' ' . $wedstrijd->match_day->date->format('d-m-Y') . ' W' .
-                $wedstrijd->index . ' teams.pdf"',
-        ]);
+        // $pdf = Pdf::loadView('pdf.scores.teams', [
+        //     'wedstrijd' => $wedstrijd,
+        //     'niveaus' => $niveaus
+        // ]);
+        // return response($pdf->output(), 200, [
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' => 'inline; filename="Uitslag ' . $wedstrijd->match_day->location->name . ' ' . $wedstrijd->match_day->date->format('d-m-Y') . ' W' .
+        //         $wedstrijd->index . ' teams.pdf"',
+        // ]);
     }
 
     public function individualscores(Wedstrijd $wedstrijd)

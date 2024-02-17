@@ -15,7 +15,7 @@
                 </tr>
                 @foreach ($registrations[$baan] as $registration)
                     <tr
-                        @if ($registration['status'] == 'signed_off') style="text-decoration: line-through" @elseif($registration['status'] == 'pending') wire:click="clicked({{ $registration['startnumber'] }})" @endif>
+                        @if ($registration['status'] == 'signed_off') style="text-decoration: line-through" @else wire:click="clicked({{ $registration['startnumber'] }})" @endif>
                         <td>{{ $registration['startnumber'] }}</td>
                         <td>{{ $registration['name'] }}</td>
                         <td>{{ $registration['club'] }}</td>

@@ -31,13 +31,29 @@ class ScoreInputForm extends Component
     public function sn_clicked($sn)
     {
         $this->startnumber = $sn;
-        $this->d = '';
-        $this->e1 = '';
-        $this->e2 = '';
-        $this->e3 = '';
-        $this->e = '';
-        $this->n = '';
-        $this->t = '';
+        $score = \App\Models\Score::where('match_day_id', $this->matchday)
+            ->where('startnumber', $this->startnumber)
+            ->where('toestel', $this->toestel)
+            ->first();
+        if ($score) {
+            $this->d = $score->d;
+            $this->e1 = $score->e1;
+            $this->e2 = $score->e2;
+            $this->e3 = $score->e3;
+            $this->e = $score->e;
+            $this->n = $score->n;
+            $this->t = $score->total;
+            $this->locked = true;
+        } else {
+            $this->d = '';
+            $this->e1 = '';
+            $this->e2 = '';
+            $this->e3 = '';
+            $this->e = '';
+            $this->n = '';
+            $this->t = '';
+            $this->locked = false;
+        }
     }
 
     public function calculate()

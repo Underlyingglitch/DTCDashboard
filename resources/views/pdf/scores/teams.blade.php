@@ -17,55 +17,56 @@
 @section('main')
     @foreach ($niveaus as $teams)
         <b>{{ $teams->first()->niveau->full_name }}</b>
-        @php($i = 0)
-        @php($previous = null)
-        @foreach ($teams as $team)
-            @php($team_total = $team->team_scores->first()->total_score ?? 0)
-            <table class="score-table">
-                <tr style="page-break-after: avoid">
-                    <th style="width: 3%"></th>
-                    <th>{{ $previous == $team_total ? $i : ++$i }}.
-                        {{ $team->name }}</th>
-                    @php($previous = $team_total)
-                    @foreach ($toestellen as $toestel)
-                        <th colspan="2" style="width: 10%">{{ $toestel }}</th>
+        <table class="group-table">
+            @php($i = 0)
+            @php($previous = null)
+            @foreach ($teams as $team)
+                @php($team_total = $team->team_scores->first()->total_score ?? 0)
+                <tbody>
+                    <tr style="page-break-after: avoid">
+                        <th colspan="2">{{ $previous == $team_total ? $i : ++$i }}.
+                            {{ $team->name }}</th>
+                        @php($previous = $team_total)
+                        @foreach ($toestellen as $toestel)
+                            <th colspan="2">{{ $toestel }}</th>
+                        @endforeach
+                    </tr>
+                    @foreach ($team->registrations as $registration)
+                        <tr style="break-after: avoid">
+                            <td style="width: 10">{{ $registration->startnumber }}</td>
+                            <td>
+                                {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
+                            @foreach ($toestellen as $key => $toestel)
+                                @php($score = $registration->scores->where('toestel', $key + 1)->first())
+                                <td style="width: fit-content; border-right: none; font-size: 8px">
+                                    d:
+                                    {{ number_format($score->d ?? 0, 3) }}<br>
+                                    e:
+                                    {{ number_format($score->e_score ?? 0, 3) }}<br>
+                                    @if ($score->n ?? 0 != 0)
+                                        n:
+                                        -{{ number_format($score->n ?? 0, 1) }}
+                                    @endif
+                                </td>
+                                <td @if (($score->counted ?? 0) == 0) class="not-counted" @endif
+                                    style="width: fit-content; border-left:none">
+                                    {{ number_format($score->total ?? 0, 3) }}
+                                </td>
+                            @endforeach
+                        </tr>
                     @endforeach
-                </tr>
-                @foreach ($team->registrations as $registration)
-                    <tr style="break-after: avoid">
-                        <td>{{ $registration->startnumber }}</td>
-                        <td>
-                            {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
+                    <tr style="break-after: auto">
+                        <td style="width: min-content"></td>
+                        <td>Totaal: {{ $team_total }}</td>
                         @foreach ($toestellen as $key => $toestel)
-                            @php($score = $registration->scores->where('toestel', $key + 1)->first())
-                            <td style="border-right: none; font-size: 8px">
-                                d:
-                                {{ number_format($score->d ?? 0, 3) }}<br>
-                                e:
-                                {{ number_format($score->e_score ?? 0, 3) }}<br>
-                                @if ($score->n ?? 0 != 0)
-                                    n:
-                                    -{{ number_format($score->n ?? 0, 1) }}
-                                @endif
-                            </td>
-                            <td @if (($score->counted ?? 0) == 0) class="not-counted" @endif style="border-left:none">
-                                {{ number_format($score->total ?? 0, 3) }}
+                            <td colspan="2" style="width: fit-content">
+                                {{ number_format($team->team_scores->first()->toestel_scores[$key] ?? 0, 3) }}
                             </td>
                         @endforeach
                     </tr>
-                @endforeach
-                <tr style="break-after: auto">
-                    <td></td>
-                    <td>Totaal: {{ $team_total }}</td>
-                    @foreach ($toestellen as $key => $toestel)
-                        <td colspan="2">
-                            {{ number_format($team->team_scores->first()->toestel_scores[$key] ?? 0, 3) }}
-                        </td>
-                    @endforeach
-                </tr>
                 </tbody>
-            </table>
-        @endforeach
+            @endforeach
+        </table>
         @if (!$loop->last)
             <div style="page-break-after: always"></div>
         @endif

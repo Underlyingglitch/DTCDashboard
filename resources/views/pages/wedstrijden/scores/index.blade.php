@@ -17,17 +17,14 @@
     <table class="table">
         <tr>
             <th>Ronde</th>
-            @for ($i = 0; $i < count($groups[0]); $i++)
-                <th>{{ $toestellen[$i] ?? 'Rust' }}</th>
+            @for ($i = 0; $i < count($settings); $i++)
+                <th>{{ $toestellen[$settings[$i] - 1] ?? 'Rust' }}</th>
             @endfor
-            {{-- @for ($i = 0; $i < $rounds; $i++)
-                <th>{{ $i < 6 ? $toestellen[$i] : 'Rust' }}</th>
-            @endfor --}}
         </tr>
-        @for ($i = 0; $i < count($groups); $i++)
+        @for ($i = 0; $i < count($groups[0]); $i++)
             <tr>
                 <th>{{ $i + 1 }}</th>
-                @for ($j = 0; $j < count($groups[0]); $j++)
+                @for ($j = 0; $j < count($groups); $j++)
                     <td>
                         @foreach ($groups[$i][$j] as $baan => $group)
                             @livewire('scores.score-table-button', ['wedstrijd' => $wedstrijd->id, 'groupnr' => $group, 'pss' => $pss, 'toestel' => $j + 1])

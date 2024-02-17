@@ -59,7 +59,8 @@ class RoundTable extends Component
 
     public function getGroups()
     {
-        $this->groups = $this->wedstrijd->group_settings[1][$this->current_round - 1][$this->toestel - 1];
+        $index = array_search($this->toestel, explode('-', $this->wedstrijd->round_settings));
+        $this->groups = $this->wedstrijd->group_settings[1][$this->current_round - 1][$index];
         $this->group_names = [];
         array_map(function ($group) {
             $baan = floor($group / 10) + 1;

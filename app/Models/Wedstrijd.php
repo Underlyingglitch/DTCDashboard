@@ -14,6 +14,7 @@ class Wedstrijd extends Model implements Auditable
         'index',
         'match_day_id',
         'group_settings',
+        'round_settings',
     ];
 
     public function baans($groups = null)

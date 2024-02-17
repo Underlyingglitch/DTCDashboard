@@ -24,7 +24,8 @@ class ScoreController extends Controller
         return view('pages.wedstrijden.scores.index', [
             'wedstrijd' => $wedstrijd,
             'groups' => $wedstrijd->group_settings[1],
-            'pss' => $pss
+            'pss' => $pss,
+            'settings' => explode('-', $wedstrijd->round_settings)
         ]);
     }
 

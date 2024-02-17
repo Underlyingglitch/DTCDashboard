@@ -23,7 +23,7 @@
             @foreach ($teams as $team)
                 <tbody style="break-inside: avoid">
                     @php($team_total = $team->team_scores->first()->total_score ?? 0)
-                    <tr style="page-break-after: avoid">
+                    <tr>
                         <th colspan="2">{{ $previous == $team_total ? $i : ++$i }}.
                             {{ $team->name }}</th>
                         @php($previous = $team_total)
@@ -32,7 +32,7 @@
                         @endforeach
                     </tr>
                     @foreach ($team->registrations as $registration)
-                        <tr style="break-after: avoid">
+                        <tr>
                             <td style="width: 10">{{ $registration->startnumber }}</td>
                             <td>
                                 {{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
@@ -55,7 +55,7 @@
                             @endforeach
                         </tr>
                     @endforeach
-                    <tr style="break-after: auto">
+                    <tr>
                         <td style="width: min-content"></td>
                         <td>Totaal: {{ $team_total }}</td>
                         @foreach ($toestellen as $key => $toestel)

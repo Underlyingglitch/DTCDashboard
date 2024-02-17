@@ -34,6 +34,7 @@ class RoundTable extends Component
                 return;
             }
         }
+        $this->getRegistrations();
     }
 
     public function groupUpdated($data)

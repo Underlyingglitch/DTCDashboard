@@ -31,7 +31,7 @@ class DatabaseSyncServiceProvider extends ServiceProvider
         if (config('app.env') != 'local') {
             return;
         }
-        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class, ProcessedScore::class];
+        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class];
         foreach ($models as $model) {
             $model::creating(function ($model) {
                 if (request()->is('api/*')) {

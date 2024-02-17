@@ -31,13 +31,6 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
-let eT = [];
-if (import.meta.env.VITE_APP_ENV == 'local') {
-    eT = ['ws'];
-} else {
-    eT = ['ws', 'wss'];
-}
-
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -48,7 +41,7 @@ window.Echo = new Echo({
     forceTLS: import.meta.env.VITE_APP_ENV == 'local' ? false : true,
     encrypted: true,
     disableStats: true,
-    enabledTransports: eT,
+    enabledTransports: import.meta.env.VITE_APP_ENV == 'local' ? ['ws'] : ['ws', 'wss'],
 });
 
 // Subscribe to a user notification channel

@@ -26,33 +26,11 @@ class ScoreController extends Controller
     {
         $this->authorize('process_scores', $wedstrijd);
 
-        // $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team', 'group')->get();
-        // $group_count = explode(', ', $wedstrijd->group_amount);
-        // $groups = [];
-        // $baans = [];
-        // $rounds = 0;
-        // for ($i = 0; $i < $wedstrijd->baans(); $i++) {
-        //     $group_nrs = $registrations
-        //         ->unique('group_id')
-        //         ->pluck('group_id')
-        //         ->toArray();
-        //     $baan_groups = array_filter($group_nrs, function ($group) use ($i) {
-        //         return floor($group / 10) == $i;
-        //     });
-        //     asort($baan_groups);
-        //     $groups[$i] = $baan_groups;
-        //     $baans[$i] = $this->getGroupNrs($group_count[$i], $i);
-        //     $rounds = count($baans[$i]) > $rounds ? count($baans[$i]) : $rounds;
-        // }
-
         $pss = ProcessedScore::where('wedstrijd_id', $wedstrijd->id)->get();
 
         return view('pages.wedstrijden.scores.index', [
             'wedstrijd' => $wedstrijd,
-            // 'registrations' => $registrations,
             'groups' => $wedstrijd->group_settings[1],
-            // 'baans' => $baans,
-            // 'rounds' => $rounds,
             'pss' => $pss
         ]);
     }

@@ -75,7 +75,7 @@ class ScoreInputForm extends Component
             'n' => $this->n,
             'total' => $this->t
         ]);
-        $this->dispatch('score_saved', sn: $this->startnumber);
+        event(new \App\Events\Scores\ScoreUpdated($this->matchday, $score));
         $this->d = '';
         $this->e1 = '';
         $this->e2 = '';

@@ -2,6 +2,7 @@
 
 namespace App\Events\Scores;
 
+use App\Models\Score;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -15,16 +16,13 @@ class ScoreUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $matchday_id;
-
-    public function __construct($matchday_id)
+    public function __construct(public $matchday_id, public Score $score)
     {
-        $this->matchday_id = $matchday_id;
     }
 
     public function broadcastOn()
     {
-        return new Channel('livescores.' . $this->matchday_id);
+        return ['livescores.' . $this->matchday_id, 'jury'];
     }
 
     public function broadcastAs()
@@ -36,6 +34,7 @@ class ScoreUpdated implements ShouldBroadcastNow
     {
         return [
             'matchday_id' => $this->matchday_id,
+            'startnumber' => $this->score->startnumber
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Scores;
 
 use App\Models\Team;
 use App\Models\Score;

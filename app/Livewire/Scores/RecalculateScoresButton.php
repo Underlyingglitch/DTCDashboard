@@ -3,7 +3,7 @@
 namespace App\Livewire\Scores;
 
 use Livewire\Component;
-use App\Jobs\CalculateTeamScore;
+use App\Jobs\Scores\CalculateTeamScore;
 use App\Jobs\IncrementCounterJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Auth;

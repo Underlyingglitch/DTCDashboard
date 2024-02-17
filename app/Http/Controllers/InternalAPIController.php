@@ -6,7 +6,7 @@ use App\Models\Setting;
 use App\Models\SyncTask;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
-use App\Jobs\CalculateTeamScore;
+use App\Jobs\Scores\CalculateTeamScore;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Facades\Auditor;

@@ -9,14 +9,7 @@ use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
-use App\Jobs\CalculateTeamScore;
-use App\Jobs\IncrementCounterJob;
 use App\Http\Traits\FunctionsTrait;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use App\Notifications\UserNotification;
-use Illuminate\Support\Facades\Notification;
 
 class ScoreController extends Controller
 {

@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Score;
-use App\Jobs\CalculateTeamScore;
+use App\Jobs\Scores\CalculateTeamScore;
 use App\Jobs\CheckCountedScores;
 use Illuminate\Support\Facades\Log;
 

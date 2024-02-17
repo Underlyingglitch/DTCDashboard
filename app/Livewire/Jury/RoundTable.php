@@ -6,6 +6,7 @@ use App\Models\Score;
 use App\Models\Setting;
 use Livewire\Component;
 use App\Models\Wedstrijd;
+use Livewire\Attributes\On;
 use App\Models\Registration;
 
 class RoundTable extends Component
@@ -24,6 +25,17 @@ class RoundTable extends Component
             "echo:settings.current_round,.SettingUpdated" => 'updateRound',
             "echo:jury,.GroupUpdated" => "groupUpdated",
         ];
+    }
+
+    #[On('score_saved')]
+    public function scoreSaved($sn)
+    {
+        foreach ($this->registrations as $index => $baan) {
+            if (array_key_exists($sn, $baan)) {
+                $this->registrations[$index][$sn]['status'] = 'scored';
+                return;
+            }
+        }
     }
 
     public function groupUpdated($data)

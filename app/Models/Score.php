@@ -16,7 +16,9 @@ class Score extends Model implements Auditable
         'startnumber',
         'toestel',
         'd',
-        'e',
+        'e1',
+        'e2',
+        'e3',
         'n',
         'total',
         'counted'

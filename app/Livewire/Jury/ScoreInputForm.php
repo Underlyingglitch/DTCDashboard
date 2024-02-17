@@ -44,10 +44,11 @@ class ScoreInputForm extends Component
     {
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
         $this->e = count($es) > 0 ? array_sum($es) / count($es) : null;
-        if ($this->d == 0) {
+        if ($this->d == 0 || $this->d == '') {
             $this->t = 0;
             return;
         }
+        if ($this->n == '') $this->n = 0;
         $this->t = 10 - $this->e + $this->d - $this->n;
         if ($this->t < 0) {
             $this->t = 0;
@@ -65,15 +66,16 @@ class ScoreInputForm extends Component
         }
         $score = Score::create([
             'match_day_id' => $this->matchday,
+            'startnumber' => $this->startnumber,
             'toestel' => $this->toestel,
             'd' => $this->d,
-            'e1' => $this->e1,
-            'e2' => $this->e2,
-            'e3' => $this->e3,
+            'e1' => $this->e1 == '' ? 0 : $this->e1,
+            'e2' => $this->e2 == '' ? null : $this->e2,
+            'e3' => $this->e3 == '' ? null : $this->e3,
             'n' => $this->n,
             'total' => $this->t
         ]);
-        Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'Score succesvol opgeslagen', 'success'));
+        $this->dispatch('score_saved', sn: $this->startnumber);
         $this->d = '';
         $this->e1 = '';
         $this->e2 = '';

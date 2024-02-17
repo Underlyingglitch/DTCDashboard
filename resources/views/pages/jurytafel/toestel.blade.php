@@ -1,14 +1,7 @@
 @extends('layouts.jury')
 
-@section('page_title',
-    $toestellen[$toestel - 1] .
-    ' | Wedstrijd ' .
-    $wedstrijd->index .
-    ' | ' .
-    $wedstrijd->match_day->date->format('d-m-Y') .
-    ' |
-    ' .
-    $wedstrijd->match_day->location->name)
+@section('page_title', $toestellen[$toestel - 1] . ' | Wedstrijd ' . $wedstrijd->index . ' | ' .
+    $wedstrijd->match_day->date->format('d-m-Y') . ' | ' . $wedstrijd->match_day->location->name)
 
 @section('content')
     <div class="alert alert-warning" id="warning-message" style="display: none">
@@ -16,8 +9,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            @livewire('jury.round-table', ['toestel' => $toestel])
-
+            @livewire('jury.round-table', ['toestel' => $toestel, 'wedstrijd' => $wedstrijd])
         </div>
     </div>
     <br>
@@ -26,6 +18,7 @@
             <div class="card">
                 <div class="card-header text-center">Score invoer</div>
                 <div class="card-body">
+                    @livewire('jury.score-input-form', ['toestel' => $toestel, 'matchday' => $wedstrijd->match_day])
                 </div>
             </div>
         </div>
@@ -33,7 +26,7 @@
             <div class="card">
                 <div class="card-header text-center">Score correctie</div>
                 <div class="card-body">
-                    @livewire('jury.score-correct-form', ['toestel' => $toestel, 'matchday' => $matchday])
+                    @livewire('jury.score-correct-form', ['toestel' => $toestel, 'matchday' => $wedstrijd->match_day])
                 </div>
             </div>
         </div>
@@ -70,5 +63,11 @@
                 window.location.reload();
             }
         })
+        document.addEventListener('sn_clicked', function() {
+            var dScoreField = document.getElementById('d-score-field');
+            if (dScoreField) {
+                dScoreField.focus();
+            }
+        });
     </script>
 @endsection

@@ -40,5 +40,11 @@ class ConstantsServiceProvider extends ServiceProvider
         ]);
 
         View::share('toestellen', ['Vloer', 'Voltige', 'Ringen', 'Sprong', 'Brug', 'Rekstok']);
+
+        View::share('jury_registration_status', [
+            'pending' => '<span style="color: orange"><i class="fas fa-clock"></i></span>',
+            'scored' => '<span style="color: green"><i class="fas fa-check"></i></span>',
+            'signed_off' => '<span style="color: red"><i class="fas fa-times"></i></span>',
+        ]);
     }
 }

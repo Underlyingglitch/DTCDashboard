@@ -24,6 +24,7 @@ class GroupTableItem extends Component
         $this->registration->update([
             'signed_off' => !$this->registration->signed_off,
         ]);
+        event(new \App\Events\Jury\GroupUpdated($this->registration->group_id));
         $this->dispatch('registration' . $this->registration->id . 'Updated');
         // Render again
         $this->render();
@@ -35,6 +36,7 @@ class GroupTableItem extends Component
         $this->registration->update([
             'group_id' => $group_id,
         ]);
+        event(new \App\Events\Jury\GroupUpdated($group_id));
     }
 
     #[On('registration{registration.id}Updated')]

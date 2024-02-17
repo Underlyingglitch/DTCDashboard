@@ -18,8 +18,7 @@ class JuryTafelController extends Controller
         if ($toestel < 1 || $toestel > 6) {
             abort(404);
         }
-        $matchday = MatchDay::find(Setting::getValue('current_match_day'));
         $wedstrijd = Wedstrijd::find(Setting::getValue('current_wedstrijd'));
-        return view('pages.jurytafel.toestel', compact('toestel', 'matchday', 'wedstrijd'));
+        return view('pages.jurytafel.toestel', compact('toestel', 'wedstrijd'));
     }
 }

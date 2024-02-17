@@ -69,14 +69,6 @@ class ScoreController extends Controller
             }
         }
 
-        ProcessedScore::updateOrCreate([
-            'wedstrijd_id' => $wedstrijd->id,
-            'group_id' => $group->id,
-            'toestel' => $toestel,
-        ], [
-            'completed' => count($request->s ?? []) > 0 ? 0 : 1,
-        ]);
-
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores zijn toegevoegd.');
     }
 

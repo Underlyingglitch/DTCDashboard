@@ -25,10 +25,11 @@ class Registration extends Model implements Auditable
         return $this->belongsTo(Team::class);
     }
 
-    public function wedstrijd()
-    {
-        return $this->belongsTo(Wedstrijd::class);
-    }
+    // TODO - DEPRECATED: Remove this relation
+    // public function wedstrijd()
+    // {
+    //     return $this->belongsTo(Wedstrijd::class);
+    // }
 
     public function gymnast()
     {

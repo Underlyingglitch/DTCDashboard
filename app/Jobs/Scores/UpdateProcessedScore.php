@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Jobs\Scores;
+
+use App\Models\Score;
+use App\Models\Wedstrijd;
+use Illuminate\Bus\Queueable;
+use App\Models\ProcessedScore;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+
+class UpdateProcessedScore implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(public Score $score)
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        $score_registration = $this->score->registration;
+        // Get the wedstrijd for this score from the niveau on the registration
+        $niveau = $score_registration->niveau;
+        $wedstrijd = Wedstrijd::where('match_day_id', $this->score->match_day_id)->whereHas('niveaus', function ($query) use ($niveau) {
+            $query->where('niveaus.id', $niveau->id);
+        })->first();
+        $startnumbers = $wedstrijd->registrations->where('group_id', $score_registration->group_id)->pluck('startnumber');
+
+        $scores = Score::where([
+            ['toestel', $this->score->toestel],
+            ['match_day_id', $this->score->match_day_id]
+        ])->whereIn('startnumber', $startnumbers)->pluck('startnumber');
+        ProcessedScore::updateOrCreate([
+            'group_id' => $score_registration->group_id,
+            'toestel' => $this->score->toestel,
+            'wedstrijd_id' => $wedstrijd->id,
+        ], [
+            'completed' => count($startnumbers) == count($scores)
+        ]);
+    }
+}

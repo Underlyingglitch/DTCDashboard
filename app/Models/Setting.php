@@ -26,11 +26,11 @@ class Setting extends Model
         });
     }
 
-    public static function getValue(string $key)
+    public static function getValue(string $key, mixed $default = null)
     {
         $value = Cache::get($key);
         if ($value === null) {
-            $value = Setting::where('key', $key)->first()->value ?? null;
+            $value = Setting::where('key', $key)->first()->value ?? $default;
         }
         Cache::put($key, $value, 60 * 60 * 24 * 7);
         return $value;

@@ -2,14 +2,18 @@
 
 namespace App\Providers;
 
+use App\Models\Club;
+use App\Models\Team;
 use App\Models\Score;
+use App\Models\Gymnast;
 use App\Models\Setting;
 use App\Models\MatchDay;
+use App\Models\SyncTask;
 use App\Models\Wedstrijd;
 use App\Models\Competition;
-use App\Models\ProcessedScore;
 use App\Models\Registration;
-use App\Models\SyncTask;
+use App\Models\ProcessedScore;
+use App\Models\ScoreCorrection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,7 +35,7 @@ class DatabaseSyncServiceProvider extends ServiceProvider
         if (config('app.env') != 'local') {
             return;
         }
-        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class];
+        $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Gymnast::class, Club::class, Score::class, ScoreCorrection::class, Team::class];
         foreach ($models as $model) {
             $model::creating(function ($model) {
                 if (request()->is('api/*')) {
@@ -56,5 +60,27 @@ class DatabaseSyncServiceProvider extends ServiceProvider
                 ]);
             });
         }
+        Setting::creating(function ($setting) {
+            if (request()->is('api/*')) {
+                return true;
+            }
+            SyncTask::create([
+                'model_type' => get_class($setting),
+                'model_id' => $setting->id,
+                'operation' => 'setting',
+                'data' => json_encode([$setting->key, $setting->value]),
+            ]);
+        });
+        Setting::updating(function ($setting) {
+            if (request()->is('api/*')) {
+                return true;
+            }
+            SyncTask::create([
+                'model_type' => get_class($setting),
+                'model_id' => $setting->id,
+                'operation' => 'setting',
+                'data' => json_encode([$setting->key, $setting->value]),
+            ]);
+        });
     }
 }

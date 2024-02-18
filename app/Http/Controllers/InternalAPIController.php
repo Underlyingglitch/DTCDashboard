@@ -7,62 +7,91 @@ use App\Models\SyncTask;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Jobs\Scores\CalculateTeamScore;
+use Cache;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Facades\Auditor;
+use PhpParser\Node\Stmt\Break_;
 
 class InternalAPIController extends Controller
 {
-    public function audits(Request $request)
+    public function test(Request $request)
     {
-        if (!isset($request->audits)) {
-            return response()->json(['error' => 'No audits provided'], 400);
-        }
-        $success_ids = [];
-        $error_ids = [];
-        foreach ($request->audits as $audit) {
-            // Get the model
-            $model = $audit['auditable_type'];
-            // Switch on the event
-            switch ($audit['event']) {
-                case 'created':
-                    // Create the model on the current database
-                    if ($model::create($audit['new_values'])) {
-                        $success_ids[] = $audit['id'];
-                    } else {
-                        $error_ids[] = $audit['id'];
-                    }
-                    break;
-                case 'updated':
-                    // Update the model on the current database
-                    if ($model::find($audit['auditable_id'])->update($audit['new_values'])) {
-                        $success_ids[] = $audit['id'];
-                    } else {
-                        $error_ids[] = $audit['id'];
-                    }
-                    break;
-                case 'deleted':
-                    // Delete the model on the current database
-                    if ($model::find($audit['auditable_id'])->delete()) {
-                        $success_ids[] = $audit['id'];
-                    } else {
-                        $error_ids[] = $audit['id'];
-                    }
-                    break;
-                case 'restored':
-                    // Restore the model on the current database
-                    if ($model::withTrashed()->find($audit['auditable_id'])->restore()) {
-                        $success_ids[] = $audit['id'];
-                    } else {
-                        $error_ids[] = $audit['id'];
-                    }
-                    break;
-                default:
-                    break;
+        // Store the request to a file
+        file_put_contents(storage_path('logs/internal_api.log'), json_encode($request->toArray()) . PHP_EOL, FILE_APPEND);
+        foreach ($request['events'] as $event) {
+            // if $event['channel'] starts with presence-jurytafel.
+            if (strpos($event['channel'], 'presence-jurytafel.') === 0) {
+                // Get the wedstrijd_id from the channel
+                $toestel = explode('.', $event['channel'])[1];
+                $key = 'monitor.jurytafel.' . $toestel;
+                $count = Setting::getValue('jurytafel_count_' . $toestel, 0);
+                if ($event['name'] == 'member_added') {
+                    $count++;
+                }
+                if ($event['name'] == 'member_removed') {
+                    // Only decrement if the count is higher than 0
+                    if ($count > 0) $count--;
+                }
+                if ($event['name'] == 'channel_vacated') {
+                    $count = 0;
+                }
+                Setting::setValue('jurytafel_count_' . $toestel, $count);
+                event(new \App\Events\Monitor\JuryTafelPresenceChanged($toestel, Cache::get($key)));
             }
         }
-        return response()->json(['success' => $success_ids, 'error' => $error_ids]);
     }
+
+    // public function audits(Request $request)
+    // {
+    //     if (!isset($request->audits)) {
+    //         return response()->json(['error' => 'No audits provided'], 400);
+    //     }
+    //     $success_ids = [];
+    //     $error_ids = [];
+    //     foreach ($request->audits as $audit) {
+    //         // Get the model
+    //         $model = $audit['auditable_type'];
+    //         // Switch on the event
+    //         switch ($audit['event']) {
+    //             case 'created':
+    //                 // Create the model on the current database
+    //                 if ($model::create($audit['new_values'])) {
+    //                     $success_ids[] = $audit['id'];
+    //                 } else {
+    //                     $error_ids[] = $audit['id'];
+    //                 }
+    //                 break;
+    //             case 'updated':
+    //                 // Update the model on the current database
+    //                 if ($model::find($audit['auditable_id'])->update($audit['new_values'])) {
+    //                     $success_ids[] = $audit['id'];
+    //                 } else {
+    //                     $error_ids[] = $audit['id'];
+    //                 }
+    //                 break;
+    //             case 'deleted':
+    //                 // Delete the model on the current database
+    //                 if ($model::find($audit['auditable_id'])->delete()) {
+    //                     $success_ids[] = $audit['id'];
+    //                 } else {
+    //                     $error_ids[] = $audit['id'];
+    //                 }
+    //                 break;
+    //             case 'restored':
+    //                 // Restore the model on the current database
+    //                 if ($model::withTrashed()->find($audit['auditable_id'])->restore()) {
+    //                     $success_ids[] = $audit['id'];
+    //                 } else {
+    //                     $error_ids[] = $audit['id'];
+    //                 }
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    //     return response()->json(['success' => $success_ids, 'error' => $error_ids]);
+    // }
 
     public function changes(Request $request)
     {
@@ -116,6 +145,11 @@ class InternalAPIController extends Controller
                     } catch (\Throwable $th) {
                         $error_ids[] = $change['id'];
                     }
+                    break;
+                case 'setting':
+                    $data = json_decode($change['data'], true);
+                    Setting::setValue($data[0], $data[1]);
+                    $success_ids[] = $change['id'];
                     break;
                 default:
                     Log::error('Unknown operation: ' . $change['operation']);

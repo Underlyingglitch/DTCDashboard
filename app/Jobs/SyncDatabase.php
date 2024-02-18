@@ -35,14 +35,14 @@ class SyncDatabase implements ShouldQueue
             return;
         }
 
-        event(new \App\Events\DataSync\UpdateSyncStatus(2));
-
         $changes = SyncTask::where('synced', false)->get(['id', 'model_type', 'model_id', 'operation', 'data'])->toArray();
 
         if (count($changes) === 0) {
             event(new \App\Events\DataSync\UpdateSyncStatus(3));
             return;
         }
+
+        event(new \App\Events\DataSync\UpdateSyncStatus(2));
 
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', config('app.api_base_url') . '/internal/changes', [

@@ -59,4 +59,9 @@ class MatchDay extends Model implements Auditable
     {
         return $this->hasMany(Declaration::class);
     }
+
+    public function getFullNameAttribute()
+    {
+        return $this->name . ' (' . $this->date->format('d-m-Y') . ') - ' . $this->competition->name;
+    }
 }

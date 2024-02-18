@@ -22,7 +22,7 @@ class ImportController extends Controller
 
         return view('pages.import.index', [
             'type' => $request->has('matchday') ? "registrations" : null,
-            'matchdays' => MatchDay::all()->pluck('name', 'id'),
+            'matchdays' => MatchDay::all()->pluck('full_name', 'id'),
             'matchday' => $request->input('matchday'),
         ]);
     }

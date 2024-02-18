@@ -36,6 +36,11 @@ class Setting extends Model
         return $value;
     }
 
+    public static function getDBValue(string $key, mixed $default = null)
+    {
+        return Setting::where('key', $key)->first()->value ?? $default;
+    }
+
     public static function setValue(string $key, mixed $value)
     {
         Setting::updateOrCreate(

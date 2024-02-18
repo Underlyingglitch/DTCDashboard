@@ -19,6 +19,8 @@ class SyncDatabase implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $queue = 'sync';
+
     /**
      * Create a new job instance.
      */

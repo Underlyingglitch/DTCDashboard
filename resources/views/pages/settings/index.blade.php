@@ -10,7 +10,7 @@
         <a class="btn btn-success" href="{{ route('settings.set', ['db_write', 'on']) }}">Inschakelen</a>
     @endif
     <br><br>
-    @if (config('app.env') == 'local' || config('app.env') == 'development')
+    @if (config('app.env') == 'local' || config('app.env') == 'dev')
         @livewire('sync-toggle-button')
     @endif
 @endsection

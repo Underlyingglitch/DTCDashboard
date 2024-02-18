@@ -9,7 +9,7 @@
         <div class="alert alert-warning">
             Applicatie in local modus. Functies beperkt.
         </div>
-    @elseif(config('app.env') == 'development')
+    @elseif(config('app.env') == 'dev')
         <div class="alert alert-danger">
             Applicatie in development modus.
         </div>

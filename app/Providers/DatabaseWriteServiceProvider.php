@@ -27,7 +27,7 @@ class DatabaseWriteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // If server is not production, do nothing
-        if (config('app.env') != 'production' && config('app.env') != 'development') {
+        if (config('app.env') != 'production' && config('app.env') != 'dev') {
             return;
         }
         // If database write is enabled, do nothing

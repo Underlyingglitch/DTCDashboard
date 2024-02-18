@@ -21,4 +21,12 @@ class FeedbackController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Bedankt voor uw feedback!');
     }
+
+    public function destroy(Feedback $feedback)
+    {
+        $this->authorize('delete', $feedback);
+        $feedback->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Feedback verwijderd');
+    }
 }

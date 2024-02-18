@@ -31,7 +31,6 @@ class SyncStatus extends Component
 
     public function updateStatus($input)
     {
-        Cache::put('sync_status', $input[0]);
         $this->status = $input[0];
         $this->message = $input[1];
     }

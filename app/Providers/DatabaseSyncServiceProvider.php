@@ -60,27 +60,27 @@ class DatabaseSyncServiceProvider extends ServiceProvider
                 ]);
             });
         }
-        Setting::creating(function ($setting) {
-            if (request()->is('api/*')) {
-                return true;
-            }
-            SyncTask::create([
-                'model_type' => get_class($setting),
-                'model_id' => $setting->id,
-                'operation' => 'setting',
-                'data' => json_encode([$setting->key, $setting->value]),
-            ]);
-        });
-        Setting::updating(function ($setting) {
-            if (request()->is('api/*')) {
-                return true;
-            }
-            SyncTask::create([
-                'model_type' => get_class($setting),
-                'model_id' => $setting->id,
-                'operation' => 'setting',
-                'data' => json_encode([$setting->key, $setting->value]),
-            ]);
-        });
+        // Setting::creating(function ($setting) {
+        //     if (request()->is('api/*')) {
+        //         return true;
+        //     }
+        //     SyncTask::create([
+        //         'model_type' => get_class($setting),
+        //         'model_id' => $setting->id,
+        //         'operation' => 'setting',
+        //         'data' => json_encode([$setting->key, $setting->value]),
+        //     ]);
+        // });
+        // Setting::updating(function ($setting) {
+        //     if (request()->is('api/*')) {
+        //         return true;
+        //     }
+        //     SyncTask::create([
+        //         'model_type' => get_class($setting),
+        //         'model_id' => $setting->id,
+        //         'operation' => 'setting',
+        //         'data' => json_encode([$setting->key, $setting->value]),
+        //     ]);
+        // });
     }
 }

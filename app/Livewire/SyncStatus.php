@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Setting;
+use App\Models\SyncTask;
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,7 +26,14 @@ class SyncStatus extends Component
 
     public function sync()
     {
-        if ($this->status != 1 && $this->status != 4) return;
+        if ($this->status != 1 && $this->status != 4) {
+            if (Setting::getValue('sync_enabled') == 'false') return;
+            if (SyncTask::where('status', 0)->count() == 0) {
+                event(new \App\Events\DataSync\UpdateSyncStatus(1));
+                return;
+            }
+            return;
+        }
         $this->status = 2;
         \App\Jobs\SyncDatabase::dispatch();
     }

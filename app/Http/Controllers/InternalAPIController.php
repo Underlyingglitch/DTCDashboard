@@ -148,6 +148,7 @@ class InternalAPIController extends Controller
                     break;
                 case 'setting':
                     $data = json_decode($change['data'], true);
+                    Log::info('Setting ' . $data[0] . ' to ' . $data[1] . ' from internal API');
                     Setting::setValue($data[0], $data[1]);
                     $success_ids[] = $change['id'];
                     break;

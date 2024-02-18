@@ -36,5 +36,13 @@ class AuthServiceProvider extends ServiceProvider
             }
             return $user->hasRole('admin') ? true : null;
         });
+
+        Gate::define('monitor', function ($user) {
+            return $user->hasRole('admin');
+        });
+
+        Gate::define('jurytafel', function ($user) {
+            return $user->hasRole('jury');
+        });
     }
 }

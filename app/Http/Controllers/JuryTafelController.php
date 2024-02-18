@@ -10,11 +10,15 @@ class JuryTafelController extends Controller
 {
     public function index()
     {
+        $this->authorize('jurytafel');
+
         return view('pages.jurytafel.index');
     }
 
     public function toestel($toestel)
     {
+        $this->authorize('jurytafel');
+
         if ($toestel < 1 || $toestel > 6) {
             abort(404);
         }

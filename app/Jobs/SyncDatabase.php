@@ -48,7 +48,7 @@ class SyncDatabase implements ShouldQueue
         $response = $client->request('POST', config('app.api_base_url') . '/internal/changes', [
             'headers' => [
                 'Content-Type' => 'application/json',
-                'X-API-KEY' => env('API_KEY')
+                'X-API-KEY' => config('app.api_key')
             ],
             'body' => json_encode(['changes' => $changes]),
         ]);

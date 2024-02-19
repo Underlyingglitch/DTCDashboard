@@ -27,10 +27,7 @@ class EventServiceProvider extends ServiceProvider
 
     protected $observers = [
         \App\Models\Score::class => [\App\Observers\ScoreObserver::class],
-        \App\Models\ProcessedScore::class => [\App\Observers\ProcessedScoreObserver::class],
         \App\Models\User::class => [\App\Observers\UserObserver::class],
-        \App\Models\SyncTask::class => [\App\Observers\SyncTasksObserver::class],
-        \App\Models\TeamScore::class => [\App\Observers\TeamScoreObserver::class],
     ];
 
     /**

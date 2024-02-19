@@ -16,6 +16,19 @@ class ProcessedScore extends Model implements Auditable
         'completed',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($ps) {
+            event(new \App\Events\ProcessedScoreUpdated($ps));
+        });
+
+        static::created(function ($ps) {
+            event(new \App\Events\ProcessedScoreUpdated($ps));
+        });
+    }
+
     public function wedstrijd()
     {
         return $this->belongsTo(Wedstrijd::class);

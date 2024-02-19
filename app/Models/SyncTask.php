@@ -9,6 +9,16 @@ class SyncTask extends Model
 {
     use HasFactory;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($st) {
+            if (Setting::getValue('sync_enabled') == 'false') return;
+            event(new \App\Events\DataSync\UpdateSyncStatus(1));
+        });
+    }
+
     protected $fillable = [
         'id',
         'model_type',

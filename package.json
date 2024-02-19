@@ -22,7 +22,7 @@
         "chart.js": "4.4.1",
         "datatables.net-bs4": "^2.0.0",
         "datatables.net-buttons-bs4": "^2.4.2",
-        "datatables.net-datetime": "^1.5.0",
+        "datatables.net-datetime": "^1.5.2",
         "datatables.net-responsive-bs4": "^3.0.0",
         "datatables.net-searchbuilder-bs4": "^1.6.0",
         "datatables.net-select-bs4": "^2.0.0",

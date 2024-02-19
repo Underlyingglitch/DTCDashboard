@@ -19,6 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/internal/test', [InternalAPIController::class, 'test'])->name('test');
+
 Route::middleware('internalapi')->controller(InternalAPIController::class)->prefix('/internal')->group(function () {
     Route::post('/changes', 'changes')->name('changes');
 });

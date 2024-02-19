@@ -21,6 +21,7 @@ use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\DGResourceController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\MatchDaysExportController;
+use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\WedstrijdExportController;
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
@@ -122,4 +123,8 @@ Route::controller(SettingsController::class)->name('settings.')->prefix('setting
     Route::get('/set/{setting}/{value}', 'set')->name('set');
     Route::get('/database', 'database')->name('database');
     Route::get('/database/process', 'database_process')->name('database.process');
+});
+
+Route::controller(MonitorController::class)->name('monitor.')->prefix('monitor')->group(function () {
+    Route::get('/', 'index')->name('index');
 });

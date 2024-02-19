@@ -1,0 +1,3 @@
+<div>
+    Count: {{ $count }}
+</div>

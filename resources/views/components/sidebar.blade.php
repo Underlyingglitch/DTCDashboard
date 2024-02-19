@@ -112,9 +112,15 @@
                 <i class="fas fa-fw fa-cog"></i>
                 <span>Instellingen</span></a>
         </li>
-    @endif
 
-    @can('viewAny', App\Models\User::class)
+        @if (config('app.env') == 'local' || config('app.env') == 'dev')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('monitor.index') }}">
+                    <i class="fas fa-fw fa-chart-line"></i>
+                    <span>Monitor</span></a>
+            </li>
+        @endif
+
         <li class="nav-item">
             <a class="nav-link" href="{{ route('users.index') }}">
                 <i class="fas fa-fw fa-users"></i>

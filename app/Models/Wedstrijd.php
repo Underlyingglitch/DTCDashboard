@@ -19,7 +19,6 @@ class Wedstrijd extends Model implements Auditable
 
     protected $casts = [
         'group_settings' => 'array',
-        'round_settings' => 'array',
     ];
 
     public function baans($groups = null)

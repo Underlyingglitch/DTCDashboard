@@ -126,7 +126,7 @@ class WedstrijdController extends Controller
             $message = ['success', 'Wedstrijd succesvol bijgewerkt'];
         }
 
-        return redirect()->route('matchdays.show', $wedstrijd->match_day_id)->with($message[0], $message[1]);
+        return redirect()->route('wedstrijden.show', $wedstrijd->id)->with($message[0], $message[1]);
     }
 
     /**

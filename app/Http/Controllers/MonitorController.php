@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use Illuminate\Http\Request;
 
 class MonitorController extends Controller
 {
     public function index()
     {
-        return view('pages.monitor.index');
+        return view('pages.monitor.index', [
+            'jury_laptops' => Device::where('type', 'jury')->get()
+        ]);
     }
 }

@@ -3,15 +3,16 @@
 namespace App\Events\Device;
 
 use App\Models\Device;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class DeviceUpdated
+class DeviceUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,7 +21,7 @@ class DeviceUpdated
      */
     public function __construct(public Device $device)
     {
-        //
+        Log::info('DeviceUpdated event fired for device ' . $device->id . ' (' . $device->name . ')' . ' with IP ' . $device->ip);
     }
 
     /**
@@ -30,7 +31,7 @@ class DeviceUpdated
      */
     public function broadcastOn()
     {
-        return new Channel('monitor');
+        return ['monitor', 'monitor.' . $this->device->id];
     }
     /**
      * The event's broadcast name.
@@ -48,6 +49,6 @@ class DeviceUpdated
      */
     public function broadcastWith()
     {
-        return ['name' => $this->device->name, 'ip' => $this->device->ip, 'type' => $this->device->type, 'settings' => $this->device->settings];
+        return ['name' => $this->device->name, 'ip' => $this->device->ip, 'type' => $this->device->type, 'loaded_page' => $this->device->loaded_page, 'settings' => $this->device->settings];
     }
 }

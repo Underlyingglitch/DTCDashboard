@@ -36,21 +36,20 @@
         // }, 1000 * 5);
         window.axios.post('/api/internal/ping', {
             page: window.location.pathname,
+        }).then((data) => {
+            let id = data.data.id
+            loadPage(data.data.loaded_page)
+            window.Echo.channel(`monitor.${id}`).listen('.DeviceUpdated', (e) => {
+                loadPage(e.loaded_page)
+            })
         }).catch((error) => {
             console.log(error)
         })
-        window.Echo.join('monitor').here((users) => {
-            console.log('here', users)
-        }).joining((user) => {
-            console.log('joining', user)
-        }).leaving((user) => {
-            console.log('leaving', user)
-        })
-        window.axios.post('/api/internal/ping', {
-            page: window.location.pathname,
-        }).catch((error) => {
-            console.log(error)
-        })
+
+        function loadPage(page) {
+            if (page == window.location.pathname) return
+            window.location.pathname = page
+        }
     </script>
     @livewireStyles
 </head>

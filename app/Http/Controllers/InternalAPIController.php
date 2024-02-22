@@ -101,7 +101,7 @@ class InternalAPIController extends Controller
             $device->loaded_page = $request->page;
             $device->last_seen = now();
             $device->save();
-            return response()->json(['message' => 'Saved']);
+            return response()->json(['message' => 'Saved', 'id' => $device->id, 'loaded_page' => $device->loaded_page]);
         }
         Log::info('Device not found: ' . $request->ip() . ' - ' . $request->page);
         return response()->json(['message' => 'Device not found'], 404);

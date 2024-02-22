@@ -52,4 +52,8 @@
             @endforeach
         </tbody>
     </table>
+    @can('processDoorstroom', $competition)
+        <h4>Doorstroming berekenen</h4>
+        @livewire('calculate-doorstroom', ['competition' => $competition])
+    @endcan
 @endsection

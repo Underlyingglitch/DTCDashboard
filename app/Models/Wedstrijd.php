@@ -17,16 +17,16 @@ class Wedstrijd extends Model implements Auditable
         'round_settings',
     ];
 
+    protected $casts = [
+        'group_settings' => 'array',
+        'round_settings' => 'array',
+    ];
+
     public function baans($groups = null)
     {
         if ($groups == null) $groups = $this->groups;
 
         return $groups->pluck('baan')->unique()->count();
-    }
-
-    public function getGroupSettingsAttribute($value)
-    {
-        return json_decode($value);
     }
 
     public function getGroupAmountAttribute()

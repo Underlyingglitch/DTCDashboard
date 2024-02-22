@@ -38,11 +38,12 @@ class MatchDaysController extends Controller
         $this->authorize('create', MatchDay::class);
 
         $this->validate($request, [
+            'name' => 'required|string',
             'date' => 'required|date',
             'location_id' => 'required|exists:locations,id',
         ]);
 
-        $competition->matchDays()->create($request->only('date', 'location_id'));
+        $competition->matchDays()->create($request->only('name', 'date', 'location_id'));
         if (Setting::getValue('db_write') == 'off') {
             $message = ['warning', 'Wedstrijddag toegevoegd aan wachtrij'];
         } else {
@@ -74,7 +75,7 @@ class MatchDaysController extends Controller
 
         return view('pages.matchdays.edit', [
             'matchday' => $matchday,
-            'locations' => Location::all()->pluck('name', 'id')->toArray()
+            'locations' => Location::all()->pluck('select_name', 'id')->toArray()
         ]);
     }
 
@@ -86,11 +87,12 @@ class MatchDaysController extends Controller
         $this->authorize('update', $matchday);
 
         $this->validate($request, [
+            'name' => 'required|string',
             'date' => 'required|date',
             'location_id' => 'required|exists:locations,id',
         ]);
 
-        $matchday->update($request->only('date', 'location_id'));
+        $matchday->update($request->only('name', 'date', 'location_id'));
 
         if (Setting::getValue('db_write') == 'off') {
             $message = ['warning', 'Wedstrijddag wijziging toegevoegd aan wachtrij'];

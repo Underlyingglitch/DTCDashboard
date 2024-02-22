@@ -65,4 +65,10 @@ class CompetitionPolicy
     {
         return false;
     }
+
+    public function processDoorstroom(User $user, Competition $competition)
+    {
+        if ($user->hasRole('dtc')) return true;
+        return false;
+    }
 }

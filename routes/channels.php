@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -23,5 +24,10 @@ Broadcast::channel('livescores', function ($user) {
 
 Broadcast::channel('jurytafel.{toestel}', function ($user, $toestel) {
     if (!$user->can('jurytafel')) return false;
+    return [$user->id];
+});
+
+Broadcast::channel('monitor', function ($user) {
+    Log::info('monitor channel device: ');
     return [$user->id];
 });

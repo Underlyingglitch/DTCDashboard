@@ -19,7 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/internal/test', [InternalAPIController::class, 'test'])->name('test');
+if (config('app.env') === 'local' || config('app.env') === 'dev') {
+    Route::post('/internal/ping', [InternalAPIController::class, 'ping'])->name('ping');
+}
 
 Route::middleware('internalapi')->controller(InternalAPIController::class)->prefix('/internal')->group(function () {
     Route::post('/changes', 'changes')->name('changes');

@@ -22,6 +22,36 @@
     </script>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @yield('scripts')
+    <script type="module" defer>
+        // Periodically send a ping to the server to keep the session alive
+        // setInterval(() => {
+        //     console.log('Sending ping')
+        //     window.axios.post('/api/internal/ping', {
+        //         userId: 'test'
+        //     }).then((data) => {
+        //         console.log(data)
+        //     }).catch((error) => {
+        //         console.log(error)
+        //     })
+        // }, 1000 * 5);
+        window.axios.post('/api/internal/ping', {
+            page: window.location.pathname,
+        }).catch((error) => {
+            console.log(error)
+        })
+        window.Echo.join('monitor').here((users) => {
+            console.log('here', users)
+        }).joining((user) => {
+            console.log('joining', user)
+        }).leaving((user) => {
+            console.log('leaving', user)
+        })
+        window.axios.post('/api/internal/ping', {
+            page: window.location.pathname,
+        }).catch((error) => {
+            console.log(error)
+        })
+    </script>
     @livewireStyles
 </head>
 

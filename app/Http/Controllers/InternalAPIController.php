@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Cache;
+use App\Models\Device;
 use App\Models\Setting;
 use App\Models\SyncTask;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
-use App\Jobs\Scores\CalculateTeamScore;
-use Cache;
+use PhpParser\Node\Stmt\Break_;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Facades\Auditor;
-use PhpParser\Node\Stmt\Break_;
+use App\Jobs\Scores\CalculateTeamScore;
 
 class InternalAPIController extends Controller
 {
@@ -92,6 +93,19 @@ class InternalAPIController extends Controller
     //     }
     //     return response()->json(['success' => $success_ids, 'error' => $error_ids]);
     // }
+
+    public function ping(Request $request)
+    {
+        $device = Device::where('ip', $request->ip())->first();
+        if ($device) {
+            $device->loaded_page = $request->page;
+            $device->last_seen = now();
+            $device->save();
+            return response()->json(['message' => 'Saved']);
+        }
+        Log::info('Device not found: ' . $request->ip() . ' - ' . $request->page);
+        return response()->json(['message' => 'Device not found'], 404);
+    }
 
     public function changes(Request $request)
     {

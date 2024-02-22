@@ -117,7 +117,7 @@ class WedstrijdController extends Controller
             'niveaus' => 'required|array|min:1|exists:niveaus,id',
         ]);
 
-        $wedstrijd->update($request->only('index'));
+        $wedstrijd->update($request->only(['index', 'round_settings']));
         $wedstrijd->niveaus()->sync($request->input('niveaus'));
 
         if (Setting::getValue('db_write') == 'off') {

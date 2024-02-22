@@ -21,7 +21,6 @@ class ScoreCorrectionAdded implements ShouldBroadcastNow
      */
     public function __construct(public ScoreCorrection $sc)
     {
-        Log::info('Broadcasting event');
     }
     /**
      * Get the channels the event should broadcast on.

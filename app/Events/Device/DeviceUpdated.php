@@ -21,7 +21,6 @@ class DeviceUpdated implements ShouldBroadcastNow
      */
     public function __construct(public Device $device)
     {
-        Log::info('DeviceUpdated event fired for device ' . $device->id . ' (' . $device->name . ')' . ' with IP ' . $device->ip);
     }
 
     /**

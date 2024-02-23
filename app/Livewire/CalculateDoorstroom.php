@@ -69,7 +69,13 @@ class CalculateDoorstroom extends Component
         foreach ($match_days_selection as $match_day_id => $type) {
             $match_day = MatchDay::find($match_day_id);
             if ($this->teams) {
-                foreach (array_values(TeamScore::where('match_day_id', $match_day->id)->whereIn('team_id', $teams->pluck('id'))->orderByDesc('total_score')->pluck('team_id')->toArray()) as $index => $team) {
+                $teamscores = TeamScore::where('match_day_id', $match_day->id)
+                    ->whereIn('team_id', $teams->pluck('id'))
+                    ->where('total_score', '>', 0)
+                    ->orderByDesc('total_score')
+                    ->pluck('team_id')->toArray();
+                // dd($teamscores);
+                foreach (array_values($teamscores) as $index => $team) {
                     $score = $scores[$team] ?? 0;
                     $score += $type * $this->teampoints[$index] ?? 0;
                     $scores[$team] = $score;
@@ -77,7 +83,9 @@ class CalculateDoorstroom extends Component
             } else {
                 $registrations = Registration::where('match_day_id', $match_day->id)->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($match_day) {
                     $query->where('match_day_id', $match_day->id);
-                }])->get()->sortByDesc(function ($registration) {
+                }])->get()->filter(function ($registration) {
+                    return $registration->scores->sum('total') > 0;
+                })->sortByDesc(function ($registration) {
                     return $registration->scores->sum('total');
                 })->values();
                 foreach ($registrations as $index => $registration) {

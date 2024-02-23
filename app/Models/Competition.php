@@ -15,7 +15,7 @@ class Competition extends Model implements Auditable
 
     protected $fillable = ['name'];
 
-    public function matchDays()
+    public function match_days()
     {
         return $this->hasMany(MatchDay::class);
     }
@@ -27,7 +27,7 @@ class Competition extends Model implements Auditable
 
     public function getDatesAttribute()
     {
-        return $this->matchDays->pluck('date')->map(function ($date) {
+        return $this->match_days->pluck('date')->map(function ($date) {
             return $date->format('d-m-Y');
         });
     }

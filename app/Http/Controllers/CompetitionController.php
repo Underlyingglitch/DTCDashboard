@@ -61,7 +61,7 @@ class CompetitionController extends Controller
         return view('pages.competitions.show', [
             'competition' => $competition,
             'activeMatchDay' => Setting::getValue('current_match_day'),
-            'matchdays' => $competition->matchDays()->with('location')->orderBy('date')->get(),
+            'matchdays' => $competition->match_days()->with('location')->orderBy('date')->get(),
         ]);
     }
 

@@ -43,7 +43,7 @@ class MatchDaysController extends Controller
             'location_id' => 'required|exists:locations,id',
         ]);
 
-        $competition->matchDays()->create($request->only('name', 'date', 'location_id'));
+        $competition->match_days()->create($request->only('name', 'date', 'location_id'));
         if (Setting::getValue('db_write') == 'off') {
             $message = ['warning', 'Wedstrijddag toegevoegd aan wachtrij'];
         } else {

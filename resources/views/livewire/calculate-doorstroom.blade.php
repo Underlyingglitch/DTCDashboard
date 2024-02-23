@@ -25,5 +25,33 @@
         <input wire:model="amount" type="number" id="amount" class="form-control"><br>
         <button class="btn btn-sm btn-primary" wire:click="process">Doorstroming berekenen</button>
     @else
+        <button wire:click="back" class="btn btn-sm btn-primary">Terug</button>
+        <table border="1">
+            @if ($teams)
+                @foreach ($doorstroom as $team)
+                    <tr>
+                        <th colspan="4">{{ $team['name'] }}</th>
+                    </tr>
+                    @foreach ($team['registrations'] as $registration)
+                        <tr>
+                            <td>{{ $registration['name'] }}</td>
+                            <td>{{ $registration['club'] }}</td>
+                            <td>{{ $registration['gymnast_id'] }}</td>
+                            <td>{{ $registration['club_id'] }}</td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            @else
+                @foreach ($doorstroom as $registration)
+                    <tr>
+                        <td>{{ $registration['name'] }}</td>
+                        <td>{{ $registration['club'] }}</td>
+                        <td>{{ $registration['gymnast_id'] }}</td>
+                        <td>{{ $registration['club_id'] }}</td>
+                    </tr>
+                @endforeach
+            @endif
+        </table>
     @endif
+
 </div>

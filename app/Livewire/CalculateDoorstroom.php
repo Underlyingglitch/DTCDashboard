@@ -37,7 +37,7 @@ class CalculateDoorstroom extends Component
     {
         $this->match_days = [];
         $this->match_days_selection = [];
-        foreach ($this->competition->matchDays as $match_day) {
+        foreach ($this->competition->match_days as $match_day) {
             if (in_array($this->niveau, $match_day->niveaus->pluck('id')->toArray())) {
                 $this->match_days[] = $match_day;
                 $this->match_days_selection[$match_day->id] = '0';
@@ -64,34 +64,67 @@ class CalculateDoorstroom extends Component
         $teams = Team::where('competition_id', $this->competition->id)->where('niveau_id', $this->niveau)->get();
         $this->teams = $teams->count() > 0;
         $scores = [];
+        $registration_cache = [];
 
         foreach ($match_days_selection as $match_day_id => $type) {
             $match_day = MatchDay::find($match_day_id);
             if ($this->teams) {
-                foreach (TeamScore::where('match_day_id', $match_day->id)->whereIn('team_id', $teams->pluck('id'))->orderByDesc('total_score')->pluck('team_id')->toArray() as $index => $team) {
+                foreach (array_values(TeamScore::where('match_day_id', $match_day->id)->whereIn('team_id', $teams->pluck('id'))->orderByDesc('total_score')->pluck('team_id')->toArray()) as $index => $team) {
                     $score = $scores[$team] ?? 0;
                     $score += $type * $this->teampoints[$index] ?? 0;
                     $scores[$team] = $score;
                 }
             } else {
+                $registrations = Registration::where('match_day_id', $match_day->id)->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($match_day) {
+                    $query->where('match_day_id', $match_day->id);
+                }])->get()->sortByDesc(function ($registration) {
+                    return $registration->scores->sum('total');
+                })->values();
+                foreach ($registrations as $index => $registration) {
+                    $score = $scores[$registration->id] ?? 0;
+                    $score += $type * $this->points[$index] ?? 0;
+                    $scores[$registration->id] = $score;
+                    $registration_cache[$registration->id] = [
+                        'name' => $registration->gymnast->name,
+                        'club' => $registration->club->name,
+                        'gymnast_id' => $registration->gymnast->id,
+                        'club_id' => $registration->club->id,
+                    ];
+                }
             }
         }
         arsort($scores);
 
-        $doorstroom = [];
+        // dd($scores);
 
+        $doorstroom = [];
+        $counter = 0;
         foreach ($scores as $id => $score) {
+            $counter++;
+            if ($counter > $this->amount) {
+                break;
+            }
             if ($this->teams) {
                 $team = $teams->where('id', $id)->first();
-                $registrations = Registration::with(['gymnast', 'club'])->whereIn('id', $team->registrations->pluck('id'))->distinct('gymnast_id')->get(['gymnast.name', 'club.name']);
-                dd($registrations);
-                $doorstroom[$team->id] = ['name' => $team->name, 'registrations' => $registrations];
+                $registrations = Registration::with(['gymnast', 'club'])->whereIn('id', $team->registrations->pluck('id'))->where('match_day_id', $this->competition->match_days->first()->id)->get()->map(function ($registration) {
+                    return [
+                        'name' => $registration->gymnast->name,
+                        'club' => $registration->club->name,
+                        'gymnast_id' => $registration->gymnast->id,
+                        'club_id' => $registration->club->id,
+                    ];
+                });
+                $doorstroom[] = ['name' => $team->name, 'registrations' => $registrations];
             } else {
+                $doorstroom[] = $registration_cache[$id];
             }
         }
+        $this->doorstroom = $doorstroom;
+    }
 
-
-        dd($scores);
+    public function back()
+    {
+        $this->doorstroom = null;
     }
 
     public function render()

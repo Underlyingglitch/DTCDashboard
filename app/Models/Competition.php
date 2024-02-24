@@ -11,7 +11,7 @@ class Competition extends Model implements Auditable
 {
     use SoftDeletes, CascadeSoftDeletes, \OwenIt\Auditing\Auditable;
 
-    protected $cascadeDeletes = ['matchDays', 'teams'];
+    protected $cascadeDeletes = ['match_days', 'teams'];
 
     protected $fillable = ['name'];
 

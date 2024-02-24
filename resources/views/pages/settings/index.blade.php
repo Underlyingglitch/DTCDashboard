@@ -3,7 +3,7 @@
 @section('page_title', 'Applicatie instellingen')
 
 @section('content')
-    Database schrijven:
+    <a href="{{ route('settings.database.compare') }}">Database</a> schrijven:
     @if (\App\Models\Setting::getValue('db_write') == 'on')
         <a class="btn btn-danger" href="{{ route('settings.set', ['db_write', 'off']) }}">Uitschakelen</a>
     @else

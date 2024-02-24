@@ -123,6 +123,7 @@ Route::controller(SettingsController::class)->name('settings.')->prefix('setting
     Route::get('/set/{setting}/{value}', 'set')->name('set');
     Route::get('/database', 'database')->name('database');
     Route::get('/database/process', 'database_process')->name('database.process');
+    Route::get('/database/compare', 'compare_databases')->name('database.compare');
 });
 
 Route::controller(MonitorController::class)->name('monitor.')->prefix('monitor')->group(function () {

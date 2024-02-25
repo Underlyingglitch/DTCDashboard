@@ -182,40 +182,6 @@ class WedstrijdController extends Controller
         return redirect()->route('wedstrijden.show', $wedstrijd)->with('success', 'Groepsinstellingen opgeslagen.');
     }
 
-    public function move_group(Wedstrijd $wedstrijd, Registration $registration)
-    {
-        $this->authorize('update', $wedstrijd);
-
-        return view('pages.wedstrijden.move_group', [
-            'wedstrijd' => $wedstrijd,
-            'registration' => $registration
-        ]);
-    }
-
-    public function move_group_store(Request $request, Wedstrijd $wedstrijd, Registration $registration)
-    {
-        $this->authorize('update', $wedstrijd);
-
-        $this->validate($request, [
-            'baan' => 'required|integer|min:0|max:3',
-            'group' => 'required|integer|min:0|max:9',
-        ]);
-
-        $group = Group::where('nr', $request->input('group') + 1)->where('baan', $request->input('baan') + 1)->first();
-        $registration->update(['group_id' => $group->id]);
-
-        return redirect()->route('wedstrijden.show', $wedstrijd)->with('success', 'Registratie is verplaatst.');
-    }
-
-    public function signoff(Wedstrijd $wedstrijd, Registration $registration)
-    {
-        $this->authorize('signoff', $registration);
-
-        $registration->update(['signed_off' => !$registration->signed_off]);
-
-        return redirect()->route('wedstrijden.show', $wedstrijd)->with('success', 'Registratie is aangepast.');
-    }
-
     public function setactive(Wedstrijd $wedstrijd)
     {
         $this->authorize('update', $wedstrijd);

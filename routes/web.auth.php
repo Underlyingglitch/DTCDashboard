@@ -27,8 +27,6 @@ Route::get('/test', [TestController::class, 'index'])->name('test');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/competitions/{competition}/setactive', [CompetitionController::class, 'setactive'])->name('competitions.setactive');
-Route::get('/matchdays/{matchday}/setactive', [MatchDaysController::class, 'setactive'])->name('matchdays.setactive');
 Route::get('/wedstrijden/{wedstrijd}/setactive', [WedstrijdController::class, 'setactive'])->name('wedstrijden.setactive');
 
 Route::resource('competitions', CompetitionController::class);
@@ -79,9 +77,6 @@ Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wed
         Route::put('/', 'update')->name('update');
         Route::delete('/', 'destroy')->name('destroy');
         Route::post('/groupsettings', 'groupsettings')->name('groupsettings');
-        Route::get('/registration/{registration}/move_group', 'move_group')->name('registration.move_group');
-        Route::post('/registration/{registration}/move_group', 'move_group_store')->name('registration.move_group.store');
-        Route::get('/registration/{registration}/signoff', 'signoff')->name('registration.signoff');
         Route::controller(WedstrijdExportController::class)->name('export.')->prefix('/export')->group(function () {
             Route::post('/', 'select')->name('select');
             Route::get('/groups', 'groups')->name('groups');

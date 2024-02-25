@@ -36,8 +36,24 @@ class SettingsController extends Controller
 
     public function compare_databases()
     {
+        if (config('app.compare_database') == false) {
+            abort(403);
+        }
         // Don't check for these tables
-        $exlusions = ['migrations', 'audits', 'sessions', 'password_resets', 'jobs', 'failed_jobs', 'pending_changes'];
+        $exlusions = [
+            'migrations',
+            'audits',
+            'sessions',
+            'password_reset_tokens',
+            'personal_access_tokens',
+            'jobs',
+            'sync_tasks',
+            'job_batches',
+            'failed_jobs',
+            'pending_changes',
+            'model_has_permissions',
+            'model_has_roles',
+        ];
         // Get all tables in database for the main connection and the prod_server connection
         $tables_local = \DB::connection()->getDoctrineSchemaManager()->listTableNames();
         $tables_prod = \DB::connection('prod_server')->getDoctrineSchemaManager()->listTableNames();
@@ -58,29 +74,9 @@ class SettingsController extends Controller
                 unset($tables[$table]);
                 continue;
             }
-            // if ($value[0] && $value[1]) {
-            //     // Compare the table rows in both connections and return missing values or differences based on id
-            //     $rows_local = \DB::connection()->table($table)->get();
-            //     $rows_prod = \DB::connection('prod_server')->table($table)->get();
-            //     $diff = [];
-            //     $checked_ids = [];
-            //     foreach ($rows_local as $row) {
-            //         $checked_ids[] = $row->id;
-            //         $row_prod = $rows_prod->where('id', $row->id)->first();
-            //         if ($row_prod == null) {
-            //             $diff[] = ['id' => $row->id, 'local' => $row, 'prod' => null];
-            //         } elseif ($row != $row_prod) {
-            //             $diff[] = ['id' => $row->id, 'local' => $row, 'prod' => $row_prod];
-            //         }
-            //     }
-            //     foreach ($rows_prod->whereNotIn('id', $checked_ids) as $row) {
-            //         $diff[] = ['id' => $row->id, 'local' => null, 'prod' => $row];
-            //     }
-            //     $tables[$table][2] = $diff;
-            //     break;
-            // }
         }
-        dd($tables);
+
+        return view('pages.settings.compare_databases', ['tables' => $tables]);
     }
 
     public function database_process()

@@ -189,6 +189,8 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'compare_database' => env('DB_COMPARE', false),
+
     'api_key' => env('API_KEY'),
     'api_base_url' => env('API_BASE_URL'),
 

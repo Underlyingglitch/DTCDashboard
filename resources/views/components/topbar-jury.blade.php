@@ -2,6 +2,7 @@
 
     <a href="{{ route('jurytafel.index') }}" class="btn btn-link">Toestel selecteren</a>
     @livewire('jury.reload-button', ['page' => url()->current()])
+    <h4 class="ml-auto">@yield('page_title')</h4>
     <!-- Topbar Search -->
     {{-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
         <div class="input-group">

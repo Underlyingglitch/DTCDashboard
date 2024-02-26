@@ -73,41 +73,6 @@ class ScoreController extends Controller
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores zijn toegevoegd.');
     }
 
-    public function correct(Wedstrijd $wedstrijd, Request $request)
-    {
-        $this->authorize('process_scores', $wedstrijd);
-
-        $this->validate($request, [
-            'startnumber' => 'required|numeric',
-            'toestel' => 'required|numeric',
-        ]);
-
-        $score = Score::where('match_day_id', $wedstrijd->match_day->id)
-            ->where('startnumber', $request->startnumber)
-            ->where('toestel', $request->toestel)
-            ->first();
-
-        // If not found, create new
-        $score = $score ?? new Score();
-        $d = $request->d ?? $score->d;
-        $e = $request->e ?? $score->e;
-        $n = $request->n ?? $score->n;
-        $total = ($d + (10 - $e)) - $n;
-        if ($total < 0) $total = 0;
-
-        $score->update([
-            'match_day_id' => $wedstrijd->match_day->id,
-            'startnumber' => $request->startnumber,
-            'toestel' => $request->toestel,
-            'd' => $d,
-            'e' => $e,
-            'n' => $n,
-            'total' => $total,
-        ]);
-
-        return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Score is bijgewerkt.');
-    }
-
     public function livescores()
     {
         $matchdays = MatchDay::orderBy('date', 'desc')->with(['location', 'competition'])->get();

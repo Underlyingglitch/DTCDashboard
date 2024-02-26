@@ -87,7 +87,6 @@ Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wed
         });
         Route::controller(ScoreController::class)->name('score.')->prefix('/score')->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/', 'correct')->name('correct');
             Route::get('/{toestel}/{group}', 'add')->name('add');
             Route::post('/{toestel}/{group}', 'store')->name('store');
             Route::get('/recalculate', 'recalculate')->name('recalculate');

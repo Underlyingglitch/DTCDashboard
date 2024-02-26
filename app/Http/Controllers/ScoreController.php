@@ -62,7 +62,7 @@ class ScoreController extends Controller
                     ],
                     [
                         'd' => $request['d-' . $id],
-                        'e' => $request['e-' . $id],
+                        'e1' => $request['e-' . $id],
                         'n' => $request['n-' . $id],
                         'total' => $total,
                     ]

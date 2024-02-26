@@ -14,7 +14,7 @@ class RoundTable extends Component
     public $toestel;
     public $current_round;
     public $groups;
-    public $group_names;
+    public $group_names = [];
     public $registrations;
 
     public function getListeners()
@@ -62,11 +62,12 @@ class RoundTable extends Component
     {
         $index = array_search($this->toestel, explode('-', $this->wedstrijd->round_settings));
         $this->groups = $this->wedstrijd->group_settings[1][$this->current_round - 1][$index];
-        $this->group_names = [];
-        array_map(function ($group) {
-            $baan = floor($group / 10) + 1;
-            $this->group_names[] = 'Baan ' . $baan . ' Groep ' . $group % 10;
-        }, $this->groups);
+        foreach ($this->groups as $index => $group) {
+            if ($group != 0) {
+                $baan = floor($group / 10) + 1;
+                $this->group_names[$index] = 'Baan ' . $baan . ' Groep ' . $group % 10;
+            }
+        }
         $this->getRegistrations();
     }
 
@@ -91,7 +92,6 @@ class RoundTable extends Component
                 'score' => $scores->where('startnumber', $registration->startnumber)->first()->total ?? null,
             ];
         }
-        // dd($this->registrations);
     }
 
     public function clicked($sn)

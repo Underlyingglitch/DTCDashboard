@@ -47,12 +47,12 @@ class ScoreTableButton extends Component
                 $this->class = "btn-success";
             } else {
                 $this->class = $ps ? "btn-warning" : "btn-danger";
-                $this->href = route('wedstrijden.score.add', [
-                    'wedstrijd' => $this->wedstrijd,
-                    'toestel' => $this->toestel,
-                    'group' => $this->groupnr
-                ]);
             }
+            $this->href = route('wedstrijden.score.add', [
+                'wedstrijd' => $this->wedstrijd,
+                'toestel' => $this->toestel,
+                'group' => $this->groupnr
+            ]);
         }
     }
 

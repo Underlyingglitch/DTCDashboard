@@ -5,6 +5,7 @@ namespace App\Livewire\Jury;
 use App\Models\Score;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 
 class ScoreInputForm extends Component
@@ -81,6 +82,22 @@ class ScoreInputForm extends Component
     public function save()
     {
         $this->calculate();
+        if ($this->d < 0 || $this->d > 10) {
+            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning'));
+            return;
+        }
+        if ($this->e1 < 0 || $this->e1 > 10) {
+            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning'));
+            return;
+        }
+        if ($this->e2 < 0 || $this->e2 > 10) {
+            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning'));
+            return;
+        }
+        if ($this->e3 < 0 || $this->e3 > 10) {
+            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning'));
+            return;
+        }
         if ($this->locked || empty($this->startnumber)) return;
         if (empty($this->e1) && !empty($this->d)) {
             Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score mag niet leeg zijn', 'warning'));

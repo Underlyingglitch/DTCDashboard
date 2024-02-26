@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Jury;
 
+use App\Models\User;
 use App\Models\Score;
 use Livewire\Component;
 use App\Models\ScoreCorrection;
@@ -9,7 +10,7 @@ use App\Models\ScoreCorrection;
 class ScoreCorrections extends Component
 {
     public $matchday;
-    public $corrections;
+    public $corrections = [];
 
     public function getListeners()
     {
@@ -25,19 +26,22 @@ class ScoreCorrections extends Component
 
     public function hydrate()
     {
-        $this->corrections = ScoreCorrection::where('approved', false)
+        $corrections = ScoreCorrection::where('approved', false)
             ->whereHas('score', function ($query) {
                 $query->where('match_day_id', $this->matchday);
             })
             ->get();
-        // dd($this->corrections);
-
+        foreach ($corrections as $correction) {
+            $this->corrections[$correction->id] = $correction;
+        }
     }
 
     public function delete($correction)
     {
-        ScoreCorrection::find($correction)->delete();
-        $this->hydrate();
+        $sc = ScoreCorrection::find($correction);
+        User::find($sc->user_id)->notify(new \App\Notifications\UserNotification('Score correctie', 'Score correctie voor ' . $sc->score->startnumber . ' is afgewezen', 'error'));
+        $sc->delete();
+        unset($this->corrections[$correction]);
     }
 
     public function approve($correction)
@@ -47,15 +51,20 @@ class ScoreCorrections extends Component
             'approved' => true
         ]);
         $score = Score::find($sc->score_id);
-        $score->update([
-            'd' => $sc->d,
-            'e1' => $sc->e1,
-            'e2' => $sc->e2,
-            'e3' => $sc->e3,
-            'n' => $sc->n,
-            'total' => $sc->total
-        ]);
-        $this->hydrate();
+        if ($sc->d == 0) {
+            $score->delete();
+        } else {
+            $score->update([
+                'd' => $sc->d,
+                'e1' => $sc->e1,
+                'e2' => $sc->e2,
+                'e3' => $sc->e3,
+                'n' => $sc->n,
+                'total' => $sc->total
+            ]);
+        }
+        User::find($sc->user_id)->notify(new \App\Notifications\UserNotification('Score correctie', 'Score correctie voor ' . $sc->score->startnumber . ' is toegewezen', 'success'));
+        unset($this->corrections[$correction]);
     }
 
     public function render()

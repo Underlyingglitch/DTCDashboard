@@ -19,7 +19,8 @@ class ScoreCorrection extends Model implements Auditable
         'e3',
         'n',
         'total',
-        'approved'
+        'approved',
+        'user_id'
     ];
 
     public function score()

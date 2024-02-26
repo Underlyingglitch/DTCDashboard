@@ -114,6 +114,7 @@ class ScoreInputForm extends Component
             'n' => $this->n,
             'total' => $this->t
         ]);
+        Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'Score opgeslagen', 'success'));
         event(new \App\Events\Scores\ScoreUpdated($this->matchday, $score));
         $this->d = '';
         $this->e1 = '';

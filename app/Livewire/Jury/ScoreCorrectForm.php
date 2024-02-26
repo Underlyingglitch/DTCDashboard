@@ -122,19 +122,25 @@ class ScoreCorrectForm extends Component
             Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'D score 0 zal deze score in zijn geheel verwijderen. Druk nogmaals op opslaan om te bevestigen', 'info'));
             return;
         }
-        $sc = ScoreCorrection::create([
-            'score_id' => $this->score_id,
-            'd' => $this->d,
-            'e1' => $this->e1,
-            'e2' => $this->e2,
-            'e3' => $this->e3,
-            'n' => $this->n,
-            'total' => $this->t
-        ]);
+        $sc = ScoreCorrection::updateOrCreate(
+            [
+                'score_id' => $this->score_id
+            ],
+            [
+                'd' => $this->d,
+                'e1' => $this->e1,
+                'e2' => $this->e2,
+                'e3' => $this->e3,
+                'n' => $this->n ?? 0,
+                'total' => $this->t,
+                'approved' => false,
+                'user_id' => Auth::user()->id
+            ]
+        );
         event(new \App\Events\Jury\ScoreCorrectionAdded($sc));
         if ($this->jury) {
             if ($this->d == 0) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol verwijderd', 'success'));
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score succesvol verwijderd', 'success'));
             } else {
                 Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol opgeslagen', 'success'));
             }

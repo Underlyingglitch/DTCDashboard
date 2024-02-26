@@ -20,7 +20,11 @@
                         <td>{{ $registration['name'] }}</td>
                         <td>{{ $registration['club'] }}</td>
                         <td>{{ $registration['niveau'] }}</td>
-                        <td>{!! $jury_registration_status[$registration['status']] !!}</td>
+                        <td>{!! $jury_registration_status[$registration['status']] !!}
+                            @if ($registration['status'] == 'scored')
+                                <i>{{ $registration['score'] }}</i>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             @endforeach

@@ -31,6 +31,7 @@ class RoundTable extends Component
         foreach ($this->registrations as $index => $baan) {
             if (array_key_exists($data['startnumber'], $baan)) {
                 $this->registrations[$index][$data['startnumber']]['status'] = 'scored';
+                $this->registrations[$index][$data['startnumber']]['score'] = $data['score'];
                 return;
             }
         }
@@ -86,7 +87,8 @@ class RoundTable extends Component
                 'name' => $registration->gymnast->name,
                 'club' => $registration->club->name,
                 'niveau' => $registration->niveau->niveau_number ? $registration->niveau->full_name . ' (' . $registration->niveau->niveau_number . ')' : $registration->niveau->full_name,
-                'status' => $status
+                'status' => $status,
+                'score' => $scores->where('startnumber', $registration->startnumber)->first()->total ?? null,
             ];
         }
         // dd($this->registrations);

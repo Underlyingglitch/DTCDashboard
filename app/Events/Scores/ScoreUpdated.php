@@ -34,7 +34,8 @@ class ScoreUpdated implements ShouldBroadcastNow
     {
         return [
             'matchday_id' => $this->matchday_id,
-            'startnumber' => $this->score->startnumber
+            'startnumber' => $this->score->startnumber,
+            'score' => $this->score->total,
         ];
     }
 }

@@ -72,10 +72,15 @@ class ScoreCorrectForm extends Component
 
     public function calculate()
     {
+        $this->d = (float)str_replace(',', '.', $this->d);
+        $this->e1 = (float)str_replace(',', '.', $this->e1);
+        $this->e2 = (float)str_replace(',', '.', $this->e2);
+        $this->e3 = (float)str_replace(',', '.', $this->e3);
+        $this->n = (float)str_replace(',', '.', $this->n);
         if ($this->locked) return;
         $this->delete = false;
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
-        $this->e = count($es) > 0 ? array_sum($es) / count($es) : null;
+        $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 1) : null;
         if ($this->d == 0) {
             $this->t = 0;
             return;

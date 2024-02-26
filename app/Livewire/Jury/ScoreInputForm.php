@@ -58,8 +58,13 @@ class ScoreInputForm extends Component
 
     public function calculate()
     {
+        $this->d = (float)str_replace(',', '.', $this->d);
+        $this->e1 = (float)str_replace(',', '.', $this->e1);
+        $this->e2 = (float)str_replace(',', '.', $this->e2);
+        $this->e3 = (float)str_replace(',', '.', $this->e3);
+        $this->n = (float)str_replace(',', '.', $this->n);
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
-        $this->e = count($es) > 0 ? array_sum($es) / count($es) : null;
+        $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 1) : null;
         if ($this->d == 0 || $this->d == '') {
             $this->t = 0;
             return;
@@ -75,6 +80,7 @@ class ScoreInputForm extends Component
 
     public function save()
     {
+        $this->calculate();
         if ($this->locked || empty($this->startnumber)) return;
         if (empty($this->e1) && !empty($this->d)) {
             Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score mag niet leeg zijn', 'warning'));

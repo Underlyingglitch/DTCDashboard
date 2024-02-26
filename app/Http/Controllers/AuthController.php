@@ -31,7 +31,11 @@ class AuthController extends Controller
                 else $user->removeRole('trainer');
                 // Log the user in and remember them
                 Auth::login($user, true);
-                return redirect()->intended(route('dashboard'));
+                $user = Auth::user();
+                $user->locked = false;
+                $user->save();
+                $redirect = Device::where('ip', $request->ip())->first() ? 'jurytafel.index' : 'dashboard';
+                return redirect()->intended(route($redirect));
             } else {
                 return back()
                     ->withInput($request->except('password'))
@@ -47,9 +51,10 @@ class AuthController extends Controller
     public function login_as(Request $request)
     {
         $device = Device::where('ip', $request->ip())->first();
-        if (!$device->authenticated_user_id ?? null) return redirect()->route('auth.login');
         $user = User::find($device->authenticated_user_id);
         if (!$user) return redirect()->route('auth.login');
+        $user->locked = false;
+        $user->save();
         Auth::login($user, false);
         return redirect()->route('jurytafel.index');
     }
@@ -88,5 +93,29 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect()->route('auth.login');
+    }
+
+    public function lock()
+    {
+        Auth::user()->locked = true;
+        Auth::user()->save();
+        return view('auth.locked');
+    }
+
+    public function unlock(Request $request)
+    {
+        $this->validate($request, [
+            'password' => 'required'
+        ]);
+        $user = Auth::user();
+        if (Auth::validate(['email' => $user->email, 'password' => $request->password])) {
+            Auth::user()->locked = false;
+            Auth::user()->save();
+            $redirect = Device::where('ip', $request->ip())->first() ? 'jurytafel.index' : 'dashboard';
+            return redirect()->route($redirect);
+        }
+
+        return back()
+            ->withErrors(['details' => 'Ongeldige inloggegevens!']);
     }
 }

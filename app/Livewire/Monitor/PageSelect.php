@@ -25,6 +25,7 @@ class PageSelect extends Component
             '/login' => 'Inloggen',
             '/logout' => 'Uitloggen',
             '/lock' => 'Vergrendelen',
+            '/login_as' => 'Ontgrendelen',
         ]
     ];
 

@@ -24,10 +24,15 @@ Route::middleware([])->group(base_path('routes/web.public.php'));
 Route::middleware(['guest'])->group(base_path('routes/web.guest.php'));
 
 // user routes
-Route::middleware(['auth', 'verified'])->group(base_path('routes/web.auth.php'));
+Route::middleware(['auth', 'verified', 'locked'])->group(base_path('routes/web.auth.php'));
 Route::middleware(['auth'])->group(base_path('routes/web.email.php'));
 Route::middleware(['auth'])->get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
+Route::controller(AuthController::class)->name('auth.')->group(function () {
+    Route::get('/lock', 'lock')->name('lock')->middleware('auth');
+    Route::get('/login_as', 'login_as')->name('login_as');
+});
+
 if (config('app.env') == 'local' || config('app.env') == 'dev') {
-    Route::middleware(['auth'])->group(base_path('routes/web.jurytafel.php'));
+    Route::middleware(['auth', 'locked'])->group(base_path('routes/web.jurytafel.php'));
 }

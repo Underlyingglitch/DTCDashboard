@@ -32,6 +32,7 @@ class UserSelect extends Component
     public function mount($device)
     {
         $this->device_id = $device->id;
+        $this->authenticated_user_id = $device->authenticated_user_id;
     }
 
     public function updateDevice($data)

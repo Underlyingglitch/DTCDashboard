@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // Custom middleware
         'internalapi' => \App\Http\Middleware\CheckAPIToken::class,
+        'locked' => \App\Http\Middleware\LockedAccount::class,
     ];
 }

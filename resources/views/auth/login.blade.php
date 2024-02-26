@@ -15,6 +15,34 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+
+    <script type="module" defer>
+        // Periodically send a ping to the server to keep the session alive
+        setInterval(() => {
+            console.log('Sending ping')
+            window.axios.post('/api/internal/ping', {
+                page: window.location.pathname,
+                user_id: null,
+            })
+        }, 1000 * 5);
+        window.axios.post('/api/internal/ping', {
+            page: window.location.pathname,
+            user_id: null
+        }).then((data) => {
+            let id = data.data.id
+            loadPage(data.data.loaded_page)
+            window.Echo.channel(`monitor.${id}`).listen('.DeviceUpdated', (e) => {
+                loadPage(e.loaded_page)
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
+
+        function loadPage(page) {
+            if (page == window.location.pathname) return
+            window.location.pathname = page
+        }
+    </script>
 </head>
 
 <body class="login-background">

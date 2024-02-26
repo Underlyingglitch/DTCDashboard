@@ -16,6 +16,7 @@
                     </div>
                     <div class="card-body">
                         @livewire('monitor.page_select', ['device' => $laptop, 'type' => 'jury'])
+                        @livewire('monitor.user_select', ['device' => $laptop])
                     </div>
                 </div>
             </div>

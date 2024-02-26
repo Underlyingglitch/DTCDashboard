@@ -48,6 +48,6 @@ class DeviceUpdated implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        return ['name' => $this->device->name, 'ip' => $this->device->ip, 'type' => $this->device->type, 'loaded_page' => $this->device->loaded_page, 'settings' => $this->device->settings];
+        return ['name' => $this->device->name, 'ip' => $this->device->ip, 'type' => $this->device->type, 'loaded_page' => $this->device->loaded_page, 'authenticated_user_id' => $this->device->authenticated_user_id, 'settings' => $this->device->settings];
     }
 }

@@ -28,10 +28,12 @@
             console.log('Sending ping')
             window.axios.post('/api/internal/ping', {
                 page: window.location.pathname,
+                user_id: window.userId,
             })
         }, 1000 * 5);
         window.axios.post('/api/internal/ping', {
             page: window.location.pathname,
+            user_id: window.userId,
         }).then((data) => {
             let id = data.data.id
             loadPage(data.data.loaded_page)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,6 +44,16 @@ class AuthController extends Controller
             ->withErrors(['details' => 'Ongeldige inloggegevens!']);
     }
 
+    public function login_as(Request $request)
+    {
+        $device = Device::where('ip', $request->ip())->first();
+        if (!$device->authenticated_user_id ?? null) return redirect()->route('auth.login');
+        $user = User::find($device->authenticated_user_id);
+        if (!$user) return redirect()->route('auth.login');
+        Auth::login($user, false);
+        return redirect()->route('jurytafel.index');
+    }
+
     public function register()
     {
         return view('auth.register');
@@ -76,6 +87,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('home');
+        return redirect()->route('auth.login');
     }
 }

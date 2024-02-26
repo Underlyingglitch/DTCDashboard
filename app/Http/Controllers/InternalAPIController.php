@@ -99,9 +99,10 @@ class InternalAPIController extends Controller
         $device = Device::where('ip', $request->ip())->first();
         if ($device) {
             $device->loaded_page = $request->page;
+            $device->authenticated_user_id = $request->user_id;
             $device->last_seen = now();
             $device->save();
-            return response()->json(['message' => 'Saved', 'id' => $device->id, 'loaded_page' => $device->loaded_page]);
+            return response()->json(['message' => 'Saved', 'id' => $device->id, 'loaded_page' => $device->loaded_page, 'authenticated_user_id' => $device->authenticated_user_id]);
         }
         Log::info('Device not found: ' . $request->ip() . ' - ' . $request->page);
         return response()->json(['message' => 'Device not found'], 404);

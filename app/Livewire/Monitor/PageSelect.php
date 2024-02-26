@@ -22,6 +22,9 @@ class PageSelect extends Component
             '/jurytafel/4' => 'Sprong',
             '/jurytafel/5' => 'Brug',
             '/jurytafel/6' => 'Rekstok',
+            '/login' => 'Inloggen',
+            '/logout' => 'Uitloggen',
+            '/lock' => 'Vergrendelen',
         ]
     ];
 

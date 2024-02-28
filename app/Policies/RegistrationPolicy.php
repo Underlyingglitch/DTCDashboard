@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\Registration;
 use App\Models\User;
+use App\Models\Setting;
+use App\Models\Registration;
 use Illuminate\Auth\Access\Response;
 
 class RegistrationPolicy
@@ -73,6 +74,7 @@ class RegistrationPolicy
     public function signoff(User $user, Registration $registration): bool
     {
         if ($user->hasRole('dtc')) return true;
+        if ($registration->match_day_id < Setting::getValue('current_match_day')) return false;
         if ($user->hasRole('trainer') && $user->trainers->count() > 0) {
             if ($user->trainers->pluck('club_id')->contains($registration->club_id)) {
                 return true;

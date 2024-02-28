@@ -82,6 +82,7 @@ Route::controller(WedstrijdController::class)->name('wedstrijden.')->prefix('wed
             Route::get('/groups', 'groups')->name('groups');
             Route::get('/teams', 'teams')->name('teams');
             Route::get('/jury', 'jury')->name('jury');
+            Route::get('/dscore', 'dscore')->name('dscore');
             Route::get('/score/teams', 'teamscores')->name('scores.teams');
             Route::get('/score/individual', 'individualscores')->name('scores.individual');
         });

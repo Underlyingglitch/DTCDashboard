@@ -24,6 +24,7 @@ class ConstantsServiceProvider extends ServiceProvider
             'groups' => 'Groepsindeling',
             'teams' => 'Teamindeling',
             'jury' => 'Jurybriefjes',
+            'dscore' => 'D-score formulieren',
             'scores.teams' => 'Team scores',
             'scores.individual' => 'Individuele scores',
         ]);

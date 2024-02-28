@@ -77,7 +77,7 @@ class WedstrijdExportController extends Controller
         ]);
     }
 
-    public function jury(Wedstrijd $wedstrijd, $group_nr = null)
+    public function jury(Wedstrijd $wedstrijd)
     {
         $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team')->get();
         $group_count = explode(', ', $wedstrijd->group_amount);
@@ -114,6 +114,46 @@ class WedstrijdExportController extends Controller
         return response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="Jurybriefjes W' . $wedstrijd->index . '.pdf"',
+        ]);
+    }
+
+    public function dscore(Wedstrijd $wedstrijd)
+    {
+        $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team')->get();
+        $group_count = explode(', ', $wedstrijd->group_amount);
+        $groups = [];
+        $baans = [];
+        for ($i = 0; $i < $wedstrijd->baans(); $i++) {
+            $group_nrs = $registrations
+                ->unique('group_id')
+                ->pluck('group_id')
+                ->toArray();
+            $baan_groups = array_filter($group_nrs, function ($group) use ($i) {
+                return floor($group / 10) == $i;
+            });
+            asort($baan_groups);
+            $groups[$i] = $baan_groups;
+            $baans[$i] = $this->getGroupNrs($group_count[$i], $i);
+        }
+
+        // If debug is enabled, return the view instead of downloading the pdf
+        if (config('app.debug')) {
+            return view('pdf.d-score', [
+                'wedstrijd' => $wedstrijd,
+                'registrations' => $registrations,
+                'groups' => $groups,
+                'baans' => $baans
+            ]);
+        }
+        $pdf = Pdf::loadView('pdf.d-score', [
+            'wedstrijd' => $wedstrijd,
+            'registrations' => $registrations,
+            'groups' => $groups,
+            'baans' => $baans
+        ]);
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="D-score formulieren W' . $wedstrijd->index . '.pdf"',
         ]);
     }
 

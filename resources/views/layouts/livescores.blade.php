@@ -63,12 +63,7 @@
     <div class="pt-2 pl-2">
         <span class="badge badge-success" id="online_count">0</span> <span id="online_text">Gebruikers online</span>
     </div>
-    <div class="container" style="padding-bottom: 60px;">
-        {{-- Create a x number of users online indicator --}}
-
-        @yield('content')
-    </div>
-    @yield('nav')
+    {{ $slot }}
     @livewireScripts()
 </body>
 

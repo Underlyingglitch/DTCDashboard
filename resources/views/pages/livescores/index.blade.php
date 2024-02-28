@@ -1,4 +1,4 @@
-@extends('layouts.livescores')
+@extends('layouts.app')
 
 @section('page_title', 'Livescores')
 
@@ -14,7 +14,7 @@
     </div>
     <div id="accordion">
         @foreach ($matchdays as $matchday)
-            <a href="{{ route('livescores.show', [$matchday]) }}">
+            <a href="{{ route('livescores.show', [$matchday]) }}" target="_blank">
                 <div class="card">
                     <div class="card-header text-center" id="heading{{ $matchday->id }}" aria-expanded="false">
                         <h5 class="mb-0">

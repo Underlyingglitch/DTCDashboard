@@ -42,7 +42,7 @@ Route::resource('clubs', ClubController::class);
 
 Route::controller(ScoreController::class)->name('livescores.')->prefix('livescores')->group(function () {
     Route::get('/', 'livescores')->name('index');
-    Route::get('/{matchday}/{niveau?}', 'livescores_show')->name('show');
+    Route::get('/{matchday}/{niveau?}', \App\Livewire\Livescores\Index::class)->name('show');
 });
 
 Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof.index');

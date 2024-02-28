@@ -80,20 +80,4 @@ class ScoreController extends Controller
             'matchdays' => $matchdays,
         ]);
     }
-
-    public function livescores_show(MatchDay $matchday, Niveau $niveau, Request $request)
-    {
-        if (is_null($niveau->id)) {
-            $niveau = $matchday->niveaus->first();
-        }
-        $teams = $matchday->competition->teams->where('niveau_id', $niveau->id);
-        if (count($teams) == 0 && $request->tab == 'teams') {
-            return redirect()->route('livescores.show', [$matchday, $niveau]);
-        }
-        return view('pages.livescores.show', [
-            'matchday' => $matchday,
-            'niveau' => $niveau,
-            'teams' => $teams,
-        ]);
-    }
 }

@@ -19,5 +19,7 @@
                 class="btn btn-sm btn-danger">Verwijderen</a> --}}
 
         </td>
+    @else
+        <td></td>
     @endcan
 </tr>

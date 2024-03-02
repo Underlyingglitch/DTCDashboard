@@ -28,6 +28,7 @@ class RoundTable extends Component
 
     public function scoreSaved($data)
     {
+        if ($data['toestel'] != $this->toestel) return;
         foreach ($this->registrations as $index => $baan) {
             if (array_key_exists($data['startnumber'], $baan)) {
                 $this->registrations[$index][$data['startnumber']]['status'] = 'scored';

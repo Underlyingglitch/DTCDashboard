@@ -65,7 +65,7 @@ class ScoreInputForm extends Component
         $this->e3 = $this->e3 ? (float)str_replace(',', '.', $this->e3) : null;
         $this->n = $this->n ? (float)str_replace(',', '.', $this->n) : null;
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
-        $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 1) : null;
+        $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 3) : null;
         if ($this->d == 0 || $this->d == '') {
             $this->n = 0;
             $this->t = 0;

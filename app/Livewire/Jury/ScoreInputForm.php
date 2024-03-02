@@ -59,7 +59,7 @@ class ScoreInputForm extends Component
 
     public function calculate()
     {
-        $this->d = $this->d ? (float)str_replace(',', '.', $this->d) : null;
+        $this->d = $this->d ? (float)str_replace(',', '.', $this->d) : 0;
         $this->e1 = $this->e1 ? (float)str_replace(',', '.', $this->e1) : null;
         $this->e2 = $this->e2 ? (float)str_replace(',', '.', $this->e2) : null;
         $this->e3 = $this->e3 ? (float)str_replace(',', '.', $this->e3) : null;
@@ -67,6 +67,7 @@ class ScoreInputForm extends Component
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
         $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 1) : null;
         if ($this->d == 0 || $this->d == '') {
+            $this->n = 0;
             $this->t = 0;
             return;
         }

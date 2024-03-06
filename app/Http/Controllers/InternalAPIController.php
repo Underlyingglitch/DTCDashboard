@@ -125,7 +125,7 @@ class InternalAPIController extends Controller
                 case 'create':
                     if (SyncTask::find($change['id'])) {
                         // TODO: Compare the data and update if needed
-                        $success_ids[] = $change['id'];
+                        $error_ids[] = $change['id'];
                         break;
                     }
                     // Create the model on the current database

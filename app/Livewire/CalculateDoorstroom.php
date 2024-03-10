@@ -48,6 +48,7 @@ class CalculateDoorstroom extends Component
 
     public function process()
     {
+        $this->error = null;
         $this->authorize('processDoorstroom', $this->competition);
 
         if ($this->amount < 1) {

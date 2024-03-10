@@ -20,6 +20,7 @@ class CalculateDoorstroom extends Component
     public $amount;
 
     public $teams;
+    public $points_shown = false;
     public $doorstroom;
 
     private $teampoints = [50, 45, 40, 37, 34, 31, 28, 25, 22, 20, 18, 16, 14, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
@@ -55,8 +56,8 @@ class CalculateDoorstroom extends Component
         }
 
         // Remove all elements with value 0 from array
-        $match_days_selection = array_filter($this->match_days_selection);
-        if (count($match_days_selection) < 1) {
+        $this->match_days_selection = array_filter($this->match_days_selection);
+        if (count($this->match_days_selection) < 1) {
             $this->error = 'Selecteer minimaal 1 wedstrijddag';
             return;
         }
@@ -64,9 +65,10 @@ class CalculateDoorstroom extends Component
         $teams = Team::where('competition_id', $this->competition->id)->where('niveau_id', $this->niveau)->get();
         $this->teams = $teams->count() > 0;
         $scores = [];
+        $ind_scores = [];
         $registration_cache = [];
 
-        foreach ($match_days_selection as $match_day_id => $type) {
+        foreach ($this->match_days_selection as $match_day_id => $type) {
             $match_day = MatchDay::find($match_day_id);
             if ($this->teams) {
                 $teamscores = TeamScore::where('match_day_id', $match_day->id)
@@ -76,9 +78,12 @@ class CalculateDoorstroom extends Component
                     ->pluck('team_id')->toArray();
                 // dd($teamscores);
                 foreach (array_values($teamscores) as $index => $team) {
+                    $ind_score = $ind_scores[$team] ?? [];
+                    $ind_score[] = $type * $this->teampoints[$index] ?? 0;
                     $score = $scores[$team] ?? 0;
                     $score += $type * $this->teampoints[$index] ?? 0;
                     $scores[$team] = $score;
+                    $ind_scores[$team] = $ind_score;
                 }
             } else {
                 $registrations = Registration::where('match_day_id', $match_day->id)->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($match_day) {
@@ -89,10 +94,13 @@ class CalculateDoorstroom extends Component
                     return $registration->scores->sum('total');
                 })->values();
                 foreach ($registrations as $index => $registration) {
-                    $score = $scores[$registration->id] ?? 0;
+                    $ind_score = $ind_scores[$registration->startnumber] ?? [];
+                    $ind_score[] = $type * $this->teampoints[$index] ?? 0;
+                    $score = $scores[$registration->startnumber] ?? 0;
                     $score += $type * $this->points[$index] ?? 0;
-                    $scores[$registration->id] = $score;
-                    $registration_cache[$registration->id] = [
+                    $scores[$registration->startnumber] = $score;
+                    $ind_scores[$registration->startnumber] = $ind_score;
+                    $registration_cache[$registration->startnumber] = [
                         'name' => $registration->gymnast->name,
                         'club' => $registration->club->name,
                         'gymnast_id' => $registration->gymnast->id,
@@ -122,17 +130,26 @@ class CalculateDoorstroom extends Component
                         'club_id' => $registration->club->id,
                     ];
                 });
-                $doorstroom[] = ['name' => $team->name, 'registrations' => $registrations];
+                $doorstroom[] = ['name' => $team->name, 'registrations' => $registrations, 'scores' => $ind_scores[$team->id], 'total' => $score];
             } else {
-                $doorstroom[] = $registration_cache[$id];
+                $item = $registration_cache[$id];
+                $item['scores'] = $ind_scores[$id];
+                $item['total'] = $score;
+                $doorstroom[] = $item;
             }
         }
+        // dd($doorstroom);
         $this->doorstroom = $doorstroom;
     }
 
     public function back()
     {
         $this->doorstroom = null;
+    }
+
+    public function togglePointsShown()
+    {
+        $this->points_shown = !$this->points_shown;
     }
 
     public function render()

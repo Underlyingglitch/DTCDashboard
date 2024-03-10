@@ -26,11 +26,19 @@
         <button class="btn btn-sm btn-primary" wire:click="process">Doorstroming berekenen</button>
     @else
         <button wire:click="back" class="btn btn-sm btn-primary">Terug</button>
+        <button wire:click="togglePointsShown"
+            class="btn btn-sm btn-info">{{ $points_shown ? 'Punten niet tonen' : 'Punten tonen' }}</button>
         <table border="1">
             @if ($teams)
                 @foreach ($doorstroom as $team)
                     <tr>
                         <th colspan="4">{{ $team['name'] }}</th>
+                        @if ($points_shown)
+                            @for ($i = 0; $i < count($match_days_selection); $i++)
+                                <th>{{ $team['scores'][$i] }}</th>
+                            @endfor
+                            <th>{{ $team['total'] }}</th>
+                        @endif
                     </tr>
                     @foreach ($team['registrations'] as $registration)
                         <tr>
@@ -42,12 +50,19 @@
                     @endforeach
                 @endforeach
             @else
+                {{-- @php(dd($match_days_selection)) --}}
                 @foreach ($doorstroom as $registration)
                     <tr>
                         <td>{{ $registration['name'] }}</td>
                         <td>{{ $registration['club'] }}</td>
                         <td>{{ $registration['gymnast_id'] }}</td>
                         <td>{{ $registration['club_id'] }}</td>
+                        @if ($points_shown)
+                            @for ($i = 0; $i < count($match_days_selection); $i++)
+                                <th>{{ $registration['scores'][$i] ?? '' }}</th>
+                            @endfor
+                            <th>{{ $registration['total'] }}</th>
+                        @endif
                     </tr>
                 @endforeach
             @endif

@@ -5,6 +5,7 @@ namespace App\Livewire\Jury;
 use App\Models\Setting;
 use Livewire\Component;
 use App\Models\ScoreCorrection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class ScoreCorrectForm extends Component
@@ -83,6 +84,10 @@ class ScoreCorrectForm extends Component
         $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 1) : null;
         if ($this->d == 0) {
             $this->t = 0;
+            $this->e1 = '';
+            $this->e2 = '';
+            $this->e3 = '';
+            $this->e = '';
             return;
         }
         $this->t = 10 - $this->e + $this->d - $this->n;
@@ -95,32 +100,42 @@ class ScoreCorrectForm extends Component
 
     public function save()
     {
-        $this->calculate();
-        if ($this->d < 0 || $this->d > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning'));
-            return;
-        }
-        if ($this->e1 < 0 || $this->e1 > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning'));
-            return;
-        }
-        if ($this->e2 < 0 || $this->e2 > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning'));
-            return;
-        }
-        if ($this->e3 < 0 || $this->e3 > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning'));
-            return;
-        }
+        Log::info($this->delete);
         if ($this->locked) return;
-        if (empty($this->e1)) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'E1 score mag niet leeg zijn', 'warning'));
-            return;
-        }
+
         if ($this->d == 0 && !$this->delete) {
             $this->delete = true;
             Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'D score 0 zal deze score in zijn geheel verwijderen. Druk nogmaals op opslaan om te bevestigen', 'info'));
             return;
+        } else if ($this->delete) {
+            $this->d = 0;
+            $this->e1 = 0;
+            $this->e2 = 0;
+            $this->e3 = 0;
+            $this->n = 0;
+            $this->t = 0;
+        } else {
+            $this->calculate();
+            if ($this->d < 0 || $this->d > 10) {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning'));
+                return;
+            }
+            if ($this->e1 < 0 || $this->e1 > 10) {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning'));
+                return;
+            }
+            if ($this->e2 < 0 || $this->e2 > 10) {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning'));
+                return;
+            }
+            if ($this->e3 < 0 || $this->e3 > 10) {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning'));
+                return;
+            }
+            if (empty($this->e1)) {
+                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'E1 score mag niet leeg zijn', 'warning'));
+                return;
+            }
         }
         $sc = ScoreCorrection::updateOrCreate(
             [

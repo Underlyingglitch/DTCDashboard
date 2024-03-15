@@ -40,7 +40,6 @@
         let count = 0;
         window.Echo.join(`jurytafel.${toestel}`)
             .here((users) => {
-                console.log('here', users)
                 count = users.length;
                 warning.style.display = count > 1 ? 'block' : 'none';
                 if (count > 1) {
@@ -48,17 +47,14 @@
                 }
             })
             .joining((user) => {
-                console.log('joining', user)
                 count++;
                 warning.style.display = 'block';
             })
             .leaving((user) => {
-                console.log('leaving', user)
                 count--;
                 warning.style.display = count > 1 ? 'block' : 'none';
             })
         window.Echo.channel('settings.all').listen('.SettingUpdated', (e) => {
-            console.log('SettingUpdated', e)
             if (e.key == 'current_competition' || e.key == 'current_match_day' || e.key == 'current_wedstrijd') {
                 window.location.reload();
             }

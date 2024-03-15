@@ -46,26 +46,31 @@ window.Echo = new Echo({
 
 // Subscribe to a user notification channel
 window.Echo.private(`App.Models.User.${window.userId}`).notification((e) => {
-    console.log(e);
-    switch (e.style) {
+    notification(e.style, e.title, e.message);
+});
+
+document.addEventListener('livewire:init', () => {
+    Livewire.on('notification', (event) => {
+        notification(event[2], event[0], event[1]);
+    });
+});
+
+function notification(style, title, message) {
+    switch (style) {
         case 'success':
-            window.toastr.success(e.message, e.title);
+            window.toastr.success(message, title);
             break;
         case 'warning':
-            window.toastr.warning(e.message, e.title);
+            window.toastr.warning(message, title);
             break;
         case 'error':
-            window.toastr.error(e.message, e.title);
+            window.toastr.error(message, title);
             break;
         default:
-            window.toastr.info(e.message, e.title);
+            window.toastr.info(message, title);
             break;
     }
-});
-// window.Echo.private(`App.Models.User.${window.userId}`).listen('UserNotification', (e) => {
-//     console.log(e);
-//     window.toastr.success(e.message, e.title);
-// });
+}
 
 $(function () {
     "use strict"; // Start of use strict

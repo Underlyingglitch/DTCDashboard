@@ -18,17 +18,14 @@
         let count = 0;
         window.Echo.join(`livescores`)
             .here((users) => {
-                console.log('here', users)
                 count = users.length;
                 updateCounter(count);
             })
             .joining((user) => {
-                console.log('joining', user)
                 count++;
                 updateCounter(count);
             })
             .leaving((user) => {
-                console.log('leaving', user)
                 count--;
                 updateCounter(count);
             })

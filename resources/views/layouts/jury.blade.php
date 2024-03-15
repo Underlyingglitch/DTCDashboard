@@ -25,7 +25,6 @@
     <script type="module" defer>
         // Periodically send a ping to the server to keep the session alive
         setInterval(() => {
-            console.log('Sending ping')
             window.axios.post('/api/internal/ping', {
                 page: window.location.pathname,
                 user_id: window.userId,

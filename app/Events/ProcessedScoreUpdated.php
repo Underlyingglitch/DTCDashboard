@@ -2,16 +2,10 @@
 
 namespace App\Events;
 
-use App\Models\Group;
 use App\Models\ProcessedScore;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class ProcessedScoreUpdated implements ShouldBroadcastNow
@@ -32,7 +26,6 @@ class ProcessedScoreUpdated implements ShouldBroadcastNow
             'completed' => $ps->completed,
             'deleted' => $deleted,
         ];
-        Log::info($this->data);
     }
     /**
      * Get the channels the event should broadcast on.

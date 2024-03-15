@@ -31,7 +31,6 @@ class CancelLocalEmails
         foreach ($emails as $email) {
             // If the email ends with @dtc.local, cancel the event
             if (Str::endsWith($email, '@dtc.local')) {
-                Log::info('Cancelling email to ' . $email);
                 return false;
             }
         }

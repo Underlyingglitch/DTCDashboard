@@ -37,9 +37,6 @@ class ProcessUpdates implements ShouldQueue
         if ($new->count() + $hasupdate->count() + $deleted->count() == 0) {
             return;
         }
-        Log::info('New: ' . $new->count());
-        Log::info('Has update: ' . $hasupdate->count());
-        Log::info('Deleted: ' . $deleted->count());
         // Notify users
         // Get all users that are subscribed to the DGResources
         $subscribed = Setting::withoutGlobalScope('user_id')->where([['key', 'dg_resources_subscribed'], ['value', 'on']])->pluck('user_id');

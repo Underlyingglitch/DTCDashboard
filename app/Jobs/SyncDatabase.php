@@ -59,7 +59,6 @@ class SyncDatabase implements ShouldQueue
             Log::error("Failed syncs: " . implode(', ', $data['error']));
             event(new \App\Events\DataSync\UpdateSyncStatus(4, count($data['error'])));
         } else {
-            Log::info("Synced " . count($data['success']) . " changes");
             event(new \App\Events\DataSync\UpdateSyncStatus(3));
         }
     }

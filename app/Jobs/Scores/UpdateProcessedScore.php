@@ -6,7 +6,6 @@ use App\Models\Score;
 use App\Models\Wedstrijd;
 use Illuminate\Bus\Queueable;
 use App\Models\ProcessedScore;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,8 +23,6 @@ class UpdateProcessedScore implements ShouldQueue
      */
     public function __construct(Score $score)
     {
-        Log::info('UpdateProcessedScore');
-        Log::info($score);
         $this->score_registration = $score->registration;
         $this->score = $score->toArray();
     }
@@ -36,22 +33,17 @@ class UpdateProcessedScore implements ShouldQueue
     public function handle(): void
     {
         $score_registration = $this->score_registration;
-        Log::info($score_registration);
         // Get the wedstrijd for this score from the niveau on the registration
         $niveau = $score_registration->niveau;
         $wedstrijd = Wedstrijd::where('match_day_id', $this->score['match_day_id'])->whereHas('niveaus', function ($query) use ($niveau) {
             $query->where('niveaus.id', $niveau->id);
         })->first();
-        Log::info($wedstrijd);
         $startnumbers = $wedstrijd->registrations->where('group_id', $score_registration->group_id)->pluck('startnumber');
-        Log::info($startnumbers);
         $scores = Score::where([
             ['toestel', $this->score['toestel']],
             ['match_day_id', $this->score['match_day_id']]
         ])->whereIn('startnumber', $startnumbers)->count();
-        Log::info($scores);
         if ($scores == 0) {
-            Log::info('Deleting ProcessedScore');
             $ps = ProcessedScore::where([
                 'group_id' => $score_registration->group_id,
                 'toestel' => $this->score['toestel'],

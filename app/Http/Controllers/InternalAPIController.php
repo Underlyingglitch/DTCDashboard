@@ -8,10 +8,8 @@ use App\Models\Setting;
 use App\Models\SyncTask;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\Break_;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
-use OwenIt\Auditing\Facades\Auditor;
 use App\Jobs\Scores\CalculateTeamScore;
 
 class InternalAPIController extends Controller
@@ -43,57 +41,6 @@ class InternalAPIController extends Controller
         }
     }
 
-    // public function audits(Request $request)
-    // {
-    //     if (!isset($request->audits)) {
-    //         return response()->json(['error' => 'No audits provided'], 400);
-    //     }
-    //     $success_ids = [];
-    //     $error_ids = [];
-    //     foreach ($request->audits as $audit) {
-    //         // Get the model
-    //         $model = $audit['auditable_type'];
-    //         // Switch on the event
-    //         switch ($audit['event']) {
-    //             case 'created':
-    //                 // Create the model on the current database
-    //                 if ($model::create($audit['new_values'])) {
-    //                     $success_ids[] = $audit['id'];
-    //                 } else {
-    //                     $error_ids[] = $audit['id'];
-    //                 }
-    //                 break;
-    //             case 'updated':
-    //                 // Update the model on the current database
-    //                 if ($model::find($audit['auditable_id'])->update($audit['new_values'])) {
-    //                     $success_ids[] = $audit['id'];
-    //                 } else {
-    //                     $error_ids[] = $audit['id'];
-    //                 }
-    //                 break;
-    //             case 'deleted':
-    //                 // Delete the model on the current database
-    //                 if ($model::find($audit['auditable_id'])->delete()) {
-    //                     $success_ids[] = $audit['id'];
-    //                 } else {
-    //                     $error_ids[] = $audit['id'];
-    //                 }
-    //                 break;
-    //             case 'restored':
-    //                 // Restore the model on the current database
-    //                 if ($model::withTrashed()->find($audit['auditable_id'])->restore()) {
-    //                     $success_ids[] = $audit['id'];
-    //                 } else {
-    //                     $error_ids[] = $audit['id'];
-    //                 }
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //     }
-    //     return response()->json(['success' => $success_ids, 'error' => $error_ids]);
-    // }
-
     public function ping(Request $request)
     {
         $device = Device::where('ip', $request->ip())->first();
@@ -104,7 +51,7 @@ class InternalAPIController extends Controller
             $device->save();
             return response()->json(['message' => 'Saved', 'id' => $device->id, 'loaded_page' => $device->loaded_page, 'authenticated_user_id' => $device->authenticated_user_id]);
         }
-        Log::info('Device not found: ' . $request->ip() . ' - ' . $request->page);
+        Log::error('Device not found: ' . $request->ip() . ' - ' . $request->page);
         return response()->json(['message' => 'Device not found'], 404);
     }
 
@@ -161,12 +108,6 @@ class InternalAPIController extends Controller
                         $error_ids[] = $change['id'];
                     }
                     break;
-                    // case 'setting':
-                    //     $data = json_decode($change['data'], true);
-                    //     Log::info('Setting ' . $data[0] . ' to ' . $data[1] . ' from internal API');
-                    //     Setting::setValue($data[0], $data[1]);
-                    //     $success_ids[] = $change['id'];
-                    //     break;
                 default:
                     Log::error('Unknown operation: ' . $change['operation']);
                     $error_ids[] = $change['id'];

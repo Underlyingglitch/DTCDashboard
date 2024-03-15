@@ -3,6 +3,12 @@ apps:
     script: artisan
     exec_mode: fork
     interpreter: php
+    autorestart: true
+    restart_delay: 0
+    cron_restart: "0 11 * * *"
+    combine_logs: true
+    error_file: "/var/www/dtcdashboard/storage/logs/worker-err.log"
+    out_file: "/var/www/dtcdashboard/storage/logs/worker.log"
     instances: 5
     args:
       - queue:work

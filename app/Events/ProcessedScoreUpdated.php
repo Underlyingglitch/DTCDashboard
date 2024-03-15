@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\Group;
 use App\Models\ProcessedScore;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -22,14 +23,16 @@ class ProcessedScoreUpdated implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct(ProcessedScore $ps)
+    public function __construct(ProcessedScore $ps, $deleted = false)
     {
         $this->data = [
             'wedstrijd_id' => $ps->wedstrijd_id,
             'groupnr' => $ps->group_id,
             'toestel' => $ps->toestel,
             'completed' => $ps->completed,
+            'deleted' => $deleted,
         ];
+        Log::info($this->data);
     }
     /**
      * Get the channels the event should broadcast on.

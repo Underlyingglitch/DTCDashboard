@@ -61,6 +61,10 @@ class ScoreTableButton extends Component
         if ($data['wedstrijd_id'] != $this->wedstrijd || $data['toestel'] != $this->toestel || $data['groupnr'] != $this->groupnr) {
             return;
         }
+        if ($data['deleted']) {
+            $this->class = "btn-danger";
+            return;
+        }
         if ($data['completed']) {
             $this->class = "btn-success";
         } else {

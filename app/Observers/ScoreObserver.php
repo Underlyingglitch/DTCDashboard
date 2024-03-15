@@ -37,6 +37,14 @@ class ScoreObserver
     }
 
     /**
+     * Handle the Score "deleting" event.
+     */
+    public function deleting(Score $score): void
+    {
+        \App\Jobs\Scores\UpdateProcessedScore::dispatch($score);
+    }
+
+    /**
      * Handle the Score "deleted" event.
      */
     public function deleted(Score $score): void

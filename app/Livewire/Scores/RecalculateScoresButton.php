@@ -22,7 +22,7 @@ class RecalculateScoresButton extends Component
 
     public function recalculate()
     {
-        Notification::sendNow(Auth::user(), new UserNotification("Scoreberekening gestart", "De scoreberekening is gestart."));
+        $this->dispatch('notification', 'Scoreberekening gestart', 'De scoreberekening is gestart.', 'info');
         Cache::put('counter' . $this->wedstrijd->id, 0, 600);
         foreach ($this->wedstrijd->teams as $team) {
             $jobs = [];

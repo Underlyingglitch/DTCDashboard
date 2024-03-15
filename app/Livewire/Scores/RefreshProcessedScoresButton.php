@@ -5,9 +5,6 @@ namespace App\Livewire\Scores;
 use App\Models\Score;
 use Livewire\Component;
 use App\Models\ProcessedScore;
-use Illuminate\Support\Facades\Auth;
-use App\Notifications\UserNotification;
-use Illuminate\Support\Facades\Notification;
 
 class RefreshProcessedScoresButton extends Component
 {
@@ -44,15 +41,17 @@ class RefreshProcessedScoresButton extends Component
                         'completed' => 0,
                     ]);
                 } else {
-                    ProcessedScore::destroy([
-                        'wedstrijd_id' => $this->wedstrijd->id,
-                        'group_id' => $group->id,
-                        'toestel' => $toestel,
-                    ]);
+                    $ps = ProcessedScore::where([
+                        ['wedstrijd_id', $this->wedstrijd->id],
+                        ['group_id', $group->id],
+                        ['toestel', $toestel],
+                    ])->first();
+                    event(new \App\Events\ProcessedScoreUpdated($ps, true));
+                    $ps->delete();
                 }
             }
         }
-        Notification::sendNow(Auth::user(), new UserNotification("Status herberekenen", "De scoreverwerking is herladen.", "success"));
+        $this->dispatch('notification', 'Status herberekenen', 'De scoreverwerking is herladen.', 'success');
     }
 
     public function render()

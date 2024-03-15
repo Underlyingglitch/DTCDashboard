@@ -31,29 +31,23 @@ class ScoreInputForm extends Component
     #[On('sn_clicked')]
     public function sn_clicked($sn)
     {
-        $this->startnumber = $sn;
         $score = \App\Models\Score::where('match_day_id', $this->matchday)
-            ->where('startnumber', $this->startnumber)
+            ->where('startnumber', $sn)
             ->where('toestel', $this->toestel)
-            ->first();
-        if ($score) {
-            $this->d = $score->d;
-            $this->e1 = $score->e1;
-            $this->e2 = $score->e2;
-            $this->e3 = $score->e3;
-            $this->e = $score->e;
-            $this->n = $score->n;
-            $this->t = $score->total;
-            $this->locked = true;
-        } else {
-            $this->d = '';
-            $this->e1 = '';
-            $this->e2 = '';
-            $this->e3 = '';
-            $this->e = '';
-            $this->n = '';
-            $this->t = '';
+            ->count();
+        $this->d = '';
+        $this->e1 = '';
+        $this->e2 = '';
+        $this->e3 = '';
+        $this->e = '';
+        $this->n = '';
+        $this->t = '';
+        if ($score == 0) {
+            $this->startnumber = $sn;
             $this->locked = false;
+        } else {
+            $this->startnumber = null;
+            $this->locked = true;
         }
     }
 
@@ -100,10 +94,6 @@ class ScoreInputForm extends Component
             return;
         }
         if ($this->locked || empty($this->startnumber)) return;
-        if (empty($this->e1) && !empty($this->d)) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score mag niet leeg zijn', 'warning'));
-            return;
-        }
         $score = Score::create([
             'match_day_id' => $this->matchday,
             'startnumber' => $this->startnumber,

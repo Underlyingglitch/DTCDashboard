@@ -4,6 +4,7 @@ namespace App\Livewire\Jury;
 
 use App\Models\Setting;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\ScoreCorrection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,28 @@ class ScoreCorrectForm extends Component
             $this->toestel = 1;
         }
         $this->matchday = $matchday->id;
+    }
+
+    #[On('sn_clicked')]
+    public function sn_clicked($sn)
+    {
+        $score = \App\Models\Score::where('match_day_id', $this->matchday)
+            ->where('startnumber', $sn)
+            ->where('toestel', $this->toestel)
+            ->count();
+        $this->d = '';
+        $this->e1 = '';
+        $this->e2 = '';
+        $this->e3 = '';
+        $this->e = '';
+        $this->n = '';
+        $this->t = '';
+        if ($score != 0) {
+            $this->startnumber = $sn;
+            $this->sn_updated();
+        } else {
+            $this->startnumber = null;
+        }
     }
 
     public function sn_updated()

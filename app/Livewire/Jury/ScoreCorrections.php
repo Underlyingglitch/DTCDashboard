@@ -39,7 +39,6 @@ class ScoreCorrections extends Component
     public function delete($correction)
     {
         $sc = ScoreCorrection::find($correction);
-        User::find($sc->user_id)->notify(new \App\Notifications\UserNotification('Score correctie', 'Score correctie voor ' . $sc->score->startnumber . ' is afgewezen', 'error'));
         $sc->delete();
         unset($this->corrections[$correction]);
     }
@@ -65,7 +64,6 @@ class ScoreCorrections extends Component
                 'total' => $sc->total
             ]);
         }
-        User::find($user_id)->notify(new \App\Notifications\UserNotification('Score correctie', 'Score correctie voor ' . $startnumber . ' is toegewezen', 'success'));
         unset($this->corrections[$correction]);
     }
 

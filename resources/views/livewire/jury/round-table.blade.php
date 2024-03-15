@@ -23,6 +23,9 @@
                         <td>{!! $jury_registration_status[$registration['status']] !!}
                             @if ($registration['status'] == 'scored')
                                 <i>{{ $registration['score'] }}</i>
+                            @elseif ($registration['status'] == 'correction_pending')
+                                <del>{{ $registration['score'] }}</del>
+                                <i>{{ $registration['new_score'] }}</i>
                             @endif
                         </td>
                     </tr>

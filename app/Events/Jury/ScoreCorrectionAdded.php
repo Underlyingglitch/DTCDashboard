@@ -19,7 +19,7 @@ class ScoreCorrectionAdded implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public function __construct(public ScoreCorrection $sc)
+    public function __construct(public ScoreCorrection $sc, public string $action)
     {
     }
     /**
@@ -47,6 +47,6 @@ class ScoreCorrectionAdded implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        return ['sc' => $this->sc->toArray()];
+        return ['sc' => $this->sc->toArray(), 'score' => $this->sc->score->toArray(), 'action' => $this->action];
     }
 }

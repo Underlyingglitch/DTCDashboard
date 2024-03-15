@@ -100,12 +100,11 @@ class ScoreCorrectForm extends Component
 
     public function save()
     {
-        Log::info($this->delete);
         if ($this->locked) return;
 
         if ($this->d == 0 && !$this->delete) {
             $this->delete = true;
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'D score 0 zal deze score in zijn geheel verwijderen. Druk nogmaals op opslaan om te bevestigen', 'info'));
+            $this->dispatch('notification', 'Score correctie', 'D score 0 zal deze score in zijn geheel verwijderen. Druk nogmaals op opslaan om te bevestigen', 'info');
             return;
         } else if ($this->delete) {
             $this->d = 0;
@@ -117,23 +116,23 @@ class ScoreCorrectForm extends Component
         } else {
             $this->calculate();
             if ($this->d < 0 || $this->d > 10) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning'));
+                $this->dispatch('notification', 'Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning');
                 return;
             }
             if ($this->e1 < 0 || $this->e1 > 10) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning'));
+                $this->dispatch('notification', 'Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning');
                 return;
             }
             if ($this->e2 < 0 || $this->e2 > 10) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning'));
+                $this->dispatch('notification', 'Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning');
                 return;
             }
             if ($this->e3 < 0 || $this->e3 > 10) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning'));
+                $this->dispatch('notification', 'Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning');
                 return;
             }
             if (empty($this->e1)) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'E1 score mag niet leeg zijn', 'warning'));
+                $this->dispatch('notification', 'Score correctie', 'E1 score mag niet leeg zijn', 'warning');
                 return;
             }
         }
@@ -142,6 +141,7 @@ class ScoreCorrectForm extends Component
                 'score_id' => $this->score_id
             ],
             [
+                'startnumber' => $this->startnumber,
                 'd' => $this->d,
                 'e1' => $this->e1,
                 'e2' => $this->e2,
@@ -152,12 +152,11 @@ class ScoreCorrectForm extends Component
                 'user_id' => Auth::user()->id
             ]
         );
-        event(new \App\Events\Jury\ScoreCorrectionAdded($sc));
         if ($this->jury) {
             if ($this->d == 0) {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score succesvol verwijderd', 'success'));
+                $this->dispatch('notification', 'Score correctie', 'Score succesvol verwijderd', 'success');
             } else {
-                Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score correctie', 'Score correctie succesvol opgeslagen', 'success'));
+                $this->dispatch('notification', 'Score correctie', 'Score correctie succesvol opgeslagen', 'success');
             }
         }
         $this->d = '';

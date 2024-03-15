@@ -12,6 +12,7 @@ class ScoreCorrection extends Model implements Auditable
     use SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
+        'startnumber',
         'score_id',
         'd',
         'e1',
@@ -22,6 +23,23 @@ class ScoreCorrection extends Model implements Auditable
         'approved',
         'user_id'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($scoreCorrection) {
+            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection, 'create'));
+        });
+
+        static::updated(function ($scoreCorrection) {
+            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection, 'update'));
+        });
+
+        static::deleted(function ($scoreCorrection) {
+            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection, 'delete'));
+        });
+    }
 
     public function score()
     {

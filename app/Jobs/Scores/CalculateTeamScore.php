@@ -73,7 +73,7 @@ class CalculateTeamScore implements ShouldQueue, ShouldBeUnique
                 $same++;
             }
             $team_score->place = $place;
-            $team_score->save();
+            $team_score->saveQuietly();
         }
     }
 }

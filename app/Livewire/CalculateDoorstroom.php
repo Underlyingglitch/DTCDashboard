@@ -75,30 +75,28 @@ class CalculateDoorstroom extends Component
                 $teamscores = TeamScore::where('match_day_id', $match_day->id)
                     ->whereIn('team_id', $teams->pluck('id'))
                     ->where('total_score', '>', 0)
-                    ->orderByDesc('total_score')
-                    ->pluck('team_id')->toArray();
+                    ->orderByDesc('place')
+                    ->toArray();
                 // dd($teamscores);
-                foreach (array_values($teamscores) as $index => $team) {
-                    $ind_score = $ind_scores[$team] ?? [];
-                    $ind_score[] = $type * $this->teampoints[$index] ?? 0;
-                    $score = $scores[$team] ?? 0;
-                    $score += $type * $this->teampoints[$index] ?? 0;
-                    $scores[$team] = $score;
-                    $ind_scores[$team] = $ind_score;
+                foreach ($teamscores as $team) {
+                    $ind_score = $ind_scores[$team['team_id']] ?? [];
+                    $ind_score[] = $type * $this->teampoints[$team['place'] - 1] ?? 0;
+                    $score = $scores[$team['team_id']] ?? 0;
+                    $score += $type * $this->teampoints[$team['place'] - 1] ?? 0;
+                    $scores[$team['team_id']] = $score;
+                    $ind_scores[$team['team_id']] = $ind_score;
                 }
             } else {
                 $registrations = Registration::where('match_day_id', $match_day->id)->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($match_day) {
                     $query->where('match_day_id', $match_day->id);
                 }])->get()->filter(function ($registration) {
                     return $registration->scores->sum('total') > 0;
-                })->sortByDesc(function ($registration) {
-                    return $registration->scores->sum('total');
-                })->values();
-                foreach ($registrations as $index => $registration) {
+                })->sortByDesc('place');
+                foreach ($registrations as $registration) {
                     $ind_score = $ind_scores[$registration->startnumber] ?? [];
-                    $ind_score[] = $type * $this->teampoints[$index] ?? 0;
+                    $ind_score[] = $type * $this->points[$registration->place - 1] ?? 0;
                     $score = $scores[$registration->startnumber] ?? 0;
-                    $score += $type * $this->points[$index] ?? 0;
+                    $score += $type * $this->points[$registration->place - 1] ?? 0;
                     $scores[$registration->startnumber] = $score;
                     $ind_scores[$registration->startnumber] = $ind_score;
                     $registration_cache[$registration->startnumber] = [
@@ -111,8 +109,6 @@ class CalculateDoorstroom extends Component
             }
         }
         arsort($scores);
-
-        // dd($scores);
 
         $doorstroom = [];
         $counter = 0;
@@ -139,7 +135,6 @@ class CalculateDoorstroom extends Component
                 $doorstroom[] = $item;
             }
         }
-        // dd($doorstroom);
         $this->doorstroom = $doorstroom;
     }
 

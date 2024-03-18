@@ -4,7 +4,9 @@ namespace App\Jobs\Scores;
 
 use App\Models\Team;
 use App\Models\Score;
+use App\Models\TeamScore;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -50,5 +52,28 @@ class CalculateTeamScore implements ShouldQueue, ShouldBeUnique
         $team_score->toestel_scores = $toestel_scores;
         $team_score->total_score = array_sum($toestel_scores);
         $team_score->save();
+
+        // Get the other teams in this match_day and this niveau
+        $other_teams = Team::where('niveau_id', $this->team->niveau_id)->whereHas('registrations', function ($query) {
+            $query->where('match_day_id', $this->match_day_id);
+        })->pluck('id');
+
+        // Sort the teams by total score
+        $sorted_team_scores = TeamScore::where('match_day_id', $this->match_day_id)->whereIn('team_id', $other_teams)->get()->sortByDesc('total_score');
+
+        $place = 0;
+        $previous = null;
+        $same = 1;
+        foreach ($sorted_team_scores as $team_score) {
+            if ($team_score->total_score != $previous) {
+                $previous = $team_score->total_score;
+                $place += $same;
+                $same = 1;
+            } else {
+                $same++;
+            }
+            $team_score->place = $place;
+            $team_score->save();
+        }
     }
 }

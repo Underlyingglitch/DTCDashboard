@@ -40,4 +40,9 @@ class Team extends Model implements Auditable
         $this->total_score = $scores->sum();
         $this->save();
     }
+
+    public function getPlaceAttribute()
+    {
+        return $this->team_scores->first()->place;
+    }
 }

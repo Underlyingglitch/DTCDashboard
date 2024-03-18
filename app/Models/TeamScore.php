@@ -22,7 +22,7 @@ class TeamScore extends Model
         });
     }
 
-    protected $fillable = ['team_id', 'match_day_id', 'toestel_scores', 'total_score'];
+    protected $fillable = ['team_id', 'match_day_id', 'toestel_scores', 'total_score', 'place'];
     protected $attributes = [
         'toestel_scores' => '0,0,0,0,0,0',
     ];

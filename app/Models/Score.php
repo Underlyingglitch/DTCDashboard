@@ -21,6 +21,7 @@ class Score extends Model implements Auditable
         'e3',
         'n',
         'total',
+        'place',
         'counted'
     ];
 

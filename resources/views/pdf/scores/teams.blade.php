@@ -18,13 +18,11 @@
     @foreach ($niveaus as $teams)
         <b>{{ $teams->first()->niveau->full_name }}</b>
         <table class="group-table">
-            @php($i = 0)
-            @php($previous = null)
             @foreach ($teams as $team)
                 <tbody style="break-inside: avoid">
                     @php($team_total = $team->team_scores->first()->total_score ?? 0)
                     <tr>
-                        <th colspan="2">{{ $previous == $team_total ? $i : ++$i }}.
+                        <th colspan="2">{{ $team->place }}.
                             {{ $team->name }}</th>
                         @php($previous = $team_total)
                         @foreach ($toestellen as $toestel)

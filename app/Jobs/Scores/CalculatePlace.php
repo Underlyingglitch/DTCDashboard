@@ -37,9 +37,13 @@ class CalculatePlace implements ShouldQueue
             });
         $previousScore = null;
         $place = 0;
+        $same = 1;
         foreach ($registrations as $registration) {
             if ($previousScore !== $registration->scores->sum('total')) {
-                $place++;
+                $place += $same;
+                $same = 1;
+            } else {
+                $same++;
             }
             $registration->place = $place;
             $registration->saveQuietly();

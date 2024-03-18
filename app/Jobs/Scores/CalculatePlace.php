@@ -2,10 +2,8 @@
 
 namespace App\Jobs\Scores;
 
-use App\Models\Score;
 use App\Models\Registration;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,7 +16,7 @@ class CalculatePlace implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Score $score)
+    public function __construct(public Registration $registration)
     {
     }
 
@@ -27,11 +25,11 @@ class CalculatePlace implements ShouldQueue
      */
     public function handle(): void
     {
-        $registrations = Registration::where('match_day_id', $this->score->match_day_id)
-            ->where('niveau_id', $this->score->registration->niveau_id)
+        $registrations = Registration::where('match_day_id', $this->registration->match_day_id)
+            ->where('niveau_id', $this->registration->niveau_id)
             ->where('signed_off', false)
             ->with(['scores' => function ($query) {
-                $query->where('match_day_id', $this->score->match_day_id);
+                $query->where('match_day_id', $this->registration->match_day_id);
             }])
             ->get()
             ->sortByDesc(function ($registration) {

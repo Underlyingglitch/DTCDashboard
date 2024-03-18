@@ -18,6 +18,17 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Artisan::command('calculate:scores', function () {
+    $this->info('Calculating scores');
+    $scores = \App\Models\Score::all();
+    $bar = $this->output->createProgressBar(count($scores));
+    foreach ($scores as $score) {
+        $score->touch();
+        $bar->advance();
+    }
+    $bar->finish();
+});
+
 Artisan::command('calculate:score-total', function () {
     $this->info('Calculating total score');
     $scores = \App\Models\Score::all();

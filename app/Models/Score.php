@@ -25,6 +25,27 @@ class Score extends Model implements Auditable
         'counted'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($score) {
+            $es = array_filter([$score->e1, $score->e2, $score->e3]);
+            $score->e = count($es) > 0 ? array_sum($es) / count($es) : null;
+            $total = $score->d > 0 ? (($score->d + (10 - $score->e)) - $score->n) : 0;
+            if ($total < 0) $total = 0;
+            $score->total = $total;
+        });
+
+        static::updating(function ($score) {
+            $es = array_filter([$score->e1, $score->e2, $score->e3]);
+            $score->e = count($es) > 0 ? array_sum($es) / count($es) : null;
+            $total = $score->d > 0 ? (($score->d + (10 - $score->e)) - $score->n) : 0;
+            if ($total < 0) $total = 0;
+            $score->total = $total;
+        });
+    }
+
     public function match_day()
     {
         return $this->belongsTo(MatchDay::class);
@@ -33,13 +54,6 @@ class Score extends Model implements Auditable
     public function getRegistrationAttribute()
     {
         return Registration::where([['startnumber', $this->startnumber], ['match_day_id', $this->match_day_id]])->first();
-    }
-
-    public function getEAttribute()
-    {
-        // Get the average of the e1, e2, e3 values, not counting the null values
-        $es = array_filter([$this->e1, $this->e2, $this->e3]);
-        return count($es) > 0 ? array_sum($es) / count($es) : null;
     }
 
     public function getEScoreAttribute()

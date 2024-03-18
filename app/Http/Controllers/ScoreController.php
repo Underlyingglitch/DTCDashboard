@@ -51,8 +51,6 @@ class ScoreController extends Controller
 
         if (!is_null($request->ids)) {
             foreach (explode(',', $request->ids) as $id) if (!in_array($id, $request->s ?? [])) {
-                $total = $request['d-' . $id] > 0 ? (($request['d-' . $id] + (10 - $request['e-' . $id])) - $request['n-' . $id]) : 0;
-                if ($total < 0) $total = 0;
                 Score::firstOrCreate(
                     [
 
@@ -63,8 +61,7 @@ class ScoreController extends Controller
                     [
                         'd' => $request['d-' . $id],
                         'e1' => $request['e-' . $id],
-                        'n' => $request['n-' . $id],
-                        'total' => $total,
+                        'n' => $request['n-' . $id]
                     ]
                 );
             }

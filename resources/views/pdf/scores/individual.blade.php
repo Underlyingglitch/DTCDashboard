@@ -25,11 +25,9 @@
                 <th>Totaal</th>
                 <th>Plaats</th>
             </tr>
-            @php($i = 0)
-            @php($previous = null)
             @foreach ($registrations as $registration)
                 <tr
-                    @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @endif>
+                    @if ($registration->signed_off) style="text-decoration:line-through;text-decoration-thickness:2px" @elseif($registration->place == 1 || $registration->place == 2 || $registration->place == 3) style="font-weight: bold" @endif>
                     <td style="width: fit-content">{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                     @foreach ($toestellen as $key => $toestel)
@@ -45,10 +43,11 @@
                         </td>
                         <td style="width: fit-content; border-left:none">
                             {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
+                            ({{ $registration->scores->where('toestel', $key + 1)->first()->place ?? null }})
                         </td>
                     @endforeach
                     <td>{{ number_format($registration->scores->sum('total') ?? 0, 3) }}</td>
-                    <td style="width: fit-content">{{ $previous == $registration->scores->sum('total') ? $i : ++$i }}</td>
+                    <td style="width: fit-content">{{ $registration->place }}</td>
                     @php($previous = $registration->scores->sum('total'))
                 </tr>
             @endforeach

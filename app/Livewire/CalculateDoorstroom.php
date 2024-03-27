@@ -75,7 +75,8 @@ class CalculateDoorstroom extends Component
                 $teamscores = TeamScore::where('match_day_id', $match_day->id)
                     ->whereIn('team_id', $teams->pluck('id'))
                     ->where('total_score', '>', 0)
-                    ->orderByDesc('place')
+                    ->orderBy('place')
+                    ->get()
                     ->toArray();
                 // dd($teamscores);
                 foreach ($teamscores as $team) {

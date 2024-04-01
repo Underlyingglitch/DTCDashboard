@@ -66,6 +66,6 @@ class TrainerController extends Controller
 
         $trainer->delete();
 
-        return redirect()->route('trainers.index');
+        return redirect()->route('trainers.index')->with('success', 'Trainer verwijderd.');
     }
 }

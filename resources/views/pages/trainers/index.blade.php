@@ -32,7 +32,7 @@
                     <td>
                         <a href="#" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                         <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pencil"></i></a>
-                        <form class="button-form" method="post" action="#">
+                        <form class="button-form" method="post" action="{{ route('trainers.destroy', $trainer->id) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>

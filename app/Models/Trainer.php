@@ -10,6 +10,13 @@ class Trainer extends Model implements Auditable
 {
     use SoftDeletes, \OwenIt\Auditing\Auditable;
 
+    protected static function booted()
+    {
+        static::deleting(function ($trainer) {
+            $trainer->competitions()->detach();
+        });
+    }
+
     protected $fillable = [
         'name',
         'email',

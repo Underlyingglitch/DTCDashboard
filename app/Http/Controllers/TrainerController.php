@@ -60,8 +60,12 @@ class TrainerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Trainer $trainer)
     {
-        //
+        $this->authorize('delete', $trainer);
+
+        $trainer->delete();
+
+        return redirect()->route('trainers.index');
     }
 }

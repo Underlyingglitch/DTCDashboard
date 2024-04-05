@@ -27,6 +27,11 @@ class TeamScore extends Model
         'toestel_scores' => '0,0,0,0,0,0',
     ];
 
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
     public function getToestelScoresAttribute()
     {
         return explode(',', $this->attributes['toestel_scores']);

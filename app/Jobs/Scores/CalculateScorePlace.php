@@ -41,5 +41,7 @@ class CalculateScorePlace implements ShouldQueue
         foreach ($scores as $key => $score) $score->update([
             'place' => $score->total == 0 ? null : $key + 1,
         ]);
+        // Update the registration place
+        \App\Jobs\Scores\CalculatePlace::dispatch($this->score->registration);
     }
 }

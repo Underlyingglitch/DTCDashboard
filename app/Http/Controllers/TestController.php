@@ -12,10 +12,8 @@ class TestController extends Controller
 {
     public function index()
     {
-        $registration = Registration::where('signed_off', false)->whereNull('place')->first();
-        if ($registration === null) {
-            dd('No more registrations to process');
-        }
-        \App\Jobs\Scores\CalculatePlace::dispatch($registration);
+        $points = [50, 45, 40, 37, 34, 31, 28, 26, 24, 22, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 1];
+        $place = null;
+        dd($points[$place - 1]);
     }
 }

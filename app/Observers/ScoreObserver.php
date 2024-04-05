@@ -30,12 +30,10 @@ class ScoreObserver
      */
     public function updated(Score $score): void
     {
-        // If only the place of the score is updated, we don't need to recalculate the place of all scores.
+        // Only if the total of the score is updated, recalculate the place of the score.
         if ($score->isDirty('total')) {
             CalculateScorePlace::dispatch($score);
-        }
-        if ($score->registration->team ?? null) {
-            if ($score->isDirty('total')) {
+            if ($score->registration->team ?? null) {
                 CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
             }
         }

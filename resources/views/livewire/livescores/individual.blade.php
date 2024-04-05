@@ -1,4 +1,5 @@
 <div class="card-body">
+    Na ronde (0 voor alles): <input type="number" wire:model="limit" wire:change="updateLimit">
     @php($i = 0)
     @php($previous = null)
     @foreach ($registrations as $registration)

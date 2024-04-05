@@ -12,6 +12,8 @@ class Individual extends Component
     public $niveau;
     public $modalShown;
 
+    public $limit = 0;
+
     public function getListeners()
     {
         return
@@ -25,23 +27,31 @@ class Individual extends Component
         $this->modalShown = 0;
         $this->hydrate();
     }
-
+    
     public function hydrate()
     {
         $matchday = $this->matchday;
         $matchday_registrations = MatchDay::find($matchday)->registrations()->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'scores' => function ($query) use ($matchday) {
             $query->where('match_day_id', $matchday);
         }])->get()->sortByDesc(function ($registration) {
+            if ($this->limit) {
+                return $registration->scores->take($this->limit)->sortByDesc('total')->sum('total');
+            }
             return $registration->scores->sum('total');
         });
 
         $this->registrations = [];
         foreach ($matchday_registrations as $registration) {
+            if ($this->limit) {
+                $scores = $registration->scores->take($this->limit);
+            } else {
+                $scores = $registration->scores;
+            }
             $this->registrations[] = [
                 'id' => $registration->id,
                 'name' => $registration->gymnast->name,
                 'club' => $registration->club->name,
-                'scores' => $registration->scores->sortBy('toestel')->map(function ($score) {
+                'scores' => $scores->sortBy('toestel')->map(function ($score) {
                     return [
                         'id' => $score->id,
                         'toestel' => $score->toestel,
@@ -52,9 +62,15 @@ class Individual extends Component
                         'counted' => $score->counted
                     ];
                 })->toArray(),
-                'total' => $registration->scores->sum('total')
+                'total' => $scores->sum('total')
             ];
         }
+        // dd($this->registrations);
+    }
+
+    public function updateLimit()
+    {
+        $this->hydrate();
     }
 
     public function toggleModal($id)

@@ -1094,32 +1094,32 @@
         },
         {
             "name": "fedeisas/laravel-mail-css-inliner",
-            "version": "5.2.1",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fedeisas/laravel-mail-css-inliner.git",
-                "reference": "47c41eddc9000f8e1579659e4953a3f36fe5c579"
+                "reference": "c6916c30756e67b91656a37b3d71b38b0ba3b28d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fedeisas/laravel-mail-css-inliner/zipball/47c41eddc9000f8e1579659e4953a3f36fe5c579",
-                "reference": "47c41eddc9000f8e1579659e4953a3f36fe5c579",
+                "url": "https://api.github.com/repos/fedeisas/laravel-mail-css-inliner/zipball/c6916c30756e67b91656a37b3d71b38b0ba3b28d",
+                "reference": "c6916c30756e67b91656a37b3d71b38b0ba3b28d",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "illuminate/mail": "^9.0 || ^10.0",
-                "illuminate/support": "^9.0 || ^10.0",
+                "illuminate/mail": "^9.0 || ^10.0 || ^11.0",
+                "illuminate/support": "^9.0 || ^10.0 || ^11.0",
                 "paragonie/random_compat": "~2.0 || ~9.99",
                 "php": "^8.0.2",
                 "tijsverkoyen/css-to-inline-styles": "~2.2"
             },
             "require-dev": {
-                "enlightn/security-checker": "^1.10",
+                "enlightn/security-checker": "^1.10 || ^2.0",
                 "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
                 "guzzlehttp/psr7": "^1.9.1 || ^2.4.5",
                 "phpunit/phpunit": "^9.0",
-                "symfony/mailer": "^6.0"
+                "symfony/mailer": "^6.0 || ^7.0"
             },
             "type": "library",
             "extra": {
@@ -1152,9 +1152,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fedeisas/laravel-mail-css-inliner/issues",
-                "source": "https://github.com/fedeisas/laravel-mail-css-inliner/tree/5.2.1"
+                "source": "https://github.com/fedeisas/laravel-mail-css-inliner/tree/5.3.0"
             },
-            "time": "2023-09-18T11:18:03+00:00"
+            "time": "2024-04-11T19:37:21+00:00"
         },
         {
             "name": "fruitcake/php-cors",

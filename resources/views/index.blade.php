@@ -72,8 +72,8 @@
                                             - <i>Overzicht van de doorstroming</i><br>
                                             <br>
                                             <u>Livescores</u><br>
-                                            De livescores zijn momenteel nog niet beschikbaar. Deze functie is nog in
-                                            ontwikkeling<br>
+                                            De livescores zijn beschikbaar, maar enkel voor aangemelde gebruikers. Dit zal
+                                            op korte termijn worden uitgebreid.<br>
                                             <br>
                                             <u>Bronnenoverzicht van de KNGU website</u><br>
                                             - Overzicht van alle documenten en links op de KNGU website (Oefenstof en
@@ -82,8 +82,12 @@
                                             - Indicatie of het document is gewijzigd (gewijzigd in de laatste 7 dagen)<br>
                                             - Indicatie of het document is verwijderd (het document blijft dan te downloaden
                                             via deze website)<br>
-                                            - <i>Mogelijkheid om een email te krijgen bij gewijzigde/toegevoegde
-                                                documenten</i>
+                                            - Mogelijkheid om een email te krijgen bij gewijzigde/toegevoegde
+                                            documenten
+                                            - <i>Overzicht van de wedstrijden</i>
+                                            - <i>Mogelijkheid om een email te krijgen bij gewijzigde/toegevoegde wedstrijden
+                                                (afhankelijk van categorie)
+                                            </i>
 
                                         </div>
                                     @endauth

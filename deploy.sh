@@ -45,6 +45,9 @@ php artisan clear-compiled
 # Recreate cache
 php artisan optimize
 
+# Clear the local cache
+php artisan cache:clear
+
 if ! cmp -s package.json package.json.bak; then
     # Compile npm assets
     echo "Installing npm packages ..."

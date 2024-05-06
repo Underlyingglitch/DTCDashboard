@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\UserSetting;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        UserSetting::create([
-            'key' => 'oefenstof_last_updated',
-            'type' => 'datetime',
-            'value' => '2021-01-01 00:00:00',
-        ]);
+        Schema::table('user_settings', function (Blueprint $table) {
+            $table->string('type')->after('key')->default('string');
+        });
     }
 
     /**
@@ -25,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('user_settings', function (Blueprint $table) {
-            //
+            $table->dropColumn('type');
         });
     }
 };

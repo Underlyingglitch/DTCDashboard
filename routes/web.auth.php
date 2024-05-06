@@ -9,7 +9,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\GymnastController;
+use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SettingsController;
@@ -20,7 +22,6 @@ use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\DGResourceController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\MatchDaysExportController;
-use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\WedstrijdExportController;
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
@@ -50,6 +51,10 @@ Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof
 Route::controller(DGResourceController::class)->group(function () {
     Route::get('/dg_resources', 'index')->name('dg_resources.index');
     Route::get('/dg_resources/{dg_resource}/download', 'download')->name('dg_resources.download');
+});
+
+Route::controller(CalendarController::class)->group(function () {
+    Route::get('/calendar', 'index')->name('calendar.index');
 });
 
 Route::controller(MatchDaysController::class)->name('matchdays.')->group(function () {
@@ -119,6 +124,8 @@ Route::controller(SettingsController::class)->name('settings.')->prefix('setting
     Route::get('/database', 'database')->name('database');
     Route::get('/database/process', 'database_process')->name('database.process');
     Route::get('/database/compare', 'compare_databases')->name('database.compare');
+    Route::get('/calendar_updates', 'calendar_updates')->name('calendar_updates');
+    Route::post('/calendar_updates', 'calendar_updates_post');
 });
 
 Route::controller(MonitorController::class)->name('monitor.')->prefix('monitor')->group(function () {

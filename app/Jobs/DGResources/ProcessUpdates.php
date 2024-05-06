@@ -39,13 +39,13 @@ class ProcessUpdates implements ShouldQueue
         }
         // Notify users
         // Get all users that are subscribed to the DGResources
-        $subscribed = Setting::withoutGlobalScope('user_id')->where([['key', 'dg_resources_subscribed'], ['value', 'on']])->pluck('user_id');
+        $subscribed = Setting::withoutGlobalScope('user_id')->where([['key', 'dg_resources_subscribed'], ['value', 'true']])->pluck('user_id');
         $users = User::whereIn('id', $subscribed)->where('email_verified_at', '!=', null)->get();
         foreach ($users as $user) {
             $user->notify(new DGResourceUpdate($new, $hasupdate, $deleted));
         }
         // Set all new and hasupdate to idle
         DGResource::whereIn('id', $new)->orWhereIn('id', $hasupdate)->update(['status' => 'idle']);
-        Setting::setValue('dg_resources_last_update', now()->toDateTimeString());
+        Setting::setValue('dg_resources_last_update', now());
     }
 }

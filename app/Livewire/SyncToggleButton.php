@@ -15,17 +15,17 @@ class SyncToggleButton extends Component
     public function mount()
     {
         $this->status = Setting::getValue('sync_enabled');
-        $this->class = $this->status == 'true' ? 'btn-danger' : 'btn-success';
-        $this->label = $this->status == 'true' ? 'Uitschakelen' : 'Inschakelen';
+        $this->class = $this->status ? 'btn-danger' : 'btn-success';
+        $this->label = $this->status ? 'Uitschakelen' : 'Inschakelen';
     }
 
     public function toggle()
     {
-        $this->status = $this->status == 'true' ? 'false' : 'true';
+        $this->status = !$this->status;
         Setting::setValue('sync_enabled', $this->status);
-        $this->class = $this->status == 'true' ? 'btn-danger' : 'btn-success';
-        $this->label = $this->status == 'true' ? 'Uitschakelen' : 'Inschakelen';
-        event(new \App\Events\DataSync\UpdateSyncStatus($this->status == 'true' ? (SyncTask::where('synced', 0)->count() > 0 ? 1 : 3) : 0));
+        $this->class = $this->status ? 'btn-danger' : 'btn-success';
+        $this->label = $this->status ? 'Uitschakelen' : 'Inschakelen';
+        event(new \App\Events\DataSync\UpdateSyncStatus($this->status ? (SyncTask::where('synced', 0)->count() > 0 ? 1 : 3) : 0));
     }
 
     public function render()

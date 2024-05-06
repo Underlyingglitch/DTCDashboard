@@ -32,11 +32,11 @@ class DatabaseSeeder extends Seeder
         $wedstrijd = Wedstrijd::create(['match_day_id' => $matchday->id, 'index' => 1]);
         $wedstrijd->niveaus()->attach(1);
 
-        UserSetting::create(['user_id' => null, 'key' => 'current_competition', 'value' => $competition->id]);
-        UserSetting::create(['user_id' => null, 'key' => 'current_match_day', 'value' => $matchday->id]);
-        UserSetting::create(['user_id' => null, 'key' => 'current_wedstrijd', 'value' => 1]);
-        UserSetting::create(['user_id' => null, 'key' => 'current_round', 'value' => 1]);
-        UserSetting::create(['user_id' => null, 'key' => 'oefenstof_last_updated', 'value' => Carbon::now()]);
+        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_competition', 'value' => $competition->id]);
+        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_match_day', 'value' => $matchday->id]);
+        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_wedstrijd', 'value' => 1]);
+        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_round', 'value' => 1]);
+        UserSetting::create(['user_id' => null, 'type' => 'datetime', 'key' => 'oefenstof_last_updated', 'value' => Carbon::now()]);
 
         $club = Club::create(['id' => 1, 'name' => 'Test club', 'email' => 'club@test.dev', 'place' => 'test', 'district' => 'test']);
         $trainer = Trainer::create(['name' => 'Test trainer', 'email' => 'trainer@test.dev', 'phone' => '0123456789', 'club_id' => 1]);

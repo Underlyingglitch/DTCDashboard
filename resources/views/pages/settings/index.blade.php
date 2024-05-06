@@ -4,10 +4,10 @@
 
 @section('content')
     Database schrijven:
-    @if (\App\Models\Setting::getValue('db_write') == 'on')
-        <a class="btn btn-danger" href="{{ route('settings.set', ['db_write', 'off']) }}">Uitschakelen</a>
+    @if (\App\Models\Setting::getValue('db_write_enabled'))
+        <a class="btn btn-danger" href="{{ route('settings.set', ['db_write_enabled', 0]) }}">Uitschakelen</a>
     @else
-        <a class="btn btn-success" href="{{ route('settings.set', ['db_write', 'on']) }}">Inschakelen</a>
+        <a class="btn btn-success" href="{{ route('settings.set', ['db_write_enabled', 1]) }}">Inschakelen</a>
     @endif
     <br><br>
     @if (config('app.env') == 'local' || config('app.env') == 'dev')

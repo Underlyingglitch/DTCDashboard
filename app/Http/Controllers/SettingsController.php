@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PendingChange;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Models\PendingChange;
+use App\Models\CalendarUpdate;
+use App\Models\UserSetting;
 use Illuminate\Support\Facades\Auth;
 
 class SettingsController extends Controller
@@ -23,7 +25,7 @@ class SettingsController extends Controller
 
         // If the setting is the sync_enabled setting, and the value is true, also send an event
         if ($setting == 'sync_enabled') {
-            event(new \App\Events\DataSync\UpdateSyncStatus($value == 'true' ? 1 : 0));
+            event(new \App\Events\DataSync\UpdateSyncStatus($value));
         }
 
         return redirect()->back()->with('success', 'Instellingen opgeslagen');
@@ -107,5 +109,19 @@ class SettingsController extends Controller
             $message = ["success", "Database bijgewerkt"];
         }
         return redirect()->back()->with($message[0], $message[1]);
+    }
+
+    public function calendar_updates()
+    {
+        $settings = [
+            'enabled_new' => UserSetting::getValue('calendar_updates_enabled_new'),
+        ];
+        return view('pages.settings.calendar_updates', compact('settings'));
+    }
+
+    public function calendar_updates_post()
+    {
+        UserSetting::setValue('calendar_updates_enabled_new', request('enabled_new') == "on");
+        return redirect()->back()->with('success', 'Instellingen opgeslagen');
     }
 }

@@ -48,7 +48,7 @@ class WedstrijdController extends Controller
         $wedstrijd = $matchday->wedstrijden()->create($request->only('index'));
         $wedstrijd->niveaus()->attach($request->input('niveaus'));
 
-        if (Setting::getValue('db_write') == 'off') {
+        if (!Setting::getValue('db_write_enabled')) {
             $message = ['warning', 'Wedstrijd toegevoegd aan wachtrij'];
         } else {
             $message = ['success', 'Wedstrijd succesvol aangemaakt'];
@@ -120,7 +120,7 @@ class WedstrijdController extends Controller
         $wedstrijd->update($request->only(['index', 'round_settings']));
         $wedstrijd->niveaus()->sync($request->input('niveaus'));
 
-        if (Setting::getValue('db_write') == 'off') {
+        if (!Setting::getValue('db_write_enabled')) {
             $message = ['warning', 'Wedstrijd wijziging toegevoegd aan wachtrij'];
         } else {
             $message = ['success', 'Wedstrijd succesvol bijgewerkt'];

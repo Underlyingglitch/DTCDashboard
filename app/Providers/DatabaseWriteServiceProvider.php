@@ -31,7 +31,7 @@ class DatabaseWriteServiceProvider extends ServiceProvider
             return;
         }
         // If database write is enabled, do nothing
-        if (Setting::getValue('db_write') == 'on') {
+        if (Setting::getValue('db_write_enabled')) {
             return;
         }
         $models = [Competition::class, MatchDay::class, Wedstrijd::class, Registration::class, Score::class];

@@ -14,7 +14,7 @@
             Applicatie in development modus.
         </div>
     @endif
-    @if (\App\Models\Setting::getValue('db_write') == 'off')
+    @if (!\App\Models\Setting::getValue('db_write_enabled'))
         <div class="alert alert-warning">
             Database alleen lezen. <a href="{{ route('settings.database') }}">Meer info</a>
         </div>

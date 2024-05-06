@@ -27,7 +27,7 @@ class SyncStatus extends Component
     public function sync()
     {
         if ($this->status != 1 && $this->status != 4) {
-            if (Setting::getValue('sync_enabled') == 'false') return;
+            if (!Setting::getValue('sync_enabled')) return;
             if (SyncTask::where('status', 0)->count() == 0) {
                 event(new \App\Events\DataSync\UpdateSyncStatus(1));
                 return;

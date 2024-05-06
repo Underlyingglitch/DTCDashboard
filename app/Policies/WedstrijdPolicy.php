@@ -82,7 +82,7 @@ class WedstrijdPolicy
 
     public function process_scores(User $user, Wedstrijd $wedstrijd): bool
     {
-        if (Setting::getValue('db_write') == 'off') return false;
+        if (!Setting::getValue('db_write_enabled')) return false;
         if ($user->hasRole('dtc')) return true;
         return false;
     }

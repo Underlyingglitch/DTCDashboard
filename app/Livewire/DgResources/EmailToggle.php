@@ -11,15 +11,15 @@ class EmailToggle extends Component
 
     public function mount()
     {
-        $this->value = (\App\Models\UserSetting::getValue('dg_resources_subscribed', 'off') == 'on') ? 'Aan' : 'Uit';
+        $this->value = \App\Models\UserSetting::getValue('dg_resources_subscribed', false) ? 'Aan' : 'Uit';
         $this->class = $this->value == 'Aan' ? 'btn-success' : 'btn-danger';
     }
 
     public function toggle()
     {
-        \App\Models\UserSetting::setValue('dg_resources_subscribed', $this->value == 'Aan' ? 'off' : 'on');
         $this->value = $this->value == 'Aan' ? 'Uit' : 'Aan';
         $this->class = $this->value == 'Aan' ? 'btn-success' : 'btn-danger';
+        \App\Models\UserSetting::setValue('dg_resources_subscribed', $this->value == 'Aan');
     }
 
     public function render()

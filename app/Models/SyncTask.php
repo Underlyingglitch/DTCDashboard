@@ -14,7 +14,7 @@ class SyncTask extends Model
         parent::boot();
 
         static::created(function ($st) {
-            if (Setting::getValue('sync_enabled') == 'false') return;
+            if (!Setting::getValue('sync_enabled')) return;
             event(new \App\Events\DataSync\UpdateSyncStatus(1));
         });
     }

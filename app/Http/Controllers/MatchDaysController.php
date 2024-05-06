@@ -44,7 +44,7 @@ class MatchDaysController extends Controller
         ]);
 
         $competition->match_days()->create($request->only('name', 'date', 'location_id'));
-        if (Setting::getValue('db_write') == 'off') {
+        if (!Setting::getValue('db_write_enabled')) {
             $message = ['warning', 'Wedstrijddag toegevoegd aan wachtrij'];
         } else {
             $message = ['success', 'Wedstrijddag succesvol aangemaakt'];
@@ -94,7 +94,7 @@ class MatchDaysController extends Controller
 
         $matchday->update($request->only('name', 'date', 'location_id'));
 
-        if (Setting::getValue('db_write') == 'off') {
+        if (!Setting::getValue('db_write_enabled')) {
             $message = ['warning', 'Wedstrijddag wijziging toegevoegd aan wachtrij'];
         } else {
             $message = ['success', 'Wedstrijddag succesvol bijgewerkt'];

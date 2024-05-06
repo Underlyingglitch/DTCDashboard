@@ -43,7 +43,7 @@ class CompetitionController extends Controller
         ]);
 
         Competition::create($request->only('name'));
-        if (Setting::getValue('db_write') == 'off') {
+        if (!Setting::getValue('db_write_enabled')) {
             $message = ['warning', 'Competitie toegevoegd aan wachtrij'];
         } else {
             $message = ['success', 'Competitie succesvol aangemaakt'];
@@ -89,7 +89,7 @@ class CompetitionController extends Controller
         ]);
 
         $competition->update($request->only('name'));
-        if (Setting::getValue('db_write') == 'off') {
+        if (!Setting::getValue('db_write_enabled')) {
             $message = ['warning', 'Competitie wijziging toegevoegd aan wachtrij'];
         } else {
             $message = ['success', 'Competitie succesvol bijgewerkt'];

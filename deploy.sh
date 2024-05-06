@@ -46,7 +46,7 @@ php artisan clear-compiled
 php artisan optimize
 
 # Clear the local cache
-php artisan cache:clear
+php artisan cache:clearsettings
 
 if ! cmp -s package.json package.json.bak; then
     # Compile npm assets

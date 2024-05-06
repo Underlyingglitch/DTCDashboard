@@ -19,7 +19,7 @@ class Setting extends Model
         'value',
     ];
 
-    private static $default_types = [
+    public static $default_types = [
         'current_competition' => 'integer',
         'current_match_day' => 'integer',
         'current_wedstrijd' => 'integer',

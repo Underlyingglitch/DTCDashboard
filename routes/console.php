@@ -70,3 +70,16 @@ Artisan::command('calculate:score-team-place', function () {
     }
     $this->info("\nScheduled to queue!");
 });
+
+Artisan::command('fetch:calendar {--test}', function () {
+    $this->info('Fetching calendar' . ($this->option('test') ? ' (test)' : ''));
+    \App\Jobs\Calendar\Initialize::dispatch($this->option('test'));
+});
+
+Artisan::command('cache:clearsettings', function () {
+    $this->info('Clearing settings cache');
+    $settings = \App\Models\Setting::$default_types;
+    foreach ($settings as $key => $type) {
+        \Illuminate\Support\Facades\Cache::forget($key);
+    }
+});

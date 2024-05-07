@@ -48,5 +48,26 @@ class ConstantsServiceProvider extends ServiceProvider
             'signed_off' => '<span style="color: red"><i class="fas fa-times"></i></span>',
             'correction_pending' => '<span style="color: orange"><i class="fas fa-clock-rotate-left"></i></span>',
         ]);
+
+        View::share('districts', [
+            'Landelijk',
+            'Mid-West',
+            'Noord',
+            'Oost',
+            'Zuid',
+            'Zuid-Holland',
+        ]);
+
+        View::share('disciplines', [
+            'Turnen Heren',
+            'Acrobatische Gymnastiek',
+            'Trampolinespringen',
+            'Turnen Dames',
+            'Groepsspringen',
+            'Ritmische Gymnastiek',
+            'Rhönrad',
+            'Dans',
+            'Freerunning',
+        ]);
     }
 }

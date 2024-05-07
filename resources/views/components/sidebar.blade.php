@@ -31,6 +31,14 @@
             <span>KNGU Bronnen</span></a>
     </li>
 
+    @can('viewAny', \App\Models\CalendarItem::class)
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('calendar.index') }}">
+                <i class="fas fa-fw fa-calendar"></i>
+                <span>Wedstrijdplanning</span></a>
+        </li>
+    @endcan
+
     {{-- <li class="nav-item">
         <a class="nav-link" href="{{ route('oefenstof.index') }}">
             <i class="fas fa-fw fa-table"></i>

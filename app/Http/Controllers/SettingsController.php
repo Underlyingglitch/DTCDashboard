@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Models\PendingChange;
 use App\Models\CalendarUpdate;
+use App\Models\User;
 use App\Models\UserSetting;
 use Illuminate\Support\Facades\Auth;
 
@@ -115,13 +116,24 @@ class SettingsController extends Controller
     {
         $settings = [
             'enabled_new' => UserSetting::getValue('calendar_updates_enabled_new'),
+            'enabled_change' => UserSetting::getValue('calendar_updates_enabled_change'),
+            'new_districts' => UserSetting::getValue('calendar_updates_new_districts', []),
+            'new_disciplines' => UserSetting::getValue('calendar_updates_new_disciplines', []),
+            'change_districts' => UserSetting::getValue('calendar_updates_change_districts', []),
+            'change_disciplines' => UserSetting::getValue('calendar_updates_change_disciplines', []),
         ];
-        return view('pages.settings.calendar_updates', compact('settings'));
+        $subscriptions = Auth::user()->calendar_subscriptions;
+        return view('pages.settings.calendar_updates', compact('settings', 'subscriptions'));
     }
 
     public function calendar_updates_post()
     {
         UserSetting::setValue('calendar_updates_enabled_new', request('enabled_new') == "on");
+        UserSetting::setValue('calendar_updates_enabled_change', request('enabled_change') == "on");
+        UserSetting::setValue('calendar_updates_new_districts', request('enabled_new') == "on" ? request('new_districts') : []);
+        UserSetting::setValue('calendar_updates_new_disciplines', request('enabled_new') == "on" ? request('new_disciplines') : []);
+        UserSetting::setValue('calendar_updates_change_districts', request('enabled_change') == "on" ? request('change_districts') : []);
+        UserSetting::setValue('calendar_updates_change_disciplines', request('enabled_change') == "on" ? request('change_disciplines') : []);
         return redirect()->back()->with('success', 'Instellingen opgeslagen');
     }
 }

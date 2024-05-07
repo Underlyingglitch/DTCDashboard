@@ -127,4 +127,25 @@ $(function () {
         e.preventDefault();
     });
 
+    $('[data-toggle="tooltip"]').tooltip()
+
+    $('[data-action="toggleelement"').on('change', function () {
+        let id = $(this).attr('data-action-id');
+        if ($(this).prop('checked')) {
+            $('#' + id).show();
+        } else {
+            $('#' + id).hide();
+        }
+    });
+
+    $('[data-toggledby').each(function () {
+        let id = $(this).attr('data-toggledby');
+
+        if ($('#' + id).prop('checked')) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
 }); // End of use strict

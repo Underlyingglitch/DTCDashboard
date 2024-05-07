@@ -14,6 +14,11 @@ class UserSetting extends Model
     private static $default_types = [
         'dg_resources_subscribed' => 'boolean',
         'calendar_updates_enabled_new' => 'boolean',
+        'calendar_updates_enabled_change' => 'boolean',
+        'calendar_updates_new_districts' => 'array',
+        'calendar_updates_new_disciplines' => 'array',
+        'calendar_updates_change_districts' => 'array',
+        'calendar_updates_change_disciplines' => 'array',
     ];
 
     protected static function booted()

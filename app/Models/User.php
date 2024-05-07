@@ -107,4 +107,9 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
 
         $this->notify(new EmailVerification($verifyUrl, $minutes));
     }
+
+    public function calendar_subscriptions()
+    {
+        return $this->belongsToMany(CalendarItem::class);
+    }
 }

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Inloggen - DTC Zuid</title>
+    <title>Registreren - DTC Zuid</title>
 
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
 
@@ -15,34 +15,6 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-
-    <script type="module" defer>
-        // Periodically send a ping to the server to keep the session alive
-        setInterval(() => {
-            console.log('Sending ping')
-            window.axios.post('/api/internal/ping', {
-                page: window.location.pathname,
-                user_id: null,
-            })
-        }, 1000 * 5);
-        window.axios.post('/api/internal/ping', {
-            page: window.location.pathname,
-            user_id: null
-        }).then((data) => {
-            let id = data.data.id
-            loadPage(data.data.loaded_page)
-            window.Echo.channel(`monitor.${id}`).listen('.DeviceUpdated', (e) => {
-                loadPage(e.loaded_page)
-            })
-        }).catch((error) => {
-            console.log(error)
-        })
-
-        function loadPage(page) {
-            if (page == window.location.pathname) return
-            window.location.pathname = page
-        }
-    </script>
 </head>
 
 <body class="login-background">
@@ -55,10 +27,19 @@
                             <div class="col-lg-12">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welkom terug!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Welkom!</h1>
                                     </div>
                                     @if (Session::has('success'))
                                         <div class="alert alert-success">{!! Session::get('success') !!}</div>
+                                    @endif
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{!! $error !!}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     @endif
                                     @error('details')
                                         <div class="alert alert-danger" role="alert">
@@ -68,38 +49,44 @@
                                             </button>
                                         </div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.login') }}" method="post">
+                                    <form class="user" action="{{ route('auth.more_details') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text"
-                                                class="form-control form-control-user @if ($errors->any()) @error('email') is-invalid @else is-valid @enderror @endif"
-                                                placeholder="Email adres" name="email" value="{{ old('email') }}">
+                                                class="form-control form-control-user @if ($errors->any()) @error('club') is-invalid @else is-valid @enderror @endif"
+                                                placeholder="Naam vereniging" name="club"
+                                                value="{{ old('club') }}">
                                         </div>
-                                        @error('email')
+                                        @error('club')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
+
                                         <div class="form-group">
-                                            <input type="password"
-                                                class="form-control form-control-user @if ($errors->any()) @error('password') is-invalid @enderror @endif"
-                                                placeholder="Wachtwoord" name="password">
+                                            <select name="type">
+                                                <option value="--">Selecteer type</option>
+                                                <option value="jury">Jurylid</option>
+                                                <option value="trainer">Trainer</option>
+                                            </select>
                                         </div>
-                                        @error('password')
+                                        @error('type')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
+
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Inloggen
+                                            Registreren
                                         </button>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="btn btn-secondary" href="{{ route('auth.register') }}">Nog geen
-                                            account?</a>
-                                        {{-- <br>of<br>
-                                        <a class="btn-link small" href="#">Wachtwoord vergeten?</a> --}}
+                                        Voor meer informatie, neem contact op met <a
+                                            href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>.
+                                        <hr>
+                                        <a class="btn btn-secondary" href="{{ route('auth.login') }}">Terug naar
+                                            inloggen</a>
                                     </div>
                                 </div>
                             </div>

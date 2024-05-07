@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -84,9 +85,24 @@ class AuthController extends Controller
             $user->active = true;
         }
 
-        if (!$user->active) User::where('email', 'rickokkersen@gmail.com')->first()->notify(new \App\Notifications\AccountWaitingActivation());
+        session(['user' => $user->id]);
+        if (!$user->active) return view('auth.more_details', compact('user'));
 
-        return $user->active ? redirect()->route('auth.login')->with('success', 'Uw account is geactiveerd! U kunt nu inloggen') : redirect()->route('auth.register')->with('success', 'We konden niet verifieren of u een jurylid of trainer bent. Uw account is aangemaakt, maar moet nog geactiveerd worden door een beheerder. U ontvangt een email zodra uw account is geactiveerd.');
+        return redirect()->route('auth.login')->with('success', 'Uw account is geactiveerd! U kunt nu inloggen');
+    }
+
+    public function more_details(Request $request)
+    {
+        $this->validate($request, [
+            'type' => 'required|in:jury,trainer',
+            'club' => 'required'
+        ]);
+
+        $user_id = session('user');
+
+        User::where('email', 'rickokkersen@gmail.com')->first()->notify(new \App\Notifications\AccountWaitingActivation($user_id, $request->type, $request->club));
+
+        return redirect()->route('auth.login')->with('success', 'We konden niet verifieren of u een jurylid of trainer bent. Uw account is aangemaakt, maar moet nog geactiveerd worden door een beheerder. U ontvangt een email zodra uw account is geactiveerd.');
     }
 
     public function logout()

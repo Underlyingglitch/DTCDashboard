@@ -8,4 +8,5 @@ Route::controller(AuthController::class)->name('auth.')->group(function () {
     Route::post('/login', 'login_post');
     Route::get('/register', 'register')->name('register');
     Route::post('/register', 'register_post');
+    Route::post('/more_details', 'more_details')->name('more_details');
 });

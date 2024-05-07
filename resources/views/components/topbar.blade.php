@@ -5,6 +5,10 @@
         <i class="fa fa-bars"></i>
     </button>
 
+    <div style="margin-right: 20px">
+        Versie: {{ config('app.version') }}
+    </div>
+
     @if (config('app.env') == 'local')
         <div class="alert alert-warning">
             Applicatie in local modus. Functies beperkt.

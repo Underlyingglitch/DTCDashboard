@@ -1,5 +1,5 @@
 .login-background {
-    background: url('../img/login-background.jpg');
+    background: url("../img/login-background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -34,6 +34,22 @@
     display: none;
 }
 
-.card .card-header[data-toggle=collapse]::after {
-    font-family: 'Font Awesome 6 Free';
+.card .card-header[data-toggle="collapse"]::after {
+    font-family: "Font Awesome 6 Free";
+}
+
+#oldBrowserWarning {
+    animation: showAfterSecond 0s 1s forwards;
+    visibility: hidden;
+    height: 0;
+}
+
+@keyframes showAfterSecond {
+    to {
+        visibility: visible;
+        height: auto;
+        border: 3px solid red;
+        background-color: #ff7777;
+        color: black;
+    }
 }

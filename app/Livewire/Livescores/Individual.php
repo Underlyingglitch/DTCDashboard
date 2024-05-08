@@ -27,7 +27,7 @@ class Individual extends Component
         $this->modalShown = 0;
         $this->hydrate();
     }
-    
+
     public function hydrate()
     {
         $matchday = $this->matchday;
@@ -70,6 +70,9 @@ class Individual extends Component
 
     public function updateLimit()
     {
+        if ($this->limit < 0) {
+            $this->limit = 0;
+        }
         $this->hydrate();
     }
 

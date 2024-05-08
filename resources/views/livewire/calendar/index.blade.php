@@ -4,7 +4,7 @@
             Maand:
             <select wire:model="selectedMonth" wire:change="getResults">
                 @foreach ($months as $i => $month)
-                    <option value="{{ $i + 1 }}">
+                    <option value="{{ $i + 1 }}" wire:key="month_dropdown_{{ $i }}">
                         {{ $month }}</option>
                 @endforeach
             </select>
@@ -14,7 +14,8 @@
             <select wire:model="selectedDistrict" wire:change="getResults">
                 <option value="*">Alle districten</option>
                 @foreach ($districts as $district)
-                    <option value="{{ $district }}">{{ $district }}</option>
+                    <option value="{{ $district }}" wire:key="district_dropdown_{{ $district }}">
+                        {{ $district }}</option>
                 @endforeach
             </select>
         </div>
@@ -23,7 +24,8 @@
             <select wire:model="selectedDiscipline" wire:change="getResults">
                 <option value="*">Alle disciplines</option>
                 @foreach ($disciplines as $discipline)
-                    <option value="{{ $discipline }}">{{ $discipline }}</option>
+                    <option value="{{ $discipline }}" wire:key="discipline_dropdown_{{ $discipline }}">
+                        {{ $discipline }}</option>
                 @endforeach
             </select>
         </div>
@@ -37,8 +39,9 @@
                     @if (in_array($result['id'], $created)) style="background-color: rgba(0, 255, 55, 0.2)" @endif
                     @if (in_array($result['id'], $updated)) style="background-color: rgba(255, 242, 0, 0.2)" @endif
                     id="heading{{ $result['event_id'] }}" data-toggle="collapse"
-                    data-target="#collapse{{ $result['event_id'] }}" aria-expanded="false"
-                    aria-controls="collapse{{ $result['event_id'] }}">
+                    data-target="#collapse{{ $result['event_id'] }}"
+                    aria-expanded="@if ($result['id'] == $selected) true @else false @endif"
+                    aria-controls="collapse{{ $result['event_id'] }}" wire:click="select({{ $result['id'] }})">
                     <div class="row" style="font-size: 20px">
                         <div class="col">
                             <h5>
@@ -61,7 +64,8 @@
                         </div>
                     </div>
                 </div>
-                <div id="collapse{{ $result['event_id'] }}" class="collapse"
+                <div id="collapse{{ $result['event_id'] }}"
+                    class="collapse @if ($result['id'] == $selected) show @endif"
                     aria-labelledby="heading{{ $result['event_id'] }}" data-parent="#accordionExample">
                     <div class="card-body">
                         <b>Locatie:</b> {{ $result['location_name'] }} ({{ $result['location_address'] }})<br>
@@ -92,7 +96,9 @@
                         <hr>
                         <a target="_blank"
                             href="https://dutchgymnastics.nl/wedstrijden-en-uitslagen?event={{ $result['event_id'] }}">Bekijk
-                            op DG</a> | @livewire('calendar.subscribe-btn', ['id' => $result['id']], key($result['id']))
+                            op DG</a> | @php($check_subscribed = in_array($result['id'], $subscribed))<button
+                            class="btn btn-sm btn-{{ $check_subscribed ? 'success' : 'danger' }}"
+                            wire:click="toggleSubscription({{ $result['id'] }})">{{ $check_subscribed ? 'Geabonneerd' : 'Niet geabonneerd' }}</button>
                     </div>
                 </div>
             </div>

@@ -15,8 +15,11 @@ class Index extends Component
     public $selectedDiscipline;
 
     public $results = [];
+    public $subscribed = [];
     public $created;
     public $updated;
+
+    public $selected = [];
 
     public function mount()
     {
@@ -47,6 +50,24 @@ class Index extends Component
                 return $query->where('discipline', $this->selectedDiscipline);
             })
             ->get();
+        $this->subscribed = auth()->user()->calendar_subscriptions->pluck('id')->toArray();
+    }
+
+    public function toggleSubscription($id)
+    {
+        $item = CalendarItem::find($id);
+        if ($item->subscribers->contains(auth()->id())) {
+            $item->subscribers()->detach(auth()->id());
+            $this->subscribed = array_diff($this->subscribed, [$id]);
+        } else {
+            $item->subscribers()->attach(auth()->id());
+            $this->subscribed[] = $id;
+        }
+    }
+
+    public function select($id)
+    {
+        $this->selected = $id;
     }
 
     public function render()

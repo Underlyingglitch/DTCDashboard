@@ -19,9 +19,9 @@ class DGResourcePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, DGResource $dGResource): bool
+    public function view(User $user, DGResource $dg_resource): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -35,7 +35,7 @@ class DGResourcePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, DGResource $dGResource): bool
+    public function update(User $user, DGResource $dg_resource): bool
     {
         return false;
     }
@@ -43,7 +43,7 @@ class DGResourcePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, DGResource $dGResource): bool
+    public function delete(User $user, DGResource $dg_resource): bool
     {
         return false;
     }
@@ -51,7 +51,7 @@ class DGResourcePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, DGResource $dGResource): bool
+    public function restore(User $user, DGResource $dg_resource): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class DGResourcePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, DGResource $dGResource): bool
+    public function forceDelete(User $user, DGResource $dg_resource): bool
     {
         return false;
     }

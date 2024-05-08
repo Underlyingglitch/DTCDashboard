@@ -13,6 +13,8 @@
 
     <title>@yield('page_title') | DTC Zuid</title>
 
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -23,8 +25,6 @@
     {{-- <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script> --}}
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @livewireStyles
-
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 </head>
 
 <body id="page-top">

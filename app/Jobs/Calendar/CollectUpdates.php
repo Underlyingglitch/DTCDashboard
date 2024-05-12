@@ -91,7 +91,8 @@ class CollectUpdates implements ShouldQueue, ShouldBeUnique
 
             // SendUpdates::dispatch($user->id, $notifications);
 
-            $user->notify(new CalendarUpdateNotification($notifications));
+            if (count($notifications) > 0)
+                $user->notify(new CalendarUpdateNotification($notifications));
         }
     }
 }

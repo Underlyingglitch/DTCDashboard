@@ -38,55 +38,59 @@
             @endcan
         </div>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Wedstrijdnummer</th>
-                <th>Niveaus</th>
-                <th>Banen</th>
-                <th>Groepen</th>
-                <th>Acties</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Wedstrijdnummer</th>
-                <th>Niveaus</th>
-                <th>Banen</th>
-                <th>Groepen</th>
-                <th>Acties</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            @foreach ($wedstrijden as $wedstrijd)
+    <div style="overflow-x: auto;">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ $wedstrijd->index }}</td>
-                    <td>{{ $wedstrijd->niveaus_list }}</td>
-                    <td>{{ $wedstrijd->baans() }}</td>
-                    <td>{{ $wedstrijd->group_amount }}</td>
-                    <td>
-                        @can('view', $wedstrijd)
-                            <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-info"><i
-                                    class="fas fa-info-circle"></i></a>
-                        @endcan
-                        @can('update', $wedstrijd)
-                            <a href="{{ route('wedstrijden.edit', $wedstrijd) }}" class="btn btn-sm btn-warning"><i
-                                    class="fas fa-pencil"></i></a>
-                        @endcan
-                        @can('delete', $wedstrijd)
-                            <form class="button-form" method="post" action="{{ route('wedstrijden.destroy', $wedstrijd) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                            </form>
-                        @endcan
-                        @if ($wedstrijd->id != $activeWedstrijd && Auth::user()->can('update', $wedstrijd))
-                            <a href="{{ route('wedstrijden.setactive', $wedstrijd) }}" class="btn btn-sm btn-success"><i
-                                    class="fas fa-check"></i></a>
-                        @endif
-                    </td>
+                    <th>Wedstrijdnummer</th>
+                    <th>Niveaus</th>
+                    <th>Banen</th>
+                    <th>Groepen</th>
+                    <th>Acties</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Wedstrijdnummer</th>
+                    <th>Niveaus</th>
+                    <th>Banen</th>
+                    <th>Groepen</th>
+                    <th>Acties</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach ($wedstrijden as $wedstrijd)
+                    <tr>
+                        <td>{{ $wedstrijd->index }}</td>
+                        <td>{{ $wedstrijd->niveaus_list }}</td>
+                        <td>{{ $wedstrijd->baans() }}</td>
+                        <td>{{ $wedstrijd->group_amount }}</td>
+                        <td>
+                            @can('view', $wedstrijd)
+                                <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-info"><i
+                                        class="fas fa-info-circle"></i></a>
+                            @endcan
+                            @can('update', $wedstrijd)
+                                <a href="{{ route('wedstrijden.edit', $wedstrijd) }}" class="btn btn-sm btn-warning"><i
+                                        class="fas fa-pencil"></i></a>
+                            @endcan
+                            @can('delete', $wedstrijd)
+                                <form class="button-form" method="post"
+                                    action="{{ route('wedstrijden.destroy', $wedstrijd) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </form>
+                            @endcan
+                            @if ($wedstrijd->id != $activeWedstrijd && Auth::user()->can('update', $wedstrijd))
+                                <a href="{{ route('wedstrijden.setactive', $wedstrijd) }}"
+                                    class="btn btn-sm btn-success"><i class="fas fa-check"></i></a>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
 @endsection

@@ -4,37 +4,39 @@
 
 @section('content')
     <a href="{{ route('locations.create') }}" class="btn btn-sm btn-success">Nieuwe locatie</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Naam</th>
-                <th>Adres</th>
-                <th>Acties</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Naam</th>
-                <th>Adres</th>
-                <th>Acties</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            @foreach ($locations as $location)
+    <div style="overflow-x: auto;">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ $location->name }}</td>
-                    <td>{{ $location->address }}</td>
-                    <td>
-                        <a href="{{ route('locations.edit', $location) }}" class="btn btn-sm btn-warning"><i
-                                class="fas fa-pencil"></i></a>
-                        <form class="button-form" method="post" action="{{ route('locations.destroy', $location) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                        </form>
-                    </td>
+                    <th>Naam</th>
+                    <th>Adres</th>
+                    <th>Acties</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Naam</th>
+                    <th>Adres</th>
+                    <th>Acties</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach ($locations as $location)
+                    <tr>
+                        <td>{{ $location->name }}</td>
+                        <td>{{ $location->address }}</td>
+                        <td>
+                            <a href="{{ route('locations.edit', $location) }}" class="btn btn-sm btn-warning"><i
+                                    class="fas fa-pencil"></i></a>
+                            <form class="button-form" method="post" action="{{ route('locations.destroy', $location) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @endsection

@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
         return view('pages.users.index', [
-            'users' => User::all(),
+            'users' => User::where('email', 'NOT LIKE', '%@dtc.local')->get(),
         ]);
     }
 

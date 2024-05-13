@@ -84,21 +84,25 @@ $(function () {
         };
     });
 
-    // Close any open menu accordions when window is resized below 768px
+    let isSidebarToggled = false;
+
+    $(".sidebar").on('show.bs.collapse', function () {
+        isSidebarToggled = true;
+    });
+
+    $(".sidebar").on('hide.bs.collapse', function () {
+        isSidebarToggled = false;
+    });
+
     $(window).on("resize", function () {
-        if ($(window).width() < 768) {
-            if (!$(".sidebar").hasClass("toggled")) {
-                $('.sidebar .collapse').collapse('hide');
-            }
+        if ($(window).width() < 768 && !isSidebarToggled) {
+            $('.sidebar .collapse').collapse('hide');
         };
 
-        // Toggle the side navigation when window is resized below 480px
-        if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
+        if ($(window).width() < 480 && !isSidebarToggled) {
             $("body").addClass("sidebar-toggled");
             $(".sidebar").addClass("toggled");
-            if (!$(".sidebar").hasClass("toggled")) {
-                $('.sidebar .collapse').collapse('hide');
-            }
+            $('.sidebar .collapse').collapse('hide');
         };
     });
 

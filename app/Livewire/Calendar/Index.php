@@ -65,8 +65,12 @@ class Index extends Component
         }
     }
 
-    public function select($id)
+    public function toggle($id)
     {
+        if ($this->selected === $id) {
+            $this->selected = null;
+            return;
+        }
         $this->selected = $id;
     }
 

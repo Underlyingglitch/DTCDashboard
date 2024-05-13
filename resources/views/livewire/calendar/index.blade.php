@@ -35,13 +35,13 @@
     <div class="accordion" id="accordionExample">
         @foreach ($results as $result)
             <div class="card">
-                <div class="card-header"
+                <div class="card-header @if ($result['id'] != $selected) collapsed @endif"
                     @if (in_array($result['id'], $created)) style="background-color: rgba(0, 255, 55, 0.2)" @endif
                     @if (in_array($result['id'], $updated)) style="background-color: rgba(255, 242, 0, 0.2)" @endif
                     id="heading{{ $result['event_id'] }}" data-toggle="collapse"
                     data-target="#collapse{{ $result['event_id'] }}"
-                    aria-expanded="@if ($result['id'] == $selected) true @else false @endif"
-                    aria-controls="collapse{{ $result['event_id'] }}" wire:click="select({{ $result['id'] }})">
+                    aria-expanded=@if ($result['id'] == $selected) "true" @else "false" @endif
+                    aria-controls="collapse{{ $result['event_id'] }}" wire:click="toggle({{ $result['id'] }})">
                     <div class="row" style="font-size: 20px">
                         <div class="col">
                             <h5>

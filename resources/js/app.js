@@ -75,31 +75,31 @@ function notification(style, title, message) {
 $(function () {
     "use strict"; // Start of use strict
 
+    if (localStorage.getItem('toggled') != 'true') {
+        $("body").removeClass("sidebar-toggled");
+        $(".sidebar").removeClass("toggled");
+    }
+
     // Toggle the side navigation
     $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
         $("body").toggleClass("sidebar-toggled");
         $(".sidebar").toggleClass("toggled");
         if ($(".sidebar").hasClass("toggled")) {
             $('.sidebar .collapse').collapse('hide');
-        };
+            localStorage.setItem('toggled', 'true');
+        } else {
+            localStorage.removeItem('toggled');
+        }
     });
 
-    let isSidebarToggled = false;
-
-    $(".sidebar").on('show.bs.collapse', function () {
-        isSidebarToggled = true;
-    });
-
-    $(".sidebar").on('hide.bs.collapse', function () {
-        isSidebarToggled = false;
-    });
-
-    $(window).on("resize", function () {
-        if ($(window).width() < 768 && !isSidebarToggled) {
+    // Close any open menu accordions when window is resized below 768px
+    $(window).resize(function () {
+        if ($(window).width() < 768) {
             $('.sidebar .collapse').collapse('hide');
         };
 
-        if ($(window).width() < 480 && !isSidebarToggled) {
+        // Toggle the side navigation when window is resized below 480px
+        if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
             $("body").addClass("sidebar-toggled");
             $(".sidebar").addClass("toggled");
             $('.sidebar .collapse').collapse('hide');

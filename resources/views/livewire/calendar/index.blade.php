@@ -72,7 +72,7 @@
                         @if (!is_null($result['description']) || !empty($result['description']) || count($result['description_files']) != 0)
                             <hr>
                             <b>Beschrijving</b><br>
-                            {!! $result['description'] !!}<br>
+                            {!! clean(nl2br($result['description'])) !!}<br>
                             @foreach ($result['description_files'] as $file)
                                 <a href="{{ $file }}" target="_blank">{{ $file }}</a><br>
                             @endforeach
@@ -80,7 +80,7 @@
                         @if (!is_null($result['program']) || !empty($result['program']) || count($result['program_files']) != 0)
                             <hr>
                             <b>Programma</b><br>
-                            {!! $result['program'] !!}<br>
+                            {!! clean(nl2br($result['program'])) !!}<br>
                             @foreach ($result['program_files'] as $file)
                                 <a href="{{ $file }}" target="_blank">{{ $file }}</a><br>
                             @endforeach
@@ -88,7 +88,7 @@
                         @if (!is_null($result['results']) || !empty($result['results']) || count($result['results_files']) != 0)
                             <hr>
                             <b>Resultaten</b><br>
-                            {!! $result['results'] !!}<br>
+                            {!! clean(nl2br($result['results'])) !!}<br>
                             @foreach ($result['results_files'] as $file)
                                 <a href="{{ $file }}" target="_blank">{{ $file }}</a><br>
                             @endforeach

@@ -17,7 +17,6 @@ class TestController extends Controller
 
     public function index(Request $request)
     {
-        $userAgent = $request->header('User-Agent');
-        dd($userAgent);
+        
     }
 }

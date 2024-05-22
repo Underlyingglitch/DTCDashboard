@@ -1,33 +1,51 @@
-// Import Custom SB Admin 2 Variables (Overrides Default Bootstrap Variables)
-@import "variables.scss";
+/*!
+ * AdminKit v3.4.0 (https://adminkit.io/)
+ * Copyright 2023 Paul Laros
+ * Copyright 2023 AdminKit
+ * Licensed under MIT (https://github.com/adminkit/adminkit/blob/master/LICENSE)
+ */
 
-// Import Bootstrap
-@import "bootstrap/scss/bootstrap.scss";
+// Variables
+@import "1-variables/app";
 
-// Import DataTables
-// @import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
-// @import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
-// @import 'datatables.net-responsive-bs4/css/responsive.bootstrap4.css';
-// @import 'datatables.net-select-bs4/css/select.bootstrap4.css';
-// @import 'datatables.net-searchbuilder-bs4/css/searchBuilder.bootstrap4.css';
-// @import 'datatables.net-datetime/css/dataTables.dateTime.scss';
+// Bootstrap
+@import "bootstrap/scss/bootstrap";
 
-// Import toastr
-@import "toastr/toastr.scss";
+// Theme mixins
+@import "2-mixins/button";
 
-// Import Custom SB Admin 2 Mixins and Components
-@import "mixins.scss";
-@import "global.scss";
-@import "utilities.scss";
+// Theme components
+@import "3-components/avatar";
+@import "3-components/buttons";
+@import "3-components/card";
+@import "3-components/chart";
+@import "3-components/content";
+@import "3-components/dropdown";
+@import "3-components/feather";
+@import "3-components/footer";
+@import "3-components/hamburger";
+@import "3-components/list-group";
+@import "3-components/main";
+@import "3-components/navbar";
+@import "3-components/reboot";
+@import "3-components/sidebar";
+@import "3-components/sizing";
+@import "3-components/stat";
+@import "3-components/tables";
+@import "3-components/type";
+@import "3-components/wrapper";
 
-// Custom Components
-@import "dropdowns.scss";
-@import "navs.scss";
-@import "buttons.scss";
-@import "cards.scss";
-@import "charts.scss";
-@import "login.scss";
-@import "error.scss";
-@import "footer.scss";
+// Theme utilities
+@import "4-utilities/cursors";
 
-@import "additions.scss";
+// 3rd party plugins
+@import "jsvectormap/dist/css/jsvectormap";
+@import "simplebar/dist/simplebar";
+@import "flatpickr/dist/flatpickr";
+
+// 3rd party plugin styles
+@import "5-vendor/flatpickr";
+@import "5-vendor/simplebar";
+
+// Custom styles
+@import "additions";

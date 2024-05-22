@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if (Device::where('ip', $request->ip())->exists()) {
+            return redirect()->route('jurytafel.index');
+        }
+        if (!auth()->check()) {
+            return view('index');
+        }
         $settings = Setting::getValues([
             'current_competition',
             'current_match_day',

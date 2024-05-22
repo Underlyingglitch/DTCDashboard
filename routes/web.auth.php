@@ -26,12 +26,11 @@ use App\Http\Controllers\WedstrijdExportController;
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/wedstrijden/{wedstrijd}/setactive', [WedstrijdController::class, 'setactive'])->name('wedstrijden.setactive');
 
 Route::resource('competitions', CompetitionController::class);
-Route::post('/competitions/{competition}/process_doorstroom', [CompetitionController::class, 'process_doorstroom'])->name('competitions.process_doorstroom');
 Route::resource('locations', LocationController::class);
 Route::resource('trainers', TrainerController::class);
 Route::resource('juries', JuryController::class);

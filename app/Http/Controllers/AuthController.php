@@ -30,11 +30,13 @@ class AuthController extends Controller
                 else $user->removeRole('jury');
                 if ($user->is_trainer) $user->assignRole('trainer');
                 else $user->removeRole('trainer');
-                // Log the user in and remember them
-                Auth::login($user, true);
+                // Log the user in and remember them if requested
+                Auth::login($user, $request->has('remember-me'));
+                // Unlock the user
                 $user = Auth::user();
                 $user->locked = false;
                 $user->save();
+                // Redirect the user to the correct page based on their device
                 $redirect = Device::where('ip', $request->ip())->first() ? 'jurytafel.index' : 'dashboard';
                 return redirect()->intended(route($redirect));
             } else {

@@ -19,7 +19,7 @@
                         <div class="modal-header">
                             <h4 class="modal-title">{{ $registration['name'] }} ({{ $registration['club'] }})
                             </h4>
-                            <button type="button" class="close" wire:click="toggleModal(0)">&times;</button>
+                            <button type="button" class="btn-close" wire:click="toggleModal(0)"></button>
                         </div>
                         <!-- Modal body -->
                         <div class="modal-body">

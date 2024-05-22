@@ -108,25 +108,4 @@ class CompetitionController extends Controller
 
         return redirect()->route('competitions.index');
     }
-
-    public function process_doorstroom(Competition $competition, Request $request)
-    {
-        $this->authorize('processDoorstroom', $competition);
-
-        $this->validate($request, [
-            'match_days' => 'required|array|min:1',
-        ]);
-        $match_days = [];
-        foreach ($request->match_days as $match_day) {
-            $split = explode('.', $match_day);
-            $match_day = $split[0];
-            $type = $split[1];
-            if (array_key_exists($match_day, $match_days)) {
-                return redirect()->back()->with('warning', 'Selecteer 1 type per wedstrijddag');
-            }
-            $match_days[$match_day] = $type;
-        }
-
-        dd($match_days);
-    }
 }

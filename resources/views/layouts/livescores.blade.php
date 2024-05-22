@@ -58,7 +58,7 @@
 
 <body>
     <div class="pt-2 pl-2">
-        <span class="badge badge-success" id="online_count">0</span> <span id="online_text">Gebruikers online</span>
+        <span class="badge text-bg-success" id="online_count">0</span> <span id="online_text">Gebruikers online</span>
     </div>
     {{ $slot }}
     @livewireScripts()

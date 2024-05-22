@@ -26,7 +26,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="p-5">
-                                    <div class="alert alert-info">
+                                    <div class="alert alert-info" role="alert">
                                         Deze website is nog in ontwikkeling, maar een aantal functies zijn al
                                         beschikbaar. Bij vragen en/of opmerkingen kunt u contact opnemen met <a
                                             href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>

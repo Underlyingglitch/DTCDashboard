@@ -77,7 +77,7 @@ class WedstrijdExportController extends Controller
         ]);
     }
 
-    public function jury(Wedstrijd $wedstrijd)
+    public function jury(Wedstrijd $wedstrijd, Request $request)
     {
         $registrations = $wedstrijd->registrations()->with('gymnast', 'club', 'niveau', 'team')->get();
         $group_count = explode(', ', $wedstrijd->group_amount);
@@ -102,7 +102,8 @@ class WedstrijdExportController extends Controller
                 'wedstrijd' => $wedstrijd,
                 'registrations' => $registrations,
                 'groups' => $groups,
-                'baans' => $baans
+                'baans' => $baans,
+                'digital' => $request->has('digital') ? true : false
             ]);
         }
         $pdf = Pdf::loadView('pdf.jury', [

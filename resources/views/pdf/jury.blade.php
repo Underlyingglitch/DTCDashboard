@@ -5,7 +5,7 @@
 @section('main')
     @foreach ($baans as $baan => $group_nrs)
         @foreach ($toestellen as $key => $toestel)
-            @foreach (array_reverse($group_nrs) as $i => $group_nr)
+            @foreach ($digital ? $group_nrs : array_reverse($group_nrs) as $i => $group_nr)
                 @if ($group_nr[$key])
                     <table class="group-table" style="page-break-inside: avoid;">
                         <tr>
@@ -14,7 +14,7 @@
                                 {{ $wedstrijd->index }} | @if (count($baans) > 1)
                                     Baan {{ $baan + 1 }} |
                                 @endif Groep {{ $group_nr[$key] - $baan * 10 }} |
-                                {{ $toestel }} | Ronde {{ count($group_nrs) - $i }}</th>
+                                {{ $toestel }} | Ronde {{ $digital ? $i + 1 : count($group_nrs) - $i }}</th>
                             <th style="width: 80px">Niveau</th>
                             <th style="width: 50px">D-score</th>
                             <th style="width: 50px">E-aftrek</th>
@@ -40,6 +40,9 @@
                     </table>
                 @endif
             @endforeach
+            @if ($digital)
+                <div style="height:0; page-break-after:always"></div>
+            @endif
         @endforeach
     @endforeach
 @endsection

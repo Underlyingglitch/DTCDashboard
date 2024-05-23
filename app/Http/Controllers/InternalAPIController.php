@@ -96,7 +96,7 @@ class InternalAPIController extends Controller
                     try {
                         $data = json_decode($change['data'], true);
                         // If we are updating a wedstrijd, we need to json_decode the group_settings
-                        if ($change['model_type'] == 'App\Models\Wedstrijd') {
+                        if ($change['model_type'] == 'App\Models\Wedstrijd' && isset($data['group_settings'])) {
                             $data['group_settings'] = json_decode($data['group_settings'], true);
                         }
                         $model::find($change['model_id'])->update($data);

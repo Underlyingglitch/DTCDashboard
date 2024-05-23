@@ -31,7 +31,7 @@ class SyncDatabase implements ShouldQueue
      */
     public function handle(): void
     {
-        if (Setting::getDBValue('sync_enabled')) {
+        if (!Setting::getDBValue('sync_enabled')) {
             return;
         }
 

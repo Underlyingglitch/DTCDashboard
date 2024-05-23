@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
-@section('page_title', $wedstrijd->match_day->location->name . ' | ' . $wedstrijd->match_day->date->format('d-m-Y') . '
-    | Wedstrijd ' . $wedstrijd->index)
+@section('page_title',
+    $wedstrijd->match_day->location->name .
+    ' | ' .
+    $wedstrijd->match_day->date->format('d-m-Y') .
+    '
+    | Wedstrijd ' .
+    $wedstrijd->index)
 
 @section('content')
     <div class="d-flex flex-row justify-content-between">
@@ -38,49 +43,50 @@
     <br>
 
     <h4>Groepen</h4>
-
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Naam</th>
-                <th>Club</th>
-                <th>Niveau</th>
-                <th>Aangemeld</th>
-                @can('manage', \App\Models\Registration::class)
-                    <th>Groep</th>
-                @endcan
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Naam</th>
-                <th>Club</th>
-                <th>Niveau</th>
-                <th>Aangemeld</th>
-                @can('manage', \App\Models\Registration::class)
-                    <th>Groep</th>
-                @endcan
-            </tr>
-        </tfoot>
-        <tbody>
-            @foreach ($groups as $registrations)
+    <div style="overflow-x: auto;">
+        <table class="table table-sm">
+            <thead>
                 <tr>
-                    <th></th>
-                    <th colspan="4">
-                        @if ($wedstrijd_baans > 1)
-                            Baan {{ $registrations->first()->group->baan }} -
-                        @endif
-                        {{ $registrations->first()->group->name }}
-                    </th>
+                    <th>#</th>
+                    <th>Naam</th>
+                    <th>Club</th>
+                    <th>Niveau</th>
+                    <th>Aangemeld</th>
+                    @can('manage', \App\Models\Registration::class)
+                        <th>Groep</th>
+                    @endcan
                 </tr>
-                @foreach ($registrations ?? [] as $registration)
-                    @livewire('wedstrijd.group-table-item', ['registration' => $registration], key($registration->id))
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Naam</th>
+                    <th>Club</th>
+                    <th>Niveau</th>
+                    <th>Aangemeld</th>
+                    @can('manage', \App\Models\Registration::class)
+                        <th>Groep</th>
+                    @endcan
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach ($groups as $registrations)
+                    <tr>
+                        <th></th>
+                        <th colspan="4">
+                            @if ($wedstrijd_baans > 1)
+                                Baan {{ $registrations->first()->group->baan }} -
+                            @endif
+                            {{ $registrations->first()->group->name }}
+                        </th>
+                    </tr>
+                    @foreach ($registrations ?? [] as $registration)
+                        @livewire('wedstrijd.group-table-item', ['registration' => $registration], key($registration->id))
+                    @endforeach
                 @endforeach
-            @endforeach
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <hr>
     <h4>Teams</h4>
@@ -88,62 +94,64 @@
         <a href="{{ route('teams.create', $wedstrijd) }}" class="btn btn-sm btn-success">Team aanmaken</a>
     @endcan
 
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Naam</th>
-                <th>Club</th>
-                <th>Niveau</th>
-                <th>Acties</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Naam</th>
-                <th>Club</th>
-                <th>Niveau</th>
-                <th>Acties</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            @foreach ($niveaus ?? [] as $team_list)
-                @foreach ($team_list ?? [] as $team_members)
-                    @php($team = $team_members->first()->team)
-                    @if ($team == null)
-                        @php(dd($team_members))
-                    @endif
-                    <tr>
-                        <th></th>
-                        <th colspan="5">
-                            {{ $team->name }}
-                            @can('update', $team)
-                                <a href="{{ route('teams.edit', [$wedstrijd, $team]) }}"
-                                    class="btn btn-sm btn-primary">Bewerken</a>
-                            @endcan
-                            @can('delete', $team)
-                                <form class="button-form" method="post"
-                                    action="{{ route('teams.destroy', [$wedstrijd, $team]) }}">
-                                    @csrf
-                                    @method('delete')
-                                    <input class="btn btn-sm btn-danger" type="submit" value="Verwijderen" />
-                                </form>
-                            @endcan
-                        </th>
-                    </tr>
-                    @foreach ($team_members ?? [] as $registration)
-                        @livewire('wedstrijd.team-table-item', ['registration' => $registration, 'wedstrijd' => $wedstrijd, 'wedstrijd_baans' => $wedstrijd_baans])
+    <div style="overflow-x: auto;">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Naam</th>
+                    <th>Club</th>
+                    <th>Niveau</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Naam</th>
+                    <th>Club</th>
+                    <th>Niveau</th>
+                    <th>Acties</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach ($niveaus ?? [] as $team_list)
+                    @foreach ($team_list ?? [] as $team_members)
+                        @php($team = $team_members->first()->team)
+                        @if ($team == null)
+                            @php(dd($team_members))
+                        @endif
+                        <tr>
+                            <th></th>
+                            <th colspan="5">
+                                {{ $team->name }}
+                                @can('update', $team)
+                                    <a href="{{ route('teams.edit', [$wedstrijd, $team]) }}"
+                                        class="btn btn-sm btn-primary">Bewerken</a>
+                                @endcan
+                                @can('delete', $team)
+                                    <form class="button-form" method="post"
+                                        action="{{ route('teams.destroy', [$wedstrijd, $team]) }}">
+                                        @csrf
+                                        @method('delete')
+                                        <input class="btn btn-sm btn-danger" type="submit" value="Verwijderen" />
+                                    </form>
+                                @endcan
+                            </th>
+                        </tr>
+                        @foreach ($team_members ?? [] as $registration)
+                            @livewire('wedstrijd.team-table-item', ['registration' => $registration, 'wedstrijd' => $wedstrijd, 'wedstrijd_baans' => $wedstrijd_baans])
+                        @endforeach
                     @endforeach
                 @endforeach
-            @endforeach
-            <tr>
-                <th></th>
-                <th colspan="5">Zonder team</th>
-            </tr>
-            @foreach ($no_team ?? [] as $registration)
-                @livewire('wedstrijd.team-table-item', ['registration' => $registration, 'wedstrijd' => $wedstrijd, 'wedstrijd_baans' => $wedstrijd_baans])
-            @endforeach
-        </tbody>
-    </table>
+                <tr>
+                    <th></th>
+                    <th colspan="5">Zonder team</th>
+                </tr>
+                @foreach ($no_team ?? [] as $registration)
+                    @livewire('wedstrijd.team-table-item', ['registration' => $registration, 'wedstrijd' => $wedstrijd, 'wedstrijd_baans' => $wedstrijd_baans])
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @endsection

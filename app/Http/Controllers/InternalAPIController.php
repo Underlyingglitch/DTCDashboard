@@ -94,7 +94,12 @@ class InternalAPIController extends Controller
                 case 'update':
                     // Update the model on the current database
                     try {
-                        $model::find($change['model_id'])->update(json_decode($change['data'], true));
+                        $data = json_decode($change['data'], true);
+                        // If we are updating a wedstrijd, we need to json_decode the group_settings
+                        if ($change['model_type'] == 'App\Models\Wedstrijd') {
+                            $data['group_settings'] = json_decode($data['group_settings'], true);
+                        }
+                        $model::find($change['model_id'])->update($data);
                         SyncTask::updateOrCreate(['id' => $change['id']], [
                             'id' => $change['id'],
                             'model_type' => $change['model_type'],

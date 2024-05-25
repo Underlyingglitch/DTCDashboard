@@ -14,13 +14,13 @@
                 readonly />
         </div>
         <div class="col-md-6">
-            E1: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E1-score"
+            E1: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E1-aftrek"
                 wire:model="e1" wire:blur="calculate()" @if ($locked) disabled @endif
                 tabindex="2" />
-            E2: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E2-score"
+            E2: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E2-aftrek"
                 wire:model="e2" wire:blur="calculate()" @if ($locked) disabled @endif
                 tabindex="3" />
-            E3: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E3-score"
+            E3: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E3-aftrek"
                 wire:model="e3" wire:blur="calculate()" @if ($locked) disabled @endif
                 tabindex="4" />
             &nbsp;<input class="form-control btn btn-primary" type="submit" value="Opslaan" wire:click="save()"

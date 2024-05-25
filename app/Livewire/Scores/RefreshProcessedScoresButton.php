@@ -46,8 +46,10 @@ class RefreshProcessedScoresButton extends Component
                         ['group_id', $group->id],
                         ['toestel', $toestel],
                     ])->first();
-                    event(new \App\Events\ProcessedScoreUpdated($ps, true));
-                    $ps->delete();
+                    if ($ps) {
+                        event(new \App\Events\ProcessedScoreUpdated($ps, true));
+                        $ps->delete();
+                    }
                 }
             }
         }

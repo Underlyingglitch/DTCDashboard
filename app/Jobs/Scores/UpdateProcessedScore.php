@@ -38,7 +38,7 @@ class UpdateProcessedScore implements ShouldQueue
         $wedstrijd = Wedstrijd::where('match_day_id', $this->score['match_day_id'])->whereHas('niveaus', function ($query) use ($niveau) {
             $query->where('niveaus.id', $niveau->id);
         })->first();
-        $startnumbers = $wedstrijd->registrations->where('group_id', $score_registration->group_id)->pluck('startnumber');
+        $startnumbers = $wedstrijd->registrations->where('group_id', $score_registration->group_id)->where('signed_off', false)->pluck('startnumber');
         $scores = Score::where([
             ['toestel', $this->score['toestel']],
             ['match_day_id', $this->score['match_day_id']]

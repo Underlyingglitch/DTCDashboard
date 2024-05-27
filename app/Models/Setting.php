@@ -26,7 +26,7 @@ class Setting extends Model
         'current_round' => 'integer',
         'oefenstof_last_updated' => 'datetime',
         'sync_enabled' => 'boolean',
-        'db_write_enabled' => 'boolean', // TODO - rename to db_write_enabled
+        'db_write_enabled' => 'boolean',
         'dg_resources_last_update' => 'datetime',
         'score_correction_enabled' => 'boolean',
     ];
@@ -75,7 +75,7 @@ class Setting extends Model
             ['key' => $key],
             ['type' => self::$default_types[$key] ?? 'string', 'value' => $value]
         );
-        if ($key == 'current_wedstrijd') {
+        if ($key == 'current_wedstrijd' && $value != 0) {
             $wedstrijd = Wedstrijd::find($value);
             self::setValue('current_competition', $wedstrijd->match_day->competition_id, true);
             self::setValue('current_match_day', $wedstrijd->match_day_id, true);

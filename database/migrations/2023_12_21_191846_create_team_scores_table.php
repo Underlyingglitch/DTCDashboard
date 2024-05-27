@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('teams', function (Blueprint $table) {
             $table->dropColumn('toestel_scores');
-            $table->dropColumn('total_score');
+            if (Schema::hasColumn('teams', 'total_score')) {
+                $table->dropColumn('total_score');
+            }
         });
         Schema::create('team_scores', function (Blueprint $table) {
             $table->id();

@@ -6,12 +6,13 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use App\Models\Club;
 use App\Models\User;
+use App\Models\Niveau;
+use App\Models\Setting;
 use App\Models\Trainer;
 use App\Models\Location;
 use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use App\Models\Competition;
-use App\Models\Niveau;
 use App\Models\UserSetting;
 use Illuminate\Database\Seeder;
 
@@ -32,11 +33,10 @@ class DatabaseSeeder extends Seeder
         $wedstrijd = Wedstrijd::create(['match_day_id' => $matchday->id, 'index' => 1]);
         $wedstrijd->niveaus()->attach(1);
 
-        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_competition', 'value' => $competition->id]);
-        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_match_day', 'value' => $matchday->id]);
-        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_wedstrijd', 'value' => 1]);
-        UserSetting::create(['user_id' => null, 'type' => 'integer', 'key' => 'current_round', 'value' => 1]);
-        UserSetting::create(['user_id' => null, 'type' => 'datetime', 'key' => 'oefenstof_last_updated', 'value' => Carbon::now()]);
+        Setting::setValue('current_competition', $competition->id);
+        Setting::setValue('current_match_day', $matchday->id);
+        Setting::setValue('current_wedstrijd', 1);
+        Setting::setValue('current_round', 1);
 
         $club = Club::create(['id' => 1, 'name' => 'Test club', 'email' => 'club@test.dev', 'place' => 'test', 'district' => 'test']);
         $trainer = Trainer::create(['name' => 'Test trainer', 'email' => 'trainer@test.dev', 'phone' => '0123456789', 'club_id' => 1]);

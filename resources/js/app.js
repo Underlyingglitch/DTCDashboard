@@ -40,7 +40,7 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_CLUSTER,
     forceTLS: false,
     // forceTLS: import.meta.env.VITE_APP_ENV == 'local' ? false : true,
-    encrypted: true,
+    encrypted: false,
     disableStats: true,
     enabledTransports: ['ws'],
     // enabledTransports: import.meta.env.VITE_APP_ENV == 'local' ? ['ws'] : ['ws', 'wss'],

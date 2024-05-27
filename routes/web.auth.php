@@ -26,8 +26,6 @@ use App\Http\Controllers\WedstrijdExportController;
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
 Route::get('/wedstrijden/{wedstrijd}/setactive', [WedstrijdController::class, 'setactive'])->name('wedstrijden.setactive');
 
 Route::resource('competitions', CompetitionController::class);

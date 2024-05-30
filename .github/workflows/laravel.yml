@@ -7,10 +7,10 @@ on:
     branches: ["main"]
 
 jobs:
-  phpunit:
+  tests:
     runs-on: [ubuntu-latest]
-    container:
-      image: kirschbaumdevelopment/laravel-test-runner:8.2
+    # container:
+    #   image: kirschbaumdevelopment/laravel-test-runner:8.2
 
     services:
       mysql:
@@ -22,27 +22,55 @@ jobs:
           MYSQL_PASSWORD: password
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
+    # steps:
+    #   - uses: actions/checkout@v1
+    #     with:
+    #       fetch-depth: 1
+
+    #   - name: Install composer dependencies
+    #     run: composer install --no-scripts
+
+    #   - name: Install npm dependencies
+    #     run: npm install
+
+    #   - name: Run Vite
+    #     run: npm run build
+
+    #   - name: Prepare Laravel Application
+    #     run: cp .env.ci .env
+
+    #   - name: Generate application key
+    #     run: php artisan key:generate
+
+    #   - name: Run Testsuite
+    #     run: php artisan test
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
         with:
-          fetch-depth: 1
+          php-version: 8.1
+          extensions: mbstring, pdo, pdo_mysql, xml, ctype, json, tokenizer, bcmath
+          ini-values: post_max_size=256M, upload_max_filesize=256M, memory_limit=512M
+          tools: composer
 
-      - name: Install composer dependencies
-        run: composer install --no-scripts
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-suggest
 
-      - name: Install npm dependencies
-        run: npm install
-
-      - name: Run Vite
-        run: npm run build
-
-      - name: Prepare Laravel Application
-        run: cp .env.ci .env
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
 
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Run Testsuite
-        run: php artisan test
+      - name: Set up database configuration
+        run: |
+          php artisan config:cache
+          php artisan migrate --force
+
+      - name: Run tests
+        run: vendor/bin/phpunit

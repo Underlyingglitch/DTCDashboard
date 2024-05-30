@@ -9,12 +9,10 @@ on:
 jobs:
   tests:
     runs-on: [ubuntu-latest]
-    # container:
-    #   image: kirschbaumdevelopment/laravel-test-runner:8.2
 
     services:
-      mysql:
-        image: mysql:8.0
+      mariadb:
+        image: mariadb:10.5
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: laravel
@@ -24,28 +22,6 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    # steps:
-    #   - uses: actions/checkout@v1
-    #     with:
-    #       fetch-depth: 1
-
-    #   - name: Install composer dependencies
-    #     run: composer install --no-scripts
-
-    #   - name: Install npm dependencies
-    #     run: npm install
-
-    #   - name: Run Vite
-    #     run: npm run build
-
-    #   - name: Prepare Laravel Application
-    #     run: cp .env.ci .env
-
-    #   - name: Generate application key
-    #     run: php artisan key:generate
-
-    #   - name: Run Testsuite
-    #     run: php artisan test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -66,6 +42,11 @@ jobs:
 
       - name: Generate application key
         run: php artisan key:generate
+
+      - name: Configure MariaDB
+        run: |
+          mysql --user=root --password=root -e "SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION';"
+          mysql --user=root --password=root -e "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';"
 
       - name: Set up database configuration
         run: |

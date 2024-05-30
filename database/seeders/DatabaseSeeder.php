@@ -15,6 +15,8 @@ use App\Models\Wedstrijd;
 use App\Models\Competition;
 use App\Models\UserSetting;
 use Illuminate\Database\Seeder;
+use Database\Seeders\NiveauSeeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +25,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'trainer']);
+        Role::create(['name' => 'dtc']);
+        Role::create(['name' => 'jury']);
+        Role::create(['name' => 'user']);
         $admin_user = User::create(['name' => 'admin', 'email' => 'admin@test.dev', 'password' => bcrypt('admin'), 'active' => true, 'email_verified_at' => Carbon::now()]);
         $admin_user->assignRole('admin');
 

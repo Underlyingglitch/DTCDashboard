@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Schema;
 
 class Setting extends Model
 {
@@ -51,6 +52,7 @@ class Setting extends Model
 
     public static function getDBValue(string $key, mixed $default = null)
     {
+        if (Schema::hasTable('user_settings') === false) return $default;
         $setting = self::where('key', $key)->first();
         if (!$setting) return $default;
         return self::parseValue($key, $setting->value);

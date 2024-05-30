@@ -49,4 +49,4 @@ jobs:
           php artisan migrate --force
 
       - name: Run tests
-        run: vendor/bin/phpunit
+        run: php artisan test

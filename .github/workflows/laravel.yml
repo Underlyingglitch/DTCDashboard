@@ -43,11 +43,6 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Configure MariaDB
-        run: |
-          mysql --user=root --password=root -e "SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION';"
-          mysql --user=root --password=root -e "SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';"
-
       - name: Set up database configuration
         run: |
           php artisan config:cache

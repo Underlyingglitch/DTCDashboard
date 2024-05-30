@@ -61,9 +61,6 @@ jobs:
       - name: Copy .env.ci to .env
         run: cp .env.ci .env
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress --no-suggest
-
       - name: Generate application key
         run: php artisan key:generate
 
@@ -71,6 +68,9 @@ jobs:
         run: |
           php artisan config:cache
           php artisan migrate --force
+
+      - name: Install composer dependencies
+        run: composer install --no-scripts --no-interaction --no-progress --prefer-dist
 
       - name: Run tests
         run: vendor/bin/phpunit

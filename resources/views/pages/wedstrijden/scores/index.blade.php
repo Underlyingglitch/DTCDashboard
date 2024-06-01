@@ -6,6 +6,9 @@
     <a href="{{ route('wedstrijden.show', $wedstrijd) }}" class="btn btn-sm btn-primary">Terug naar wedstrijd</a>
     @livewire('scores.recalculate-scores-button', ['wedstrijd' => $wedstrijd])
     @livewire('scores.refresh-processed-scores-button', ['wedstrijd' => $wedstrijd])
+    @if ($wedstrijd->id != \App\Models\Setting::getValue('current_wedstrijd') && Auth::user()->can('update', $wedstrijd))
+        <a href="{{ route('wedstrijden.setactive', $wedstrijd) }}" class="btn btn-sm btn-success">Wedstrijd actief maken</a>
+    @endif
     <div style="float:right">
         @livewire('scores.set-round-button')
     </div>

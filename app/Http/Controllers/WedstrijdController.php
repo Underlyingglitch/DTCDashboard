@@ -188,6 +188,6 @@ class WedstrijdController extends Controller
 
         Setting::setValue('current_wedstrijd', $wedstrijd->id);
 
-        return redirect()->route('matchdays.show', $wedstrijd->match_day_id);
+        return redirect()->back()->with('success', 'Wedstrijd is nu actief.');
     }
 }

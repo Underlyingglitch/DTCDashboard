@@ -13,7 +13,7 @@ class ScoreInputForm extends Component
     public $startnumber;
     public $toestel;
     public $matchday;
-    public $locked = false;
+    public $locked = true;
     public $d;
     public $e;
     public $e1;

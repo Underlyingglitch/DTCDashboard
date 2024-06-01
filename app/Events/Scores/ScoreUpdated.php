@@ -3,6 +3,7 @@
 namespace App\Events\Scores;
 
 use App\Models\Score;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -32,6 +33,7 @@ class ScoreUpdated implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
+        Log::info('ScoreUpdated event fired with score: ' . $this->score->total . ' for matchday: ' . $this->matchday_id);
         return [
             'matchday_id' => $this->matchday_id,
             'startnumber' => $this->score->startnumber,

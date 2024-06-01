@@ -100,7 +100,7 @@ class ScoreInputForm extends Component
             'e1' => $this->e1 == '' ? 0 : $this->e1,
             'e2' => $this->e2 == '' ? null : $this->e2,
             'e3' => $this->e3 == '' ? null : $this->e3,
-            'n' => $this->n,
+            'n' => $this->n ?? 0,
             'total' => $this->t
         ]);
         Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'Score opgeslagen', 'success'));

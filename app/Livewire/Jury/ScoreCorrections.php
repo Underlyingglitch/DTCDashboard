@@ -52,7 +52,9 @@ class ScoreCorrections extends Component
         ]);
         $score = Score::find($sc->score_id);
         $startnumber = $score->startnumber;
+        //TODO - remove score on DNS only
         if ($sc->d == 0) {
+            ScoreCorrection::withTrashed()->where('score_id', $score->id)->forceDelete();
             $score->delete();
         } else {
             $score->update([

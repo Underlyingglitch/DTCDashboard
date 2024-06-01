@@ -12,14 +12,14 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ScoreCorrectionAdded implements ShouldBroadcastNow
+class ScoreCorrectionUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public ScoreCorrection $sc)
+    public function __construct(public ScoreCorrection $sc, public string $action)
     {
     }
     /**
@@ -38,7 +38,7 @@ class ScoreCorrectionAdded implements ShouldBroadcastNow
      */
     public function broadcastAs()
     {
-        return 'ScoreCorrectionAdded';
+        return 'ScoreCorrectionUpdated';
     }
     /**
      * The event's broadcast name.
@@ -47,7 +47,6 @@ class ScoreCorrectionAdded implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        Log::info('ScoreCorrectionAdded event fired with score: ' . $this->sc->score->total . ' for matchday: ' . $this->sc->score->match_day_id . ' and startnumber: ' . $this->sc->score->startnumber . ' and toestel: ' . $this->sc->score->toestel);
-        return ['sc' => $this->sc->toArray(), 'score' => $this->sc->score->toArray()];
+        return ['sc' => $this->sc->toArray(), 'score' => $this->sc->score->toArray(), 'action' => $this->action];
     }
 }

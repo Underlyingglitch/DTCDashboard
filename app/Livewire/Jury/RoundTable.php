@@ -25,6 +25,7 @@ class RoundTable extends Component
             "echo:jury,.GroupUpdated" => "groupUpdated",
             "echo:jury,.ScoreUpdated" => "scoreSaved",
             "echo:jury,.ScoreCorrectionAdded" => "scoreCorrection",
+            "echo:jury,.ScoreCorrectionUpdated" => "scoreCorrection",
         ];
     }
 
@@ -35,29 +36,37 @@ class RoundTable extends Component
         $startnumber = $data['score']['startnumber'];
         foreach ($this->registrations as $index => $baan) {
             if (array_key_exists($startnumber, $baan)) {
+                $registration = $this->registrations[$index][$startnumber];
+                if (!isset($data['action'])) {
+                    $registration['status'] = 'correction_pending';
+                    $registration['score'] = $data['score']['total'];
+                    $registration['new_score'] = $data['sc']['total'];
+                    $this->registrations[$index][$startnumber] = $registration;
+                    return;
+                }
+
                 if ($data['action'] == 'delete') {
-                    $this->registrations[$index][$startnumber]['status'] = 'scored';
-                    $this->registrations[$index][$startnumber]['new_score'] = $data['score']['total'];
+                    $registration['status'] = 'scored';
+                    $registration['new_score'] = $data['score']['total'];
+                    $this->registrations[$index][$startnumber] = $registration;
                     $this->dispatch('notification', 'Score correctie', 'Score correctie voor ' . $startnumber . ' is afgewezen', 'error');
                     return;
                 }
                 if ($data['action'] == 'update' && $data['sc']['approved'] == 1) {
                     if ($data['sc']['d'] == 0) {
-                        $this->registrations[$index][$startnumber]['status'] = 'pending';
-                        $this->registrations[$index][$startnumber]['score'] = null;
-                        $this->registrations[$index][$startnumber]['new_score'] = null;
+                        $registraion['status'] = 'pending';
+                        $registration['score'] = null;
+                        $registration['new_score'] = null;
+                        $this->registrations[$index][$startnumber] = $registration;
                         $this->dispatch('notification', 'Score correctie', 'Score voor ' . $startnumber . ' is verwijderd', 'error');
                         return;
                     }
-                    $this->registrations[$index][$startnumber]['status'] = 'scored';
-                    $this->registrations[$index][$startnumber]['score'] = $data['score']['total'];
+                    $registration['status'] = 'scored';
+                    $registration['score'] = $data['score']['total'];
+                    $this->registrations[$index][$startnumber] = $registration;
                     $this->dispatch('notification', 'Score correctie', 'Score correctie voor ' . $startnumber . ' is toegewezen', 'success');
                     return;
                 }
-                $this->registrations[$index][$startnumber]['status'] = 'correction_pending';
-                $this->registrations[$index][$startnumber]['score'] = $data['score']['total'];
-                $this->registrations[$index][$startnumber]['new_score'] = $data['sc']['total'];
-                return;
             }
         }
         // $this->getRegistrations();
@@ -73,7 +82,7 @@ class RoundTable extends Component
                 return;
             }
         }
-        $this->getRegistrations();
+        // $this->getRegistrations();
     }
 
     public function groupUpdated($data)

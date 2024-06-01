@@ -18,6 +18,7 @@ class ScoreCorrection extends Model implements Auditable
         'e1',
         'e2',
         'e3',
+        'e',
         'n',
         'total',
         'approved',
@@ -29,28 +30,21 @@ class ScoreCorrection extends Model implements Auditable
         parent::boot();
 
         static::created(function ($scoreCorrection) {
-            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection, 'create'));
+            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection));
         });
 
         static::updated(function ($scoreCorrection) {
-            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection, 'update'));
+            event(new \App\Events\Jury\ScoreCorrectionUpdated($scoreCorrection, 'update'));
         });
 
         static::deleted(function ($scoreCorrection) {
-            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection, 'delete'));
+            event(new \App\Events\Jury\ScoreCorrectionUpdated($scoreCorrection, 'delete'));
         });
     }
 
     public function score()
     {
         return $this->belongsTo(Score::class);
-    }
-
-    public function getEAttribute()
-    {
-        // Get the average of the e1, e2, e3 values, not counting the null values
-        $es = array_filter([$this->e1, $this->e2, $this->e3]);
-        return count($es) > 0 ? array_sum($es) / count($es) : null;
     }
 
     public function getEScoreAttribute()

@@ -24,7 +24,6 @@ class ScoreCorrectForm extends Component
     public $e3;
     public $n;
     public $t;
-    public $delete = false;
 
     public function getListeners()
     {
@@ -91,7 +90,6 @@ class ScoreCorrectForm extends Component
             $this->t = '';
             $this->locked = true;
         }
-        $this->delete = false;
     }
 
     public function calculate()
@@ -102,7 +100,6 @@ class ScoreCorrectForm extends Component
         $this->e3 = $this->e3 ? (float)str_replace(',', '.', $this->e3) : null;
         $this->n = $this->n ? (float)str_replace(',', '.', $this->n) : null;
         if ($this->locked) return;
-        $this->delete = false;
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
         $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 3) : null;
         if ($this->d == 0) {
@@ -126,16 +123,13 @@ class ScoreCorrectForm extends Component
         if ($this->locked) return;
 
         $this->calculate();
-        
-        if ($this->d == 0 && !$this->delete) {
-            $this->delete = true;
-            $this->dispatch('notification', 'Score correctie', 'D score 0 zal deze score in zijn geheel verwijderen. Druk nogmaals op opslaan om te bevestigen', 'info');
-            return;
-        } else if ($this->delete) {
+
+        if ($this->d == 0) {
             $this->d = 0;
             $this->e1 = 0;
             $this->e2 = 0;
             $this->e3 = 0;
+            $this->e = 0;
             $this->n = 0;
             $this->t = 0;
         } else {
@@ -171,6 +165,7 @@ class ScoreCorrectForm extends Component
                 'e1' => $this->e1,
                 'e2' => $this->e2,
                 'e3' => $this->e3,
+                'e' => $this->e,
                 'n' => $this->n ?? 0,
                 'total' => $this->t,
                 'approved' => false,
@@ -192,7 +187,6 @@ class ScoreCorrectForm extends Component
         $this->n = '';
         $this->t = '';
         $this->startnumber = '';
-        $this->delete = false;
         $this->locked = true;
         $this->toestel = $this->jury ? $this->toestel : null;
     }

@@ -1,3 +1,5 @@
+@section('page_title', 'Live Scores')
+
 <div>
     <div class="container" style="padding-bottom: 60px;">
         <div class="mt-4 card">

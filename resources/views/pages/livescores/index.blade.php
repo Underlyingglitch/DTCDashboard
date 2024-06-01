@@ -9,7 +9,8 @@
         </button>
         <h4 class="alert-heading">Disclaimer</h4>
         <p>De scores op deze pagina kunnen vertraging hebben. In zeer uitzonderlijke gevallen kunnen de scores fouten
-            bevatten. De gepubliceerde puntenlijsten zijn altijd leidend en aan deze scores kunnen geen rechten worden
+            bevatten. De gepubliceerde puntenlijsten zijn altijd leidend en aan de scores op deze pagina kunnen geen rechten
+            worden
             ontleend.</p>
     </div>
     <div id="accordion">

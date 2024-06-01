@@ -20,6 +20,7 @@ use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\OefenstofController;
 use App\Http\Controllers\WedstrijdController;
 use App\Http\Controllers\DGResourceController;
+use App\Http\Controllers\LiveScoresController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\MatchDaysExportController;
 use App\Http\Controllers\WedstrijdExportController;
@@ -39,9 +40,9 @@ Route::resource('feedback', FeedbackController::class);
 Route::get('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
 Route::resource('clubs', ClubController::class);
 
-Route::controller(ScoreController::class)->name('livescores.')->prefix('livescores')->group(function () {
-    Route::get('/', 'livescores')->name('index');
-    Route::get('/{matchday}/{niveau?}', \App\Livewire\Livescores\Index::class)->name('show');
+Route::name('livescores.')->prefix('livescores')->group(function () {
+    Route::get('/', \App\Livewire\Livescores\Index::class)->name('index');
+    Route::get('/{matchday}/{niveau?}', \App\Livewire\Livescores\MatchDayView::class)->name('show');
 });
 
 Route::get('/oefenstof', [OefenstofController::class, 'index'])->name('oefenstof.index');

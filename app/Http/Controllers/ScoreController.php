@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Score;
-use App\Models\Niveau;
-use App\Models\MatchDay;
 use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use App\Models\ProcessedScore;
@@ -68,13 +66,5 @@ class ScoreController extends Controller
         }
 
         return redirect()->route('wedstrijden.score.index', $wedstrijd)->with('success', 'Scores zijn toegevoegd.');
-    }
-
-    public function livescores()
-    {
-        $matchdays = MatchDay::orderBy('date', 'desc')->with(['location', 'competition'])->get();
-        return view('pages.livescores.index', [
-            'matchdays' => $matchdays,
-        ]);
     }
 }

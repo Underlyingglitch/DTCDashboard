@@ -1,45 +1,30 @@
 @section('page_title', $title)
 
 <div>
-    <div class="container" style="padding-bottom: 60px;">
-        <div class="mt-4 card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link @if ($page == 'individual') active @endif"
-                            wire:click="tab('individual')">Individueel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link
-                            @if ($page == 'teams') active @elseif(!$teams) disabled @endif"
-                            @if ($teams) wire:click="tab('teams')" @endif>Teams</a>
-                    </li>
-                </ul>
-            </div>
-            {{-- Content here --}}
-            @if ($page == 'individual')
-                @livewire('livescores.individual', ['matchday' => $matchday, 'niveau' => $niveau], key($page . $niveau))
-            @else
-                @livewire('livescores.teams', ['matchday' => $matchday, 'niveau' => $niveau], key($page . $niveau))
-            @endif
-        </div>
-
-        {{-- @yield('content') --}}
-    </div>
-    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+    <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
         </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-            <ul class="navbar-nav">
-                @foreach ($niveaus as $n)
-                    <li class="nav-item">
-                        <a class="nav-link @if ($n->id == $niveau) active @endif"
-                            wire:click="setNiveau({{ $n->id }})">{{ $n->full_name }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    </nav>
+        <h4 class="alert-heading">Disclaimer</h4>
+        <p>De scores op deze pagina kunnen vertraging hebben. In zeer uitzonderlijke gevallen kunnen de scores fouten
+            bevatten. De gepubliceerde puntenlijsten zijn altijd leidend en aan de scores op deze pagina kunnen geen
+            rechten
+            worden
+            ontleend.</p>
+    </div>
+    <div id="accordion">
+        @foreach ($matchdays as $matchday)
+            <a href="{{ route('livescores.show', [$matchday]) }}">
+                <div class="card">
+                    <div class="card-header text-center" id="heading{{ $matchday->id }}" aria-expanded="false">
+                        <h5 class="mb-0">
+                            {{ $matchday->date->format('d-m-Y') }} | {{ $matchday->location->name }}
+                        </h5>
+                        <small>{{ $matchday->competition->name }}</small>
+                    </div>
+                </div>
+            </a>
+        @endforeach
+
+    </div>
 </div>

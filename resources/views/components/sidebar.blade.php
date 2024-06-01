@@ -54,7 +54,7 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('livescores.index') }}">
+        <a class="nav-link" target="_blank" href="{{ route('livescores.index') }}">
             <i class="fas fa-fw fa-sliders"></i>
             <span>Livescores</span></a>
     </li>

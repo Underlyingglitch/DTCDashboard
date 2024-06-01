@@ -29,7 +29,7 @@ class WedstrijdController extends Controller
 
         return view('pages.wedstrijden.create', [
             'matchday' => $matchday,
-            'niveaus' => Niveau::all()
+            'niveaus' => Niveau::orderBy('order')->get()
         ]);
     }
 
@@ -101,7 +101,7 @@ class WedstrijdController extends Controller
 
         return view('pages.wedstrijden.edit', [
             'wedstrijd' => $wedstrijd,
-            'niveaus' => Niveau::all()
+            'niveaus' => Niveau::orderBy('order')->get()
         ]);
     }
 

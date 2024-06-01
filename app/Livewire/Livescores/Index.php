@@ -28,7 +28,7 @@ class Index extends Component
         if ($teams->count() > 0) {
             $this->teams = true;
         }
-        $this->niveaus = $matchday->niveaus;
+        $this->niveaus = $matchday->niveaus->sortBy('order');
     }
 
     public function tab($page)

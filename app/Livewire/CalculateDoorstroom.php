@@ -29,7 +29,7 @@ class CalculateDoorstroom extends Component
     public function mount($competition)
     {
         $this->competition = $competition;
-        $this->niveaus = Niveau::all();
+        $this->niveaus = Niveau::orderBy('order')->get();
         $this->niveau = $this->niveaus->first()->id;
         $this->updateNiveau();
     }

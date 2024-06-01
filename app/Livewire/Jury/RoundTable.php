@@ -23,6 +23,7 @@ class RoundTable extends Component
         return [
             "echo:settings.current_round,.SettingUpdated" => 'updateRound',
             "echo:jury,.GroupUpdated" => "groupUpdated",
+            "echo:jury,.RegistrationUpdated" => "registrationUpdated",
             "echo:jury,.ScoreUpdated" => "scoreSaved",
             "echo:jury,.ScoreCorrectionAdded" => "scoreCorrection",
             "echo:jury,.ScoreCorrectionUpdated" => "scoreCorrection",
@@ -88,6 +89,16 @@ class RoundTable extends Component
     public function groupUpdated($data)
     {
         if (in_array($data['group'], $this->groups)) $this->getRegistrations();
+    }
+
+    public function registrationUpdated($data)
+    {
+        $startnumber = $data['registration']['startnumber'];
+        foreach ($this->registrations as $index => $baan) {
+            if (array_key_exists($startnumber, $baan)) {
+                $this->getRegistrations();
+            }
+        }
     }
 
     public function updateRound($data)

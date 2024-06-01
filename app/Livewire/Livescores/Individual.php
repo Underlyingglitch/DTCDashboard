@@ -17,7 +17,10 @@ class Individual extends Component
     public function getListeners()
     {
         return
-            ['echo:livescores.' . $this->matchday . ',.ScoreUpdated' => 'hydrate'];
+            [
+                'echo:livescores.' . $this->matchday . ',.ScoreUpdated' => 'hydrate',
+                'echo:jury,.RegistrationUpdated' => 'hydrate'
+            ];
     }
 
     public function mount($matchday, $niveau)
@@ -62,7 +65,8 @@ class Individual extends Component
                         'counted' => $score->counted
                     ];
                 })->toArray(),
-                'total' => $scores->sum('total')
+                'total' => $scores->sum('total'),
+                'place' => $registration->place ?? 0
             ];
         }
         // dd($this->registrations);

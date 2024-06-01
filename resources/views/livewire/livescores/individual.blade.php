@@ -1,11 +1,9 @@
 <div class="card-body">
     Na ronde (0 voor alles): <input type="number" wire:model="limit" wire:change="updateLimit">
-    @php($i = 0)
-    @php($previous = null)
     @foreach ($registrations as $registration)
         <div class="card mb-2" wire:click="toggleModal({{ $registration['id'] }})">
             <div class="card-header">
-                {{ $previous == $registration['total'] ? $i : ++$i }}. {{ $registration['name'] }}
+                {{ $registration['place'] }}. {{ $registration['name'] }}
                 ({{ $registration['club'] }})
                 <span class="float-right">{{ number_format($registration['total'], 3) }}</span>
             </div>
@@ -17,7 +15,8 @@
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title">{{ $registration['name'] }} ({{ $registration['club'] }})
+                            <h4 class="modal-title">{{ $registration['place'] }}. {{ $registration['name'] }}
+                                ({{ $registration['club'] }})
                             </h4>
                             <button type="button" class="close" wire:click="toggleModal(0)">&times;</button>
                         </div>
@@ -37,7 +36,7 @@
                                         <td>{{ number_format($score['d'], 3) }}</td>
                                         <td>{{ number_format($score['e'], 3) }}</td>
                                         <td>{{ number_format($score['n'], 1) }}</td>
-                                        <td>{{ $score['total'] }}</td>
+                                        <td>{{ number_format($score['total'], 3) }}</td>
                                     </tr>
                                 @endforeach
                                 <tr>

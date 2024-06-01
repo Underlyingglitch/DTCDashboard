@@ -48,6 +48,7 @@ class Teams extends Component
                 'id' => $team->id,
                 'name' => $team->name,
                 'total' => $team_scores->total_score ?? 0,
+                'place' => $team_scores->place ?? 0,
                 'toestel_scores' => $team_scores->toestel_scores ?? []
             ];
         }

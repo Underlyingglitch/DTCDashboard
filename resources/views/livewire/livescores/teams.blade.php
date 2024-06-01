@@ -1,10 +1,8 @@
 <div class="card-body">
-    @php($i = 0)
-    @php($previous = null)
     @foreach ($teams as $team)
         <div class="card mb-2" wire:click="toggleModal({{ $team['id'] }})">
             <div class="card-header">
-                {{ $previous == $team['total'] ? $i : ++$i }}. {{ $team['name'] }}
+                {{ $team['place'] }}. {{ $team['name'] }}
                 <span class="float-right">{{ number_format($team['total'], 3) }}</span>
             </div>
         </div>
@@ -15,7 +13,7 @@
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title">{{ $team['name'] }}</h4>
+                            <h4 class="modal-title">{{ $team['place'] }}. {{ $team['name'] }}</h4>
                             <button type="button" class="close" wire:click="toggleModal(0)">&times;</button>
                         </div>
                         <!-- Modal body -->

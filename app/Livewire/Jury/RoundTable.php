@@ -78,6 +78,11 @@ class RoundTable extends Component
         if ($data['toestel'] != $this->toestel) return;
         foreach ($this->registrations as $index => $baan) {
             if (array_key_exists($data['startnumber'], $baan)) {
+                if ($data['dns']) {
+                    $this->registrations[$index][$data['startnumber']]['status'] = 'dns';
+                    $this->registrations[$index][$data['startnumber']]['score'] = null;
+                    return;
+                }
                 $this->registrations[$index][$data['startnumber']]['status'] = 'scored';
                 $this->registrations[$index][$data['startnumber']]['score'] = $data['score'];
                 return;
@@ -142,11 +147,15 @@ class RoundTable extends Component
             $status = 'pending';
             if ($registration->signed_off == 1) $status = 'signed_off';
             if ($scores->where('startnumber', $registration->startnumber)->count() > 0) {
-                $status = 'scored';
-                $score = $scores->where('startnumber', $registration->startnumber)->first();
-                if ($score_corrections->where('startnumber', $registration->startnumber)->count() > 0) {
-                    $status = 'correction_pending';
-                    $new_score = $score_corrections->where('startnumber', $registration->startnumber)->first()->total;
+                if (is_null($scores->where('startnumber', $registration->startnumber)->first()->d)) {
+                    $status = 'dns';
+                } else {
+                    $status = 'scored';
+                    $score = $scores->where('startnumber', $registration->startnumber)->first();
+                    if ($score_corrections->where('startnumber', $registration->startnumber)->count() > 0) {
+                        $status = 'correction_pending';
+                        $new_score = $score_corrections->where('startnumber', $registration->startnumber)->first()->total;
+                    }
                 }
             }
             $baan = floor($registration->group_id / 10);

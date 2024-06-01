@@ -47,6 +47,7 @@ class ConstantsServiceProvider extends ServiceProvider
             'scored' => '<span style="color: green"><i class="fas fa-check"></i></span>',
             'signed_off' => '<span style="color: red"><i class="fas fa-times"></i></span>',
             'correction_pending' => '<span style="color: orange"><i class="fas fa-clock-rotate-left"></i></span>',
+            'dns' => '<span style="color: red"><i>DNS</i></span>',
         ]);
 
         View::share('districts', [

@@ -41,6 +41,7 @@ class CalculateTeamScore implements ShouldQueue, ShouldBeUnique
         foreach ($scores as $score) {
             // Set counted to true if score is among the 3 highest scores for this toestel, otherwise set to false
             $score->counted = $topScores->contains($score);
+            if (is_null($score->d)) $score->counted = false;
             $score->save();
         }
         // Sum all counted scores for this team on this toestel

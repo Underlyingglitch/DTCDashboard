@@ -39,6 +39,7 @@ class ScoreUpdated implements ShouldBroadcastNow
             'startnumber' => $this->score->startnumber,
             'toestel' => $this->score->toestel,
             'score' => $this->score->total,
+            'dns' => is_null($this->score->d) ? true : false,
         ];
     }
 }

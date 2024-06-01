@@ -31,19 +31,34 @@
                     <td style="width: fit-content">{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}<br>{{ $registration->club->name }}</td>
                     @foreach ($toestellen as $key => $toestel)
+                        @php($score = $registration->scores->where('toestel', $key + 1)->first())
                         <td style="width: fit-content; border-right: none; font-size: 8px">
                             d:
-                            {{ number_format($registration->scores->where('toestel', $key + 1)->first()->d ?? 0, 3) }}<br>
+                            @if (is_null($score->d))
+                                -
+                            @else
+                                {{ number_format($score->d ?? 0, 3) }}
+                            @endif
+                            <br>
                             e:
-                            {{ number_format($registration->scores->where('toestel', $key + 1)->first()->e_score ?? 0, 3) }}<br>
-                            @if ($registration->scores->where('toestel', $key + 1)->first()->n ?? 0 != 0)
+                            @if (is_null($score->d))
+                                -
+                            @else
+                                {{ number_format($score->e_score ?? 0, 3) }}
+                            @endif
+                            <br>
+                            @if ($score->n ?? 0 != 0)
                                 n:
-                                -{{ number_format($registration->scores->where('toestel', $key + 1)->first()->n ?? 0, 1) }}
+                                -{{ number_format($score->n ?? 0, 1) }}
                             @endif
                         </td>
                         <td style="width: fit-content; border-left:none">
-                            {{ number_format($registration->scores->where('toestel', $key + 1)->first()->total ?? 0, 3) }}
-                            ({{ $registration->scores->where('toestel', $key + 1)->first()->place ?? null }})
+                            @if (is_null($score->d))
+                                DNS
+                            @else
+                                {{ number_format($score->total ?? 0, 3) }}
+                                ({{ $score->place ?? null }})
+                            @endif
                         </td>
                     @endforeach
                     <td>{{ number_format($registration->scores->sum('total') ?? 0, 3) }}</td>

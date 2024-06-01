@@ -53,7 +53,7 @@ class ScoreInputForm extends Component
 
     public function calculate()
     {
-        $this->d = $this->d ? (float)str_replace(',', '.', $this->d) : null;
+        $this->d = $this->d ? (float)str_replace(',', '.', $this->d) : 0;
         $this->e1 = $this->e1 ? (float)str_replace(',', '.', $this->e1) : null;
         $this->e2 = $this->e2 ? (float)str_replace(',', '.', $this->e2) : null;
         $this->e3 = $this->e3 ? (float)str_replace(',', '.', $this->e3) : null;
@@ -72,23 +72,36 @@ class ScoreInputForm extends Component
         }
     }
 
+    public function dns()
+    {
+        if (!$this->startnumber) return;
+        // dd('test');
+        Score::create([
+            'match_day_id' => $this->matchday,
+            'startnumber' => $this->startnumber,
+            'toestel' => $this->toestel
+        ]);
+
+        $this->dispatch('notification', 'Score invoer', $this->startnumber . ' is als DNS gemarkeerd', 'success');
+    }
+
     public function save()
     {
         $this->calculate();
         if ($this->d < 0 || $this->d > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning'));
+            $this->dispatch('notification', 'Score invoer', 'D score moet tussen 0 en 10 liggen', 'warning');
             return;
         }
         if ($this->e1 < 0 || $this->e1 > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning'));
+            $this->dispatch('notification', 'Score invoer', 'E1 score moet tussen 0 en 10 liggen', 'warning');
             return;
         }
         if ($this->e2 < 0 || $this->e2 > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning'));
+            $this->dispatch('notification', 'Score invoer', 'E2 score moet tussen 0 en 10 liggen', 'warning');
             return;
         }
         if ($this->e3 < 0 || $this->e3 > 10) {
-            Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning'));
+            $this->dispatch('notification', 'Score invoer', 'E3 score moet tussen 0 en 10 liggen', 'warning');
             return;
         }
         if ($this->locked || empty($this->startnumber)) return;
@@ -103,8 +116,8 @@ class ScoreInputForm extends Component
             'n' => $this->n ?? 0,
             'total' => $this->t
         ]);
-        Auth::user()->notifyNow(new \App\Notifications\UserNotification('Score invoer', 'Score opgeslagen', 'success'));
-        // event(new \App\Events\Scores\ScoreUpdated($this->matchday, $score));
+        $this->dispatch('notification', 'Score invoer', 'Score opgeslagen', 'success');
+
         $this->d = '';
         $this->e1 = '';
         $this->e2 = '';

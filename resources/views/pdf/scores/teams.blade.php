@@ -38,9 +38,19 @@
                                 @php($score = $registration->scores->where('toestel', $key + 1)->first())
                                 <td style="width: fit-content; border-right: none; font-size: 8px">
                                     d:
-                                    {{ number_format($score->d ?? 0, 3) }}<br>
+                                    @if (is_null($score->d))
+                                        -
+                                    @else
+                                        {{ number_format($score->d ?? 0, 3) }}
+                                    @endif
+                                    <br>
                                     e:
-                                    {{ number_format($score->e_score ?? 0, 3) }}<br>
+                                    @if (is_null($score->d))
+                                        -
+                                    @else
+                                        {{ number_format($score->e_score ?? 0, 3) }}
+                                    @endif
+                                    <br>
                                     @if ($score->n ?? 0 != 0)
                                         n:
                                         -{{ number_format($score->n ?? 0, 1) }}
@@ -48,7 +58,11 @@
                                 </td>
                                 <td @if (($score->counted ?? 0) == 0) class="not-counted" @endif
                                     style="width: fit-content; border-left:none">
-                                    {{ number_format($score->total ?? 0, 3) }}
+                                    @if (is_null($score->d))
+                                        DNS
+                                    @else
+                                        {{ number_format($score->total ?? 0, 3) }}
+                                    @endif
                                 </td>
                             @endforeach
                         </tr>

@@ -23,8 +23,16 @@
             E3: <input class="form-control" type="text" step=".001" inputmode="decimal" placeholder="E3-aftrek"
                 wire:model="e3" wire:blur="calculate()" @if ($locked) disabled @endif
                 tabindex="4" />
-            &nbsp;<input class="form-control btn btn-primary" type="submit" value="Opslaan" wire:click="save()"
-                tabindex="6" />
+            &nbsp;
+            <div class="row">
+                <div class="col-md-6">
+                    <input class="form-control btn btn-primary" type="submit" value="Opslaan" wire:click="save()"
+                        tabindex="6" />
+                </div>
+                <div class="col-md-6">
+                    <input class="form-control btn btn-warning" type="submit" value="DNS" wire:click="dns()" />
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -58,7 +58,10 @@ class Score extends Model implements Auditable
 
     public function getEScoreAttribute()
     {
-        if ($this->e == 0 || $this->d == 0) {
+        if (is_null($this->d)) {
+            return null;
+        }
+        if ($this->d == 0) {
             return 0;
         }
         return 10 - $this->e;

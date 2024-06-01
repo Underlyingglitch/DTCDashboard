@@ -53,7 +53,7 @@ class ScoreInputForm extends Component
 
     public function calculate()
     {
-        $this->d = $this->d ? (float)str_replace(',', '.', $this->d) : 0;
+        $this->d = $this->d ? (float)str_replace(',', '.', $this->d) : null;
         $this->e1 = $this->e1 ? (float)str_replace(',', '.', $this->e1) : null;
         $this->e2 = $this->e2 ? (float)str_replace(',', '.', $this->e2) : null;
         $this->e3 = $this->e3 ? (float)str_replace(',', '.', $this->e3) : null;
@@ -65,13 +65,11 @@ class ScoreInputForm extends Component
             $this->t = 0;
             return;
         }
-        if ($this->n == '') $this->n = 0;
-        $this->t = 10 - $this->e + $this->d - $this->n;
+        // if ($this->n == '') $this->n = 0;
+        $this->t = round(10 - $this->e + $this->d - $this->n, 3);
         if ($this->t < 0) {
             $this->t = 0;
         }
-        // Round to 3 decimals
-        $this->t = round($this->t, 3);
     }
 
     public function save()

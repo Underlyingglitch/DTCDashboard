@@ -1,4 +1,4 @@
-@section('page_title', 'Live Scores')
+@section('page_title', $title)
 
 <div>
     <div class="container" style="padding-bottom: 60px;">

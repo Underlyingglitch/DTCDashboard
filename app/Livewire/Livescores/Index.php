@@ -12,6 +12,8 @@ class Index extends Component
     public $niveau;
     public $teams = false;
 
+    public $title = '';
+
     public $niveaus;
 
     public function mount(MatchDay $matchday, $niveau = null)
@@ -19,6 +21,7 @@ class Index extends Component
         if (is_null($niveau)) {
             $niveau = $matchday->niveaus->first()->id;
         }
+        $this->title = $matchday->name . ' - ' . $matchday->date->format('d-m-Y');
         $this->matchday = $matchday->id;
         $this->niveau = $niveau;
         $teams = $matchday->competition->teams->where('niveau_id', $niveau);

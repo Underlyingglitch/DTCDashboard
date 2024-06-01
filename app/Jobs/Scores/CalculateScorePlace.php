@@ -38,9 +38,21 @@ class CalculateScorePlace implements ShouldQueue
             ->orderBy('total', 'desc')
             ->orderBy('e', 'desc')
             ->get();
-        foreach ($scores as $key => $score) $score->update([
-            'place' => $score->total == 0 ? null : $key + 1,
-        ]);
+
+        $previousScore = null;
+        $place = 0;
+        $same = 1;
+        foreach ($scores as $score) {
+            if ($previousScore !== $score->total) {
+                $place += $same;
+                $same = 1;
+            } else {
+                $same++;
+            }
+            $score->place = $place;
+            $score->saveQuietly();
+            $previousScore = $score->total;
+        }
         // Update the registration place
         \App\Jobs\Scores\CalculatePlace::dispatch($this->score->registration);
     }

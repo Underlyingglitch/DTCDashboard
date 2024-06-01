@@ -10,9 +10,6 @@
         @else
             <a class="btn btn-success" href="{{ route('settings.set', ['db_write_enabled', 1]) }}">Inschakelen</a>
         @endif
-        @if (config('app.compare_database'))
-            <a class="btn btn-primary" href="{{ route('settings.database.compare') }}">Databases vergelijken</a>
-        @endif
 
     @endif
 

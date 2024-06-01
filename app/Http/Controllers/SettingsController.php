@@ -37,51 +37,6 @@ class SettingsController extends Controller
         return view('pages.settings.database');
     }
 
-    public function compare_databases()
-    {
-        if (config('app.compare_database') == false) {
-            abort(403);
-        }
-        // Don't check for these tables
-        $exlusions = [
-            'migrations',
-            'audits',
-            'sessions',
-            'password_reset_tokens',
-            'personal_access_tokens',
-            'jobs',
-            'sync_tasks',
-            'job_batches',
-            'failed_jobs',
-            'pending_changes',
-            'model_has_permissions',
-            'model_has_roles',
-        ];
-        // Get all tables in database for the main connection and the prod_server connection
-        $tables_local = \DB::connection()->getDoctrineSchemaManager()->listTableNames();
-        $tables_prod = \DB::connection('prod_server')->getDoctrineSchemaManager()->listTableNames();
-        // Result is an array with key = table name and value [boolean, boolean] where the first boolean is whether the table exists in the main connection and the second boolean is whether the table exists in the prod_server connection
-        $tables = [];
-        foreach ($tables_local as $table) {
-            $tables[$table] = [true, false];
-        }
-        foreach ($tables_prod as $table) {
-            if (array_key_exists($table, $tables)) {
-                $tables[$table][1] = true;
-            } else {
-                $tables[$table] = [false, true];
-            }
-        }
-        foreach ($tables as $table => $value) {
-            if (in_array($table, $exlusions)) {
-                unset($tables[$table]);
-                continue;
-            }
-        }
-
-        return view('pages.settings.compare_databases', ['tables' => $tables]);
-    }
-
     public function database_process()
     {
         $this->authorize('process_database', Setting::class);

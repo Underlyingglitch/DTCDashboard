@@ -121,7 +121,6 @@ Route::controller(SettingsController::class)->name('settings.')->prefix('setting
     Route::get('/set/{setting}/{value}', 'set')->name('set');
     Route::get('/database', 'database')->name('database');
     Route::get('/database/process', 'database_process')->name('database.process');
-    Route::get('/database/compare', 'compare_databases')->name('database.compare');
     Route::get('/calendar_updates', 'calendar_updates')->name('calendar_updates');
     Route::post('/calendar_updates', 'calendar_updates_post');
 });

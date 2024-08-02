@@ -8,7 +8,7 @@
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
-        "axios": "^1.7.2",
+        "axios": "^1.7.3",
         "jquery": "^3.6.4",
         "laravel-echo": "^1.16.1",
         "laravel-vite-plugin": "^1.0.4",

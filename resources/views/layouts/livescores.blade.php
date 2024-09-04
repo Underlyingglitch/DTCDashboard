@@ -11,6 +11,7 @@
     <script>
         window.userId = @json(auth()->id());
     </script>
+    <script src="config.js"></script>
     @vite(['resources/scss/livescores.scss', 'resources/js/app.js'])
 
     <script type="module" defer>

@@ -16,6 +16,7 @@
     <script>
         window.userId = @json(auth()->id());
     </script>
+    <script src="config.js"></script>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @yield('scripts')
     <script type="module" defer>

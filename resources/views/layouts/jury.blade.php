@@ -11,7 +11,7 @@
 
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
 
-    <title>@yield('page_title') | DTC Zuid</title>
+    <title>@yield('page_title') | DTC TH Zuid</title>
 
     <script>
         window.userId = @json(auth()->id());

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>DTC Zuid</title>
+    <title>DTC TH Zuid</title>
 
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
     
@@ -29,7 +29,7 @@
                                             href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>
                                     </div>
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welkom op de website van DTC Zuid!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Welkom op de website van DTC TH Zuid!</h1>
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <a class="btn btn-sm btn-success mb-4"

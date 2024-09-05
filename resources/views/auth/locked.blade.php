@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Vergrendeld - DTC Zuid</title>
+    <title>Vergrendeld - DTC TH Zuid</title>
 
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
     

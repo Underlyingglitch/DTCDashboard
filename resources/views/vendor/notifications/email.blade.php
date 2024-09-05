@@ -40,7 +40,7 @@
 {{ $salutation }}
 @else
 Met vriendelijke groet,<br>
-DTC Zuid
+DTC TH Zuid
 @endif
 
 {{-- Subcopy --}}

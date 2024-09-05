@@ -11,7 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\LastSeen::class,
+        ]);
+
+        $middleware->alias([
+            'locked' => \App\Http\Middleware\LockedAccount::class,
+            'internalapi' => \App\Http\Middleware\CheckAPIToken::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

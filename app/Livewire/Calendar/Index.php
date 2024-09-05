@@ -5,6 +5,7 @@ namespace App\Livewire\Calendar;
 use Livewire\Component;
 use App\Models\CalendarItem;
 use App\Models\CalendarUpdate;
+use Illuminate\Support\Facades\Auth;
 
 class Index extends Component
 {
@@ -33,8 +34,8 @@ class Index extends Component
 
     public function getResults()
     {
-        $monthStart = now()->month($this->selectedMonth)->startOfMonth();
-        $monthEnd = now()->month($this->selectedMonth)->endOfMonth();
+        $monthStart = now()->month((int)$this->selectedMonth)->startOfMonth();
+        $monthEnd = now()->month((int)$this->selectedMonth)->endOfMonth();
         $this->results = CalendarItem::where(function ($query) use ($monthStart, $monthEnd) {
             $query->whereBetween('date_from', [$monthStart, $monthEnd])
                 ->orWhereBetween('date_to', [$monthStart, $monthEnd])
@@ -50,17 +51,17 @@ class Index extends Component
                 return $query->where('discipline', $this->selectedDiscipline);
             })
             ->get();
-        $this->subscribed = auth()->user()->calendar_subscriptions->pluck('id')->toArray();
+        $this->subscribed = Auth::user()->calendar_subscriptions->pluck('id')->toArray();
     }
 
     public function toggleSubscription($id)
     {
         $item = CalendarItem::find($id);
-        if ($item->subscribers->contains(auth()->id())) {
-            $item->subscribers()->detach(auth()->id());
+        if ($item->subscribers->contains(Auth::id())) {
+            $item->subscribers()->detach(Auth::id());
             $this->subscribed = array_diff($this->subscribed, [$id]);
         } else {
-            $item->subscribers()->attach(auth()->id());
+            $item->subscribers()->attach(Auth::id());
             $this->subscribed[] = $id;
         }
     }

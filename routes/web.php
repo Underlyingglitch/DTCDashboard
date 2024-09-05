@@ -21,6 +21,19 @@ Route::get('/test', function () {
     return view('emails.verify');
 });
 
+Route::get('/config.js', function () {
+    $config = 'window.__CONFIG__ = {
+        VITE_APP_ENV: "' . env('APP_ENV') . '",
+        VITE_PUSHER_APP_KEY: "' . env('VITE_PUSHER_APP_KEY') . '",
+        VITE_PUSHER_HOST: "' . env('VITE_PUSHER_HOST') . '",
+        VITE_PUSHER_PORT: "' . env('VITE_PUSHER_PORT') . '",
+        VITE_PUSHER_CLUSTER: "' . env('VITE_PUSHER_CLUSTER') . '"
+    };';
+
+    return response($config, 200)
+        ->header('Content-Type', 'application/javascript');
+});
+
 // non-authenticated users only
 Route::middleware(['guest'])->group(base_path('routes/web.guest.php'));
 

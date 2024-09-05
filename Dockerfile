@@ -93,7 +93,6 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
 
 # Next we have to copy in our code base from our initial build which we installed in the previous stage
 COPY --from=composer_base /opt/apps/laravel /opt/apps/laravel
-COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public
 
 # We need a stage which contains FPM to actually run and process requests to our PHP application.
 FROM php:8.3-fpm-alpine AS fpm_server
@@ -119,12 +118,13 @@ USER  www-data
 
 # We have to copy in our code base from our initial build which we installed in the previous stage
 COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel
-COPY --from=frontend --chown=www-data /opt/apps/laravel/public /opt/apps/laravel/public
+COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public
 
 # We want to cache the event, routes, and views so we don't try to write them when we are in Kubernetes.
 # Docker builds should be as immutable as possible, and this removes a lot of the writing of the live application.
 RUN php artisan event:cache && \
-    php artisan view:cache
+    php artisan view:cache && \
+    php artisan route:cache
 
 # We need an nginx container which can pass requests to our FPM container,
 # as well as serve any static content.
@@ -135,13 +135,10 @@ WORKDIR /opt/apps/laravel
 # We need to add our NGINX template to the container for startup,
 # and configuration.
 COPY docker/nginx.conf /etc/nginx/templates/default.conf.template
-COPY docker/entrypoint.sh /opt/apps/laravel/entrypoint.sh
 
 # Copy in ONLY the public directory of our project.
 # This is where all the static assets will live, which nginx will serve for us.
 COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public
-
-CMD ["sh", "./entrypoint.sh"]
 
 # We need a CRON container to the Laravel Scheduler.
 # We'll start with the CLI container as our base,

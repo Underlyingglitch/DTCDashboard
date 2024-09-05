@@ -2,20 +2,16 @@
 ARG PHP_EXTS="pdo_mysql mbstring exif pcntl bcmath gd"
 ARG PHP_PECL_EXTS="redis"
 
-# We need to build the Composer base to reuse packages we've installed
+# BUILDING COMPOSER BASE
 FROM composer:latest AS composer_base
 
-# We need to declare that we want to use the args in this build step
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
 
-# First, create the application directory, and some auxiliary directories for scripts and such
 RUN mkdir -p /opt/apps/laravel /opt/apps/laravel/bin
 
-# Next, set our working directory
 WORKDIR /opt/apps/laravel
 
-# Install necessary dependencies for building PHP extensions 
 RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
@@ -24,65 +20,43 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
     apk del build-dependencies && \
     apk add --no-cache libpng libjpeg-turbo freetype
 
-# Create a composer group and user
 RUN addgroup -S composer && adduser -S composer -G composer
 
-# Copy the composer.json and composer.lock files
 COPY --chown=composer composer.json composer.lock ./
 
-# Ensure the vendor directory exists and has the correct permissions
 RUN chown -R composer:composer /opt/apps/laravel
 
-# Set the user to composer
 USER composer
 
-# Install all the dependencies without running any installation scripts.
-# We skip scripts as the code base hasn't been copied in yet and script will likely fail,
-# as `php artisan` available yet.
-# This also helps us to cache previous runs and layers.
-# As long as composer.json and composer.lock doesn't change the install will be cached.
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
-# Copy in our actual source code so we can run the installation scripts we need
-# At this point all the PHP packages have been installed, 
-# and all that is left to do, is to run any installation scripts which depends on the code base
 COPY --chown=composer . .
 
-# Now that the code base and packages are all available,
-# we can run the install again, and let it run any install scripts.
 RUN composer install --no-dev --prefer-dist
 
 
-# For the frontend, we want to get all the Laravel files,
-# and run a production compile
+
+
+# BUILD FRONTEND
 FROM node:18 AS frontend
 
-# We need to copy in the Laravel files to make everything is available to our frontend compilation
 COPY --from=composer_base /opt/apps/laravel /opt/apps/laravel
 
 WORKDIR /opt/apps/laravel
 
-# We want to install all the NPM packages,
-# and compile the MIX bundle for production
 RUN npm install && \
     npm run build
 
-# For running things like migrations, and queue jobs,
-# we need a CLI container.
-# It contains all the Composer packages,
-# and just the basic CLI "stuff" in order for us to run commands,
-# be that queues, migrations, tinker etc.
+
+
+# BUILD CLI
 FROM php:8.3-alpine AS cli
 
-# We need to declare that we want to use the args in this build step
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
 
 WORKDIR /opt/apps/laravel
 
-# We need to install some requirements into our image,
-# used to compile our PHP extensions, as well as install all the extensions themselves.
-# You can see a list of required extensions for Laravel here: https://laravel.com/docs/8.x/deployment#server-requirements
 RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
@@ -91,13 +65,14 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
     apk del build-dependencies && \
     apk add --no-cache libpng libjpeg-turbo freetype
 
-# Next we have to copy in our code base from our initial build which we installed in the previous stage
 COPY --from=composer_base /opt/apps/laravel /opt/apps/laravel
 
-# We need a stage which contains FPM to actually run and process requests to our PHP application.
+
+
+
+# BUILD FPM
 FROM php:8.3-fpm-alpine AS fpm_server
 
-# We need to declare that we want to use the args in this build step
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
 
@@ -111,48 +86,57 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
     apk del build-dependencies && \
     apk add --no-cache libpng libjpeg-turbo freetype
     
-# As FPM uses the www-data user when running our application,
-# we need to make sure that we also use that user when starting up,
-# so our user "owns" the application when running
 USER  www-data
 
-# We have to copy in our code base from our initial build which we installed in the previous stage
 COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel
 COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public
 
-# We want to cache the event, routes, and views so we don't try to write them when we are in Kubernetes.
-# Docker builds should be as immutable as possible, and this removes a lot of the writing of the live application.
 RUN php artisan event:cache && \
     php artisan view:cache && \
     php artisan route:cache
 
-# We need an nginx container which can pass requests to our FPM container,
-# as well as serve any static content.
+
+
+
+# BUILD NGINX
 FROM nginx:1.20-alpine AS web_server
 
 WORKDIR /opt/apps/laravel
 
-# We need to add our NGINX template to the container for startup,
-# and configuration.
 COPY docker/nginx.conf /etc/nginx/templates/default.conf.template
 
-# Copy in ONLY the public directory of our project.
-# This is where all the static assets will live, which nginx will serve for us.
 COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public
 
-# We need a CRON container to the Laravel Scheduler.
-# We'll start with the CLI container as our base,
-# as we only need to override the CMD which the container starts with to point at cron
+
+
+
+# BUILD CRON
 FROM cli AS cron
 
 WORKDIR /opt/apps/laravel
 
-# We want to create a laravel.cron file with Laravel cron settings, which we can import into crontab,
-# and run crond as the primary command in the forground
 RUN touch laravel.cron && \
     echo "* * * * * cd /opt/apps/laravel && php artisan schedule:run" >> laravel.cron && \
     crontab laravel.cron
 
 CMD ["crond", "-l", "2", "-f"]
 
+
+
+
+# BUILD QUEUE WORKER
+FROM cli AS queue_worker
+
+WORKDIR /opt/apps/laravel
+
+USER www-data
+
+COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel
+COPY --from=frontend --chown=www-data /opt/apps/laravel/public /opt/apps/laravel/public
+
+CMD ["php", "artisan", "queue:work", "--verbose", "--tries=3", "--timeout=90"]
+
+
+
+# DEFAULT STAGE
 FROM cli

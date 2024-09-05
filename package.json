@@ -11,7 +11,7 @@
         "axios": "^1.7.2",
         "jquery": "^3.6.4",
         "laravel-echo": "^1.16.1",
-        "laravel-vite-plugin": "^1.0.4",
+        "laravel-vite-plugin": "^1.0.5",
         "pusher-js": "^8.4.0-rc2",
         "sass": "^1.77.5",
         "vite": "^5.4.3"

@@ -7,6 +7,7 @@ use PHPHtmlParser\Dom;
 use App\Models\CalendarItem;
 use Illuminate\Bus\Queueable;
 use App\Models\CalendarUpdate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -74,7 +75,7 @@ class GetDetails implements ShouldQueue
         $calendar_item->save();
 
         Cache::decrement('calendar_jobs');
-        if (Cache::get('calendar_jobs') <= 0) {
+        if (Cache::get('calendar_jobs') == 0) {
             CollectUpdates::dispatch();
             Cache::forget('calendar_jobs');
         }

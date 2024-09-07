@@ -2,10 +2,11 @@
 
 namespace App\Jobs\Calendar;
 
+use Cache;
 use App\Models\CalendarItem;
 use Illuminate\Bus\Queueable;
 use App\Models\CalendarUpdate;
-use Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -94,9 +95,5 @@ class GetItems implements ShouldQueue
             ->delete();
 
         Cache::decrement('calendar_jobs');
-        if (Cache::get('calendar_jobs') <= 0) {
-            SendUpdates::dispatch();
-            Cache::forget('calendar_jobs');
-        }
     }
 }

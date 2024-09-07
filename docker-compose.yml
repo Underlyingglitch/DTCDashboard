@@ -1,0 +1,43 @@
+version: "3"
+services:
+    php:
+        image: registry.rickokkersen.nl/dtcdashboard/fpm_server:latest
+        env_file:
+            - .env.local
+        depends_on:
+            - db
+            - soketi
+    web:
+        image: registry.rickokkersen.nl/dtcdashboard/web_server:latest
+        ports:
+            - "80:80"
+        env_file:
+            - .env.local
+        depends_on:
+            - php
+    cron:
+        image: registry.rickokkersen.nl/dtcdashboard/cron:latest
+        env_file:
+            - .env.local
+        depends_on:
+            - db
+    queue:
+        image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
+        env_file:
+            - .env.local
+        depends_on:
+            - db
+    soketi:
+        image: quay.io/soketi/soketi:latest
+        volumes:
+            - ./local_data/soketi:/app/config
+        command: "soketi --config=/app/config/config.yml"
+    db:
+        image: mariadb:latest
+        volumes:
+            - ./local_data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: dtcdashboard
+            MYSQL_USER: dtcdashboard
+            MYSQL_PASSWORD: dtcdashboard

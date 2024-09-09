@@ -1,0 +1,35 @@
+services:
+    php:
+        image: registry.rickokkersen.nl/dtcdashboard/fpm_server:latest
+        env_file:
+            - .env.local
+        depends_on:
+            - soketi
+    web:
+        image: registry.rickokkersen.nl/dtcdashboard/web_server:latest
+        ports:
+            - "80:80"
+        env_file:
+            - .env.local
+        depends_on:
+            - php
+    cron:
+        image: registry.rickokkersen.nl/dtcdashboard/cron:latest
+        env_file:
+            - .env.local
+    queue:
+        image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
+        env_file:
+            - .env.local
+    queue-sync:
+        image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
+        env_file:
+            - .env.local
+        command: "php artisan queue:work --queue=sync --tries=3"
+    soketi:
+        image: registry.rickokkersen.nl/soketi/soketi:latest
+        ports:
+            - "6001:6001"
+        volumes:
+            - ./local_data/config.json:/app/config/config.json
+        entrypoint: ["node", "/app/bin/server.js", "start",  "--config=/app/config/config.json"]

@@ -36,6 +36,7 @@ class Initialize implements ShouldQueue
         }
         // Initializing
         $current_month = (int)date('m');
+        Cache::put('calendar_jobs', 0);
         for ($m = $current_month - 1; $m <= $current_month + 4; $m++) {
             $month = $m;
             $year = (int)date('Y');
@@ -55,7 +56,7 @@ class Initialize implements ShouldQueue
                 8 => 'Zuid-Holland',
                 1 => 'Landelijk'
             ];
-            Cache::set('calendar_jobs', count($districts));
+            Cache::increment('calendar_jobs', count($districts));
             foreach ($districts as $key => $value) {
                 GetItems::dispatch($month, $year, $key, $value);
             }

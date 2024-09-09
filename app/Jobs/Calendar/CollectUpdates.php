@@ -15,7 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use App\Notifications\CalendarUpdateNotification;
 
-class CollectUpdates implements ShouldQueue, ShouldBeUnique
+class CollectUpdates implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -40,7 +40,6 @@ class CollectUpdates implements ShouldQueue, ShouldBeUnique
             Log::info('Already sent updates!');
             return;
         }
-        Log::info('Sending updates!');
         Cache::set('has_updated', true, now()->addMinutes(15));
 
         $settings = Setting::withoutGlobalScopes()->where('key', 'LIKE', 'calendar_updates_%')->get();
@@ -88,9 +87,7 @@ class CollectUpdates implements ShouldQueue, ShouldBeUnique
             $notifications = array_merge($notifications, $sub_updates);
 
             $notifications = array_map("unserialize", array_unique(array_map("serialize", $notifications)));
-
-            // SendUpdates::dispatch($user->id, $notifications);
-
+            
             if (count($notifications) > 0)
                 $user->notify(new CalendarUpdateNotification($notifications));
         }

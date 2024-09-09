@@ -47,7 +47,6 @@ class ScoreCorrectionAdded implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        Log::info('ScoreCorrectionAdded event fired with score: ' . $this->sc->score->total . ' for matchday: ' . $this->sc->score->match_day_id . ' and startnumber: ' . $this->sc->score->startnumber . ' and toestel: ' . $this->sc->score->toestel);
         return ['sc' => $this->sc->toArray(), 'score' => $this->sc->score->toArray()];
     }
 }

@@ -85,15 +85,16 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
     docker-php-ext-enable ${PHP_PECL_EXTS} && \
     apk del build-dependencies && \
     apk add --no-cache libpng libjpeg-turbo freetype
-    
+
+COPY docker/fpm-entrypoint.sh /opt/apps/laravel/entrypoint.sh
+RUN chmod +x /opt/apps/laravel/entrypoint.sh
+
 USER  www-data
 
 COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel
 COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public
 
-RUN php artisan event:cache && \
-    php artisan view:cache && \
-    php artisan route:cache
+ENTRYPOINT ["./entrypoint.sh"]
 
 
 

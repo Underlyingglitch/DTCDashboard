@@ -54,18 +54,6 @@ class Index extends Component
         $this->subscribed = Auth::user()->calendar_subscriptions->pluck('id')->toArray();
     }
 
-    public function toggleSubscription($id)
-    {
-        $item = CalendarItem::find($id);
-        if ($item->subscribers->contains(Auth::id())) {
-            $item->subscribers()->detach(Auth::id());
-            $this->subscribed = array_diff($this->subscribed, [$id]);
-        } else {
-            $item->subscribers()->attach(Auth::id());
-            $this->subscribed[] = $id;
-        }
-    }
-
     public function toggle($id)
     {
         if ($this->selected === $id) {

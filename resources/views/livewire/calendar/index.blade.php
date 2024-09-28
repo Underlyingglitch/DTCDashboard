@@ -74,7 +74,8 @@
                             <b>Beschrijving</b><br>
                             {!! clean(nl2br($result['description'])) !!}<br>
                             @foreach ($result['description_files'] as $file)
-                                <a href="{{ $file }}" target="_blank">{{ array_reverse(explode('/', $file))[0] }}</a><br>
+                                <a href="{{ $file }}"
+                                    target="_blank">{{ array_reverse(explode('/', $file))[0] }}</a><br>
                             @endforeach
                         @endif
                         @if (!is_null($result['program']) || !empty($result['program']) || count($result['program_files']) != 0)
@@ -82,7 +83,8 @@
                             <b>Programma</b><br>
                             {!! clean(nl2br($result['program'])) !!}<br>
                             @foreach ($result['program_files'] as $file)
-                                <a href="{{ $file }}" target="_blank">{{ array_reverse(explode('/', $file))[0] }}</a><br>
+                                <a href="{{ $file }}"
+                                    target="_blank">{{ array_reverse(explode('/', $file))[0] }}</a><br>
                             @endforeach
                         @endif
                         @if (!is_null($result['results']) || !empty($result['results']) || count($result['results_files']) != 0)
@@ -97,9 +99,7 @@
                         <hr>
                         <a target="_blank"
                             href="https://dutchgymnastics.nl/wedstrijden-en-uitslagen?event={{ $result['event_id'] }}">Bekijk
-                            op DG</a> | @php($check_subscribed = in_array($result['id'], $subscribed))<button
-                            class="btn btn-sm btn-{{ $check_subscribed ? 'success' : 'danger' }}"
-                            wire:click="toggleSubscription({{ $result['id'] }})">{{ $check_subscribed ? 'Geabonneerd' : 'Niet geabonneerd' }}</button>
+                            op DG</a> | @livewire('calendar.subscribe-btn', ['id' => $result['id'], 'subscribed' => in_array($result['id'], $subscribed)])
                     </div>
                 </div>
             </div>

@@ -113,7 +113,10 @@
                         <div class="col-auto" style="width: 200px">{{ $subscription->place }}</div>
                         <div class="col-auto" style="width: 250px">{{ $subscription->date }}</div>
                         <div class="col-auto" style="width: 100px">
-                            @if (!is_null($subscription->description) || !empty($subscription->description) || count($subscription->description_files) != 0)
+                            @if (
+                                !is_null($subscription->description) ||
+                                    !empty($subscription->description) ||
+                                    count($subscription->description_files) != 0)
                                 <span style="color: rgb(0, 166, 255)"><i class="fas fa-info-circle"></i></span>
                             @endif
                             @if (!is_null($subscription->program) || !empty($subscription->program) || count($subscription->program_files) != 0)

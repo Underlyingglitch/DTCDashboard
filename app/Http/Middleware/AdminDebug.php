@@ -16,7 +16,7 @@ class AdminDebug
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->hasRole('admin')) {
+        if (Auth::user() && Auth::user()->hasRole('admin')) {
             config(['app.debug' => true]);
         }
         return $next($request);

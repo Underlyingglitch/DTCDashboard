@@ -1,5 +1,5 @@
 # ARG PHP_EXTS="bcmath ctype fileinfo mbstring pdo pdo_mysql tokenizer dom pcntl"
-ARG PHP_EXTS="pdo_mysql mbstring exif pcntl bcmath gd"
+ARG PHP_EXTS="pdo_mysql mbstring exif pcntl bcmath gd zip"
 ARG PHP_PECL_EXTS="redis"
 
 # BUILDING COMPOSER BASE
@@ -12,7 +12,8 @@ RUN mkdir -p /opt/apps/laravel /opt/apps/laravel/bin
 
 WORKDIR /opt/apps/laravel
 
-RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev && \
+RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev && \
+    apk add --no-cache libzip && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
     pecl install ${PHP_PECL_EXTS} && \
@@ -32,7 +33,18 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 COPY --chown=composer . .
 
+RUN cat <<EOF > .env
+DB_CONNECTION=mysql
+DB_HOST=host.docker.internal
+DB_PORT=3306
+DB_DATABASE=dtcdashboard
+DB_USERNAME=admin
+DB_PASSWORD=password
+EOF
+
 RUN composer install --no-dev --prefer-dist
+
+RUN rm .env
 
 
 
@@ -57,7 +69,8 @@ ARG PHP_PECL_EXTS
 
 WORKDIR /opt/apps/laravel
 
-RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev && \
+RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev && \
+    apk add --no-cache libzip && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
     pecl install ${PHP_PECL_EXTS} && \
@@ -78,7 +91,8 @@ ARG PHP_PECL_EXTS
 
 WORKDIR /opt/apps/laravel
 
-RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev && \
+RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev && \
+    apk add --no-cache libzip && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) ${PHP_EXTS} && \
     pecl install ${PHP_PECL_EXTS} && \
@@ -136,6 +150,17 @@ COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel
 COPY --from=frontend --chown=www-data /opt/apps/laravel/public /opt/apps/laravel/public
 
 CMD ["php", "artisan", "queue:work", "--verbose", "--tries=3", "--timeout=90"]
+
+
+
+
+# BUILD SOCKET_SERVER
+FROM cli AS socket_server
+
+WORKDIR /opt/apps/laravel
+
+CMD ["php", "artisan", "reverb:start"]
+
 
 
 

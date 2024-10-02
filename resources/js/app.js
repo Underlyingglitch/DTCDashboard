@@ -6,44 +6,6 @@ import "@fortawesome/fontawesome-free/scss/solid.scss";
 import "@fortawesome/fontawesome-free/scss/brands.scss";
 import "@fortawesome/fontawesome-free/scss/regular.scss";
 
-import toastr from 'toastr';
-toastr.options = {
-    "closeButton": false,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": false,
-    "positionClass": "toast-top-right",
-    "preventDuplicates": false,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "5000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-}
-window.toastr = toastr;
-
-import Echo from 'laravel-echo';
-
-import Pusher from 'pusher-js';
-window.Pusher = Pusher;
-
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: window.__CONFIG__.VITE_PUSHER_APP_KEY,
-    wsHost: window.__CONFIG__.VITE_PUSHER_HOST,
-    wsPort: window.__CONFIG__.VITE_PUSHER_PORT,
-    wssPort: window.__CONFIG__.VITE_PUSHER_PORT,
-    cluster: window.__CONFIG__.VITE_PUSHER_CLUSTER,
-    forceTLS: window.__CONFIG__.VITE_APP_ENV == 'local' ? false : true,
-    encrypted: true,
-    disableStats: true,
-    enabledTransports: window.__CONFIG__.VITE_APP_ENV == 'local' ? ['ws'] : ['ws', 'wss'],
-});
-
 // Subscribe to a user notification channel
 window.Echo.private(`App.Models.User.${window.userId}`).notification((e) => {
     notification(e.style, e.title, e.message);

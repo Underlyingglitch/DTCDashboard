@@ -15,11 +15,11 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('livewire/livewire.js', function () {
-    return \Livewire\Drawer\Utils::class::pretendResponseIsFile(
-        base_path('vendor/livewire/livewire/dist/livewire.min.js')
-    );
-})->name('livewire.js');
+// Route::get('livewire/livewire.js', function () {
+//     return \Livewire\Drawer\Utils::class::pretendResponseIsFile(
+//         base_path('vendor/livewire/livewire/dist/livewire.min.js')
+//     );
+// })->name('livewire.js');
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -29,11 +29,10 @@ Route::get('/test', function () {
 
 Route::get('/config.js', function () {
     $config = 'window.__CONFIG__ = {
-        VITE_APP_ENV: "' . env('APP_ENV') . '",
-        VITE_PUSHER_APP_KEY: "' . env('VITE_PUSHER_APP_KEY') . '",
-        VITE_PUSHER_HOST: "' . env('VITE_PUSHER_HOST') . '",
-        VITE_PUSHER_PORT: "' . env('VITE_PUSHER_PORT') . '",
-        VITE_PUSHER_CLUSTER: "' . env('VITE_PUSHER_CLUSTER') . '"
+        VITE_REVERB_APP_KEY: "' . env('REVERB_APP_KEY') . '",
+        VITE_REVERB_HOST: "' . env('REVERB_HOST') . '",
+        VITE_REVERB_PORT: "' . env('REVERB_PORT') . '",
+        VITE_REVERB_SCHEME: "' . env('REVERB_SCHEME') . '",
     };';
 
     return response($config, 200)

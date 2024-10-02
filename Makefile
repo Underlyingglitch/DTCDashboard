@@ -31,6 +31,7 @@ docker-build:
 	docker build . $(NO_CACHE_FLAG) --target fpm_server -t ${REGISTRY}/fpm_server:${VERSION}
 	docker build . $(NO_CACHE_FLAG) --target web_server -t ${REGISTRY}/web_server:${VERSION}
 	docker build . $(NO_CACHE_FLAG) --target queue_worker -t ${REGISTRY}/queue_worker:${VERSION}
+	docker build . $(NO_CACHE_FLAG) --target socket_server -t ${REGISTRY}/socket_server:${VERSION}
 
 docker-push:
 	docker push ${REGISTRY}/cli:${VERSION}
@@ -38,3 +39,4 @@ docker-push:
 	docker push ${REGISTRY}/fpm_server:${VERSION}
 	docker push ${REGISTRY}/web_server:${VERSION}
 	docker push ${REGISTRY}/queue_worker:${VERSION}
+	docker push ${REGISTRY}/socket_server:${VERSION}

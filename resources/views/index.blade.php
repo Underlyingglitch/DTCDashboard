@@ -10,7 +10,7 @@
     <title>DTC TH Zuid</title>
 
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
-    
+    <script src="/config.js"></script>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 

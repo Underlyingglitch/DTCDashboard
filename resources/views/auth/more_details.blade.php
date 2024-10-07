@@ -47,7 +47,7 @@
                                             </button>
                                         </div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.more_details') }}" method="post">
+                                    <form class="user" action="{{ route('more_details') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text"
@@ -83,7 +83,7 @@
                                         Voor meer informatie, neem contact op met <a
                                             href="mailto:rickokkersen@gmail.com">rickokkersen@gmail.com</a>.
                                         <hr>
-                                        <a class="btn btn-secondary" href="{{ route('auth.login') }}">Terug naar
+                                        <a class="btn btn-secondary" href="{{ route('login') }}">Terug naar
                                             inloggen</a>
                                     </div>
                                 </div>

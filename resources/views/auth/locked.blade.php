@@ -63,7 +63,7 @@
                                             </button>
                                         </div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.login') }}" method="post">
+                                    <form class="user" action="{{ route('login') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <input type="password"

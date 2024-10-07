@@ -53,7 +53,7 @@ class AuthController extends Controller
     {
         $device = Device::where('ip', $request->ip())->first();
         $user = User::find($device->authenticated_user_id);
-        if (!$user) return redirect()->route('auth.login');
+        if (!$user) return redirect()->route('login');
         $user->locked = false;
         $user->save();
         Auth::login($user, false);
@@ -88,7 +88,7 @@ class AuthController extends Controller
         session(['user' => $user->id]);
         if (!$user->active) return view('auth.more_details', compact('user'));
 
-        return redirect()->route('auth.login')->with('success', 'Uw account is geactiveerd! U kunt nu inloggen');
+        return redirect()->route('login')->with('success', 'Uw account is geactiveerd! U kunt nu inloggen');
     }
 
     public function more_details(Request $request)
@@ -102,13 +102,13 @@ class AuthController extends Controller
 
         User::where('email', 'rickokkersen@gmail.com')->first()->notify(new \App\Notifications\AccountWaitingActivation($user_id, $request->type, $request->club));
 
-        return redirect()->route('auth.login')->with('success', 'We konden niet verifieren of u een jurylid of trainer bent. Uw account is aangemaakt, maar moet nog geactiveerd worden door een beheerder. U ontvangt een email zodra uw account is geactiveerd.');
+        return redirect()->route('login')->with('success', 'We konden niet verifieren of u een jurylid of trainer bent. Uw account is aangemaakt, maar moet nog geactiveerd worden door een beheerder. U ontvangt een email zodra uw account is geactiveerd.');
     }
 
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('auth.login');
+        return redirect()->route('login');
     }
 
     public function lock()

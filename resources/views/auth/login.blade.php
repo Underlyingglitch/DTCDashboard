@@ -12,7 +12,7 @@
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
 
     <script src="/config.js"></script>
-    
+
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 
     <script type="module" defer>
@@ -67,7 +67,7 @@
                                             </button>
                                         </div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.login') }}" method="post">
+                                    <form class="user" action="{{ route('login') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text"
@@ -95,7 +95,7 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="btn btn-secondary" href="{{ route('auth.register') }}">Nog geen
+                                        <a class="btn btn-secondary" href="{{ route('register') }}">Nog geen
                                             account?</a>
                                         {{-- <br>of<br>
                                         <a class="btn-link small" href="#">Wachtwoord vergeten?</a> --}}

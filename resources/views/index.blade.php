@@ -32,11 +32,10 @@
                                         <h1 class="h4 text-gray-900 mb-4">Welkom op de website van DTC TH Zuid!</h1>
                                     </div>
                                     <div class="d-flex justify-content-center">
-                                        <a class="btn btn-sm btn-success mb-4"
-                                            href="{{ route('auth.login') }}">Inloggen</a>
+                                        <a class="btn btn-sm btn-success mb-4" href="{{ route('login') }}">Inloggen</a>
                                         <p>&nbsp;&nbsp;of&nbsp;&nbsp;</p>
                                         <a class="btn btn-sm btn-primary mb-4"
-                                            href="{{ route('auth.register') }}">Registreren</a>
+                                            href="{{ route('register') }}">Registreren</a>
                                     </div>
                                     <div>
                                         <b>Inloggen en registreren</b><br>

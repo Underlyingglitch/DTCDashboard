@@ -4,7 +4,7 @@ services:
         env_file:
             - .env.local
         depends_on:
-            - soketi
+            - socket_server
     web:
         image: registry.rickokkersen.nl/dtcdashboard/web_server:latest
         ports:
@@ -26,14 +26,7 @@ services:
         env_file:
             - .env.local
         command: "php artisan queue:work --queue=sync --tries=3"
-    # soketi:
-    #     image: registry.rickokkersen.nl/soketi/soketi:latest
-    #     ports:
-    #         - "6001:6001"
-    #     volumes:
-    #         - ./local_data/config.json:/app/config/config.json
-    #     entrypoint: ["node", "/app/bin/server.js", "start",  "--config=/app/config/config.json"]
-    socket-server:
+    socket_server:
         image: registry.rickokkersen.nl/dtcdashboard/socket_server:latest
         ports:
             - "8080:8080"

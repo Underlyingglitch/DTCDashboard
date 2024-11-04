@@ -22,7 +22,7 @@
         "chart.js": "4.4.4",
         "jquery.easing": "^1.4.1",
         "jszip": "^3.10.1",
-        "pdfmake": "^0.2.12",
+        "pdfmake": "^0.2.15",
         "save": "^2.9.0",
         "toastr": "^2.1.4"
     }

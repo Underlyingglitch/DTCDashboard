@@ -5,6 +5,7 @@ services:
             - .env.local
         depends_on:
             - socket_server
+        entrypoint: /opt/apps/laravel/docker/fpm-entrypoint.sh
     web:
         image: registry.rickokkersen.nl/dtcdashboard/web_server:latest
         ports:

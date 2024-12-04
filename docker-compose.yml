@@ -13,7 +13,7 @@ services:
             - .env.local
         depends_on:
             - socket_server
-        entrypoint: /opt/apps/laravel/docker/fpm-entrypoint.sh
+            - redis
     web:
         image: registry.rickokkersen.nl/dtcdashboard/web_server:latest
         ports:
@@ -30,11 +30,15 @@ services:
         image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
         env_file:
             - .env.local
+        depends_on:
+            - redis
     queue-sync:
         image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
         env_file:
             - .env.local
         command: "php artisan queue:work --queue=sync --tries=3"
+        depends_on:
+            - redis
     socket_server:
         image: registry.rickokkersen.nl/dtcdashboard/socket_server:latest
         ports:

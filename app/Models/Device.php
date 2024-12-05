@@ -10,7 +10,7 @@ class Device extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'ip', 'type', 'loaded_page', 'settings', 'authenticated_user_id', 'last_seen'];
+    protected $fillable = ['name', 'device_id', 'type', 'loaded_page', 'settings', 'authenticated_user_id', 'last_seen'];
 
     protected $casts = [
         'settings' => 'array',

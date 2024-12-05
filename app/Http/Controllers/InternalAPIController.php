@@ -43,7 +43,7 @@ class InternalAPIController extends Controller
 
     public function ping(Request $request)
     {
-        $device = Device::where('ip', $request->ip())->first();
+        $device = Device::where('device_id', $request->device_id)->first();
         if ($device) {
             $device->loaded_page = $request->page;
             $device->authenticated_user_id = $request->user_id;
@@ -51,8 +51,23 @@ class InternalAPIController extends Controller
             $device->save();
             return response()->json(['message' => 'Saved', 'id' => $device->id, 'loaded_page' => $device->loaded_page, 'authenticated_user_id' => $device->authenticated_user_id]);
         }
-        Log::error('Device not found: ' . $request->ip() . ' - ' . $request->page);
+        Log::error('Device not found: ' . $request->device_id . ' - ' . $request->page);
         return response()->json(['message' => 'Device not found'], 404);
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'laptop_number' => 'required|integer|between:0,9',
+            'device_id' => 'required|string|unique:devices,device_id',
+        ]);
+        $device_name = 'Laptop ' . $request->laptop_number;
+        $device = Device::where('name', $device_name)->first();
+        if ($device) {
+            $device->device_id = $request->device_id;
+            $device->save();
+            return response()->json(['message' => 'Updated', 'id' => $device->id, 'name' => $device->name, 'device_id' => $device->device_id]);
+        }
     }
 
     public function changes(Request $request)

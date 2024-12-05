@@ -13,35 +13,11 @@
 
     <script src="/config.js"></script>
 
-    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-
-    <script type="module" defer>
-        // Periodically send a ping to the server to keep the session alive
-        setInterval(() => {
-            console.log('Sending ping')
-            window.axios.post('/api/internal/ping', {
-                page: window.location.pathname,
-                user_id: null,
-            })
-        }, 1000 * 5);
-        window.axios.post('/api/internal/ping', {
-            page: window.location.pathname,
-            user_id: null
-        }).then((data) => {
-            let id = data.data.id
-            loadPage(data.data.loaded_page)
-            window.Echo.channel(`monitor.${id}`).listen('.DeviceUpdated', (e) => {
-                loadPage(e.loaded_page)
-            })
-        }).catch((error) => {
-            console.log(error)
-        })
-
-        function loadPage(page) {
-            if (page == window.location.pathname) return
-            window.location.pathname = page
-        }
-    </script>
+    @php($vite = ['resources/scss/app.scss', 'resources/js/app.js'])
+    @if (env('APP_ENV') == 'local' || env('APP_ENV') == 'dev')
+        @php($vite[] = 'resources/js/localLogin.js')
+    @endif
+    @vite($vite)
 </head>
 
 <body class="login-background">

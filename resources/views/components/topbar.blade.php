@@ -209,10 +209,12 @@
                     Activity Log
                 </a>
                 <div class="dropdown-divider"></div> --}}
-                <a class="dropdown-item" href="{{ route('auth.lock') }}">
-                    <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Vergrendelen
-                </a>
+                @if (env('APP_ENV') == 'local' || env('APP_ENV') == 'dev')
+                    <a class="dropdown-item" href="{{ route('auth.lock') }}">
+                        <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Vergrendelen
+                    </a>
+                @endif
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout

@@ -27,7 +27,7 @@ class UpdateSyncStatus implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('sync_data');
+        return new Channel('internal');
     }
     /**
      * The event's broadcast name.

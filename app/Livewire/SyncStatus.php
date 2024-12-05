@@ -17,7 +17,7 @@ class SyncStatus extends Component
     // 4 = Enabled, error syncing
     public $message = null;
 
-    protected $listeners = ['echo:sync_data,.UpdateSyncStatus' => 'updateStatus'];
+    protected $listeners = ['echo:internal,.UpdateSyncStatus' => 'updateStatus'];
 
     public function mount()
     {

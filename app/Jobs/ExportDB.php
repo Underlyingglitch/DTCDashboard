@@ -42,11 +42,16 @@ class ExportDB implements ShouldQueue
             'score_corrections',
             'team_scores',
             'processed_scores',
+            'user_settings',
         ];
         $data = [];
         foreach ($tables as $table) {
             $data[$table] = [];
             DB::table($table)->orderBy('id')->chunk(100, function ($rows) use ($table, &$data) {
+                if ($table == 'user_settings') {
+                    // Only get the rows where user_id is null
+                    $rows = $rows->where('user_id', null);
+                }
                 foreach ($rows as $row) {
                     $data[$table][] = $row;
                 }

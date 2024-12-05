@@ -10,9 +10,9 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class DeviceUpdated implements ShouldBroadcastNow
+class DeviceRegistered implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -28,16 +28,16 @@ class DeviceUpdated implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return ['monitor', 'monitor.' . $this->device->device_id];
+        return new Channel('monitor');
     }
-    /**`
+    /**
      * The event's broadcast name.
      *
      * @return string
      */
     public function broadcastAs()
     {
-        return 'DeviceUpdated';
+        return 'DeviceRegistered';
     }
     /**
      * The event's broadcast name.
@@ -46,6 +46,6 @@ class DeviceUpdated implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        return $this->device->toArray();
+        return ['name' => $this->device->name, 'device_id' => $this->device->device_id];
     }
 }

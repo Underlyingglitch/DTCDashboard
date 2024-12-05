@@ -1,50 +1,40 @@
 let device_id = getCookie('device_id')
-if (device_id == "") {
-    device_id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    setCookie('device_id', device_id)
-}
-console.log('Device ID:', device_id)
-setInterval(() => {
-    console.log('Sending ping')
-    window.axios.post('/api/internal/ping', {
-        page: window.location.pathname,
-        user_id: null,
-        // Get the device id from a cookie
-        device_id: device_id
-    })
-}, 1000 * 5);
+let id_element = document.getElementById('device_code')
+
 window.axios.post('/api/internal/ping', {
-    page: window.location.pathname,
-    user_id: null,
-    device_id: device_id
-}).then((data) => {
-    let id = data.data.id
-    loadPage(data.data.loaded_page)
-    window.Echo.channel(`monitor.${id}`).listen('.DeviceUpdated', (e) => {
-        loadPage(e.loaded_page)
-    })
-}).catch((error) => {
-    if (error.response.status == 404) {
-        // Prompt the user for a number
-        let number = prompt('Voer laptopnummer in')
-        if (number == null) {
-            return
-        }
-        window.axios.post('/api/internal/register', {
-            laptop_number: number,
-            device_id: getCookie('device_id')
-        }).then((data) => {
-            console.log(data)
-        }).catch((error) => {
-            console.log(error)
-        })
-    }
+    device_id: device_id,
+    loaded_page: window.location.pathname
 })
 
-function loadPage(page) {
-    if (page == window.location.pathname) return
-    window.location.pathname = page
+if (window.location.pathname == '/auth/local') {
+    if (device_id == "") {
+        device_id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        setCookie('device_id', device_id)
+    }
+
+    window.axios.post('/api/internal/register', {
+        device_id: device_id
+    }).then((r) => {
+        if (r.data.page) {
+            window.location.pathname = r.data.page
+        }
+        if (id_element) {
+            id_element.innerHTML = r.data.code
+        } else {
+            console.log('No element found, code:', r.data.code)
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
 }
+
+window.Echo.channel(`monitor.${device_id}`).listen('.DeviceUpdated', (e) => {
+    console.log('Device updated', e)
+    if (e.loaded_page != window.location.pathname) {
+        window.location.pathname = e.loaded_page
+        window.Echo.leaveChannel(`monitor.${device_id}`)
+    }
+})
 
 function setCookie(cname, cvalue, exdays = 365) {
     const d = new Date();

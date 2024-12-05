@@ -24,4 +24,9 @@ class Device extends Model
             event(new \App\Events\Device\DeviceUpdated($device));
         });
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'authenticated_user_id');
+    }
 }

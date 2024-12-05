@@ -19,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'locked' => \App\Http\Middleware\LockedAccount::class,
-            'internalapi' => \App\Http\Middleware\CheckAPIToken::class
+            'internalapi' => \App\Http\Middleware\CheckAPIToken::class,
+            'jurytafel' => \App\Http\Middleware\JuryTafel::class,
         ]);
         $middleware->trustProxies(at: [
             '10.244.0.0/16'

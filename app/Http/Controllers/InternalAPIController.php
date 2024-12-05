@@ -10,7 +10,9 @@ use App\Models\Wedstrijd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Jobs\Scores\CalculateTeamScore;
+use Session;
 
 class InternalAPIController extends Controller
 {
@@ -41,32 +43,42 @@ class InternalAPIController extends Controller
         }
     }
 
+    public function register(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|string',
+        ]);
+        $request->session()->put('device_id', $request->device_id);
+        $device = Device::where('device_id', $request->device_id)->first();
+        if ($device) {
+            if ($device->authenticated_user_id) {
+                Auth::loginUsingId($device->authenticated_user_id);
+                return response()->json(['message' => 'already_registered', 'page' => $device->loaded_page]);
+            }
+            return response()->json(['message' => 'registered', 'code' => $device->name]);
+        }
+        $registered_devices = Device::where('type', 'registered')->get();
+        // Get a 4 digit random numer not in the list of registered devices
+        do {
+            $device_name = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        } while ($registered_devices->contains('name', $device_name));
+        $device = Device::create([
+            'device_id' => $request->device_id,
+            'name' => $device_name,
+            'last_seen' => now(),
+            'type' => 'registered'
+        ]);
+        event(new \App\Events\Device\DeviceRegistered($device));
+        return response()->json(['message' => 'registered', 'code' => $device_name]);
+    }
+
     public function ping(Request $request)
     {
         $device = Device::where('device_id', $request->device_id)->first();
         if ($device) {
-            $device->loaded_page = $request->page;
-            $device->authenticated_user_id = $request->user_id;
             $device->last_seen = now();
+            $device->loaded_page = $request->loaded_page;
             $device->save();
-            return response()->json(['message' => 'Saved', 'id' => $device->id, 'loaded_page' => $device->loaded_page, 'authenticated_user_id' => $device->authenticated_user_id]);
-        }
-        Log::error('Device not found: ' . $request->device_id . ' - ' . $request->page);
-        return response()->json(['message' => 'Device not found'], 404);
-    }
-
-    public function register(Request $request)
-    {
-        $request->validate([
-            'laptop_number' => 'required|integer|between:0,9',
-            'device_id' => 'required|string|unique:devices,device_id',
-        ]);
-        $device_name = 'Laptop ' . $request->laptop_number;
-        $device = Device::where('name', $device_name)->first();
-        if ($device) {
-            $device->device_id = $request->device_id;
-            $device->save();
-            return response()->json(['message' => 'Updated', 'id' => $device->id, 'name' => $device->name, 'device_id' => $device->device_id]);
         }
     }
 

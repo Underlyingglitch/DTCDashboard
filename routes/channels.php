@@ -22,6 +22,10 @@ Broadcast::channel('livescores', function ($user) {
     return [$user->id];
 });
 
+Broadcast::channel('monitor', function ($user, ) {
+    return [$user->id];
+});
+
 Broadcast::channel('jurytafel.{toestel}', function ($user, $toestel) {
     if (!$user->can('jurytafel')) return false;
     return [$user->id];

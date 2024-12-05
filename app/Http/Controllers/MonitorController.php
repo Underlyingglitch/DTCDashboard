@@ -9,8 +9,6 @@ class MonitorController extends Controller
 {
     public function index()
     {
-        return view('pages.monitor.index', [
-            'jury_laptops' => Device::where('type', 'jury')->get()
-        ]);
+        return view('pages.monitor.index');
     }
 }

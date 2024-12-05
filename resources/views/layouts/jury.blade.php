@@ -17,11 +17,7 @@
         window.userId = @json(auth()->id());
     </script>
     <script src="/config.js"></script>
-    @php($vite = ['resources/scss/app.scss', 'resources/js/app.js'])
-    @if (env('APP_ENV') == 'local' || env('APP_ENV') == 'dev')
-        @php($vite[] = 'resources/js/localLogin.js')
-    @endif
-    @vite($vite)
+    @vite(['resources/scss/app.scss', 'resources/js/app.js', 'resources/js/jurytafel.js'])
     @yield('scripts')
     @livewireStyles
 </head>

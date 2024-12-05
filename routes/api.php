@@ -21,7 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 if (config('app.env') === 'local' || config('app.env') === 'dev') {
     Route::post('/internal/ping', [InternalAPIController::class, 'ping'])->name('ping');
-    Route::post('/internal/register', [InternalAPIController::class, 'register'])->name('register');
+    Route::post('/internal/register', [InternalAPIController::class, 'register'])
+        ->middleware(['web'])->name('register');
 }
 
 Route::middleware('internalapi')->controller(InternalAPIController::class)->prefix('/internal')->group(function () {

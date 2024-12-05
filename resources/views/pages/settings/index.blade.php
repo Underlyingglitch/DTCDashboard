@@ -14,7 +14,9 @@
         @livewire('sync-toggle-button')
         Database importeren:
         @livewire('import-db-form')
+        <br>
+        @livewire('migrate-db-button')
     @endif
-    <br>
+    <br><br>
     @livewire('export-db-button')
 @endsection

@@ -18,6 +18,8 @@ ifeq ($(no-cache), true)
 endif
 
 
+dep: docker deploy
+
 # Commands
 deploy: 
 	kubectl rollout restart deployment dtcdashboard --namespace=laravel-applications

@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,14 +13,6 @@ use App\Http\Controllers\DashboardController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-// Route::get('livewire/livewire.js', function () {
-//     return \Livewire\Drawer\Utils::class::pretendResponseIsFile(
-//         base_path('vendor/livewire/livewire/dist/livewire.min.js')
-//     );
-// })->name('livewire.js');
-
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/test', function () {
     return view('emails.verify');

@@ -15,6 +15,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MatchDaysController;
 use App\Http\Controllers\OefenstofController;
 use App\Http\Controllers\WedstrijdController;
@@ -22,6 +23,8 @@ use App\Http\Controllers\DGResourceController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\MatchDaysExportController;
 use App\Http\Controllers\WedstrijdExportController;
+
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 

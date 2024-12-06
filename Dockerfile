@@ -103,6 +103,8 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
 COPY docker/fpm-entrypoint.sh /opt/apps/laravel/entrypoint.sh
 RUN chmod +x /opt/apps/laravel/entrypoint.sh
 
+COPY docker/php.ini /usr/local/etc/php/php.ini
+
 USER  www-data
 
 COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel

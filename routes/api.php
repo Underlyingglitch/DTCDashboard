@@ -18,13 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::name('api.')->group(function () {
+    if (config('app.env') === 'local' || config('app.env') === 'dev') {
+        Route::post('/internal/ping', [InternalAPIController::class, 'ping'])->name('ping');
+        Route::post('/internal/register', [InternalAPIController::class, 'register'])
+            ->middleware(['web'])->name('register');
+    }
 
-if (config('app.env') === 'local' || config('app.env') === 'dev') {
-    Route::post('/internal/ping', [InternalAPIController::class, 'ping'])->name('ping');
-    Route::post('/internal/register', [InternalAPIController::class, 'register'])
-        ->middleware(['web'])->name('register');
-}
-
-Route::middleware('internalapi')->controller(InternalAPIController::class)->prefix('/internal')->group(function () {
-    Route::post('/changes', 'changes')->name('changes');
+    Route::middleware('internalapi')->controller(InternalAPIController::class)->prefix('/internal')->group(function () {
+        Route::post('/changes', 'changes')->name('changes');
+    });
 });

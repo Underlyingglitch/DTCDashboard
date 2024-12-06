@@ -1,4 +1,9 @@
 services:
+    init:
+        image: registry.rickokkersen.nl/dtcdashboard/cli:latest
+        command: ['sh', '-c', 'php artisan migrate --force']
+        env_file:
+            - .env.local
     redis:
         image: redis:latest
         container_name: redis
@@ -14,6 +19,7 @@ services:
         depends_on:
             - socket_server
             - redis
+            - init
     web:
         image: registry.rickokkersen.nl/dtcdashboard/web_server:latest
         ports:
@@ -26,12 +32,15 @@ services:
         image: registry.rickokkersen.nl/dtcdashboard/cron:latest
         env_file:
             - .env.local
+        depends_on:
+            - init
     queue:
         image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
         env_file:
             - .env.local
         depends_on:
             - redis
+            - init
     queue-sync:
         image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
         env_file:
@@ -39,6 +48,7 @@ services:
         command: "php artisan queue:work --queue=sync --tries=3"
         depends_on:
             - redis
+            - init
     socket_server:
         image: registry.rickokkersen.nl/dtcdashboard/socket_server:latest
         ports:

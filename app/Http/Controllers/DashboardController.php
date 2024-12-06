@@ -10,10 +10,12 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // TODO - fix this
-        // if (Device::where('ip', $request->ip())->exists()) {
-        //     return redirect()->route('jurytafel.index');
-        // }
+        if (
+            (env('APP_ENV') === 'local' || env('APP_ENV') === 'dev')
+            && Device::where('device_id', $request->session()->get('device_id'))->where('type', 'jury')->exists()
+        ) {
+            return redirect()->route('jurytafel.index');
+        }
         $settings = Setting::getValues([
             'current_competition',
             'current_match_day',

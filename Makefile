@@ -23,6 +23,7 @@ dep: docker deploy
 # Commands
 deploy: 
 	kubectl rollout restart deployment dtcdashboard --namespace=laravel-applications
+	kubectl rollout restart deployment dtcdashboard-socket --namespace=laravel-applications
 	kubectl rollout restart deployment dtcdashboard-workers --namespace=laravel-applications
 
 docker: docker-build docker-push

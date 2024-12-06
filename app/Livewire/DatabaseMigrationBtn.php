@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class MigrateDBButton extends Component
+class DatabaseMigrationBtn extends Component
 {
     public function run()
     {
@@ -15,6 +15,6 @@ class MigrateDBButton extends Component
 
     public function render()
     {
-        return view('livewire.migrate-db-button');
+        return view('livewire.database-migration-btn');
     }
 }

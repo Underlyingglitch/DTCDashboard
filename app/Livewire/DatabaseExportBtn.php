@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
 
-class ExportDBButton extends Component
+class DatabaseExportBtn extends Component
 {
     public $listeners = ['echo:internal,.DBExportReady' => 'download'];
 
@@ -27,6 +27,6 @@ class ExportDBButton extends Component
 
     public function render()
     {
-        return view('livewire.export-db-button');
+        return view('livewire.database-export-btn');
     }
 }

@@ -13,10 +13,10 @@
     @if (config('app.env') == 'local' || config('app.env') == 'dev')
         @livewire('sync-toggle-button')
         Database importeren:
-        @livewire('import-db-form')
+        @livewire('database-import-form')
         <br>
-        @livewire('migrate-db-button')
+        @livewire('database-migration-btn')
     @endif
     <br><br>
-    @livewire('export-db-button')
+    @livewire('database-export-btn')
 @endsection

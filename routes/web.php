@@ -44,5 +44,5 @@ if (config('app.env') == 'local' || config('app.env') == 'dev') {
         Route::get('/auth/login_as', 'login_as')->name('login_as');
     });
     Route::get('/auth/local', [AuthController::class, 'local'])->name('auth.local');
-    Route::middleware(['auth', 'locked', 'jurytafel'])->group(base_path('routes/web.jurytafel.php'));
+    Route::middleware(['jurytafel', 'locked'])->group(base_path('routes/web.jurytafel.php'));
 }

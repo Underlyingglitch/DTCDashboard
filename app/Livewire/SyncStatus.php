@@ -21,15 +21,15 @@ class SyncStatus extends Component
 
     public function mount()
     {
-        $this->status = Cache::get('sync_status', 0);
+        $this->status = Setting::getValue('sync_enabled', 0);
     }
 
     public function sync()
     {
+        if (!Setting::getValue('sync_enabled')) return;
         if ($this->status != 1 && $this->status != 4) {
-            if (!Setting::getValue('sync_enabled')) return;
-            if (SyncTask::where('status', 0)->count() == 0) {
-                event(new \App\Events\DataSync\UpdateSyncStatus(1));
+            if (SyncTask::where('synced', 0)->count() == 0) {
+                event(new \App\Events\DataSync\UpdateSyncStatus(3));
                 return;
             }
             return;

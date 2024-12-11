@@ -53,7 +53,7 @@ class AuthController extends Controller
         if ($request->session()->exists('device_id')) {
             $device = Device::where('device_id', $request->session()->get('device_id'))->first();
             if ($device && $device->authenticated_user_id) {
-                Auth::login(User::find($device->authenticated_user_id), false);
+                Auth::loginUsingId($device->authenticated_user_id);
                 return redirect($device->loaded_page);
             }
         }

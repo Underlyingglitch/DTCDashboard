@@ -33,7 +33,7 @@ class JuryTafel
             Auth::loginUsingId($device->authenticated_user_id);
         }
 
-        $device->loaded_page = '/' . $request->path() == 'auth/local' ? 'jurytafel' : $request->path();
+        $device->loaded_page = '/' . ($request->path() == 'auth/local' ? 'jurytafel' : $request->path());
         $device->last_seen = now();
         $device->save();
 

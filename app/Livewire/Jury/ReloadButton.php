@@ -34,6 +34,6 @@ class ReloadButton extends Component
     public function reload()
     {
         // Redirect to the same page
-        if ($this->page) return redirect()->to($this->page);
+        if ($this->page) return $this->reload();
     }
 }

@@ -75,14 +75,28 @@ class ScoreInputForm extends Component
     public function dns()
     {
         if (!$this->startnumber) return;
-        // dd('test');
-        Score::create([
+
+        $score = Score::updateOrCreate([
             'match_day_id' => $this->matchday,
             'startnumber' => $this->startnumber,
             'toestel' => $this->toestel
-        ]);
+        ], ['d' => null]);
 
-        $this->dispatch('notification', 'Score invoer', $this->startnumber . ' is als DNS gemarkeerd', 'success');
+        if ($score->wasRecentlyCreated) {
+            $this->dispatch('notification', 'Score invoer', $this->startnumber . ' is als DNS gemarkeerd', 'success');
+        } else {
+            $this->dispatch('notification', 'Score invoer', $this->startnumber . ' is al DNS gemarkeerd', 'warning');
+        }
+
+        $this->d = '';
+        $this->e1 = '';
+        $this->e2 = '';
+        $this->e3 = '';
+        $this->e = '';
+        $this->n = '';
+        $this->t = '';
+        $this->startnumber = '';
+        $this->locked = true;
     }
 
     public function save()
@@ -105,10 +119,11 @@ class ScoreInputForm extends Component
             return;
         }
         if ($this->locked || empty($this->startnumber)) return;
-        $score = Score::create([
+        $score = Score::updateOrCreate([
             'match_day_id' => $this->matchday,
             'startnumber' => $this->startnumber,
-            'toestel' => $this->toestel,
+            'toestel' => $this->toestel
+        ], [
             'd' => $this->d,
             'e1' => $this->e1 == '' ? 0 : $this->e1,
             'e2' => $this->e2 == '' ? null : $this->e2,
@@ -116,7 +131,11 @@ class ScoreInputForm extends Component
             'n' => $this->n ?? 0,
             'total' => $this->t
         ]);
-        $this->dispatch('notification', 'Score invoer', 'Score opgeslagen', 'success');
+        if ($score->wasRecentlyCreated) {
+            $this->dispatch('notification', 'Score invoer', 'Score opgeslagen', 'success');
+        } else {
+            $this->dispatch('notification', 'Score invoer', 'Score al opgeslagen', 'warning');
+        }
 
         $this->d = '';
         $this->e1 = '';
@@ -126,7 +145,7 @@ class ScoreInputForm extends Component
         $this->n = '';
         $this->t = '';
         $this->startnumber = '';
-        $this->locked = false;
+        $this->locked = true;
     }
 
     public function render()

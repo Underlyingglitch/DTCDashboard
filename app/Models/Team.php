@@ -43,6 +43,6 @@ class Team extends Model implements Auditable
 
     public function getPlaceAttribute()
     {
-        return $this->team_scores->first()->place;
+        return $this->team_scores->first()->place ?? 0;
     }
 }

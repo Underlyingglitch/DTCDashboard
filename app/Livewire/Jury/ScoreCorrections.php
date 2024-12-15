@@ -46,26 +46,7 @@ class ScoreCorrections extends Component
     public function approve($correction)
     {
         $sc = ScoreCorrection::find($correction);
-        $user_id = $sc->user_id;
-        $sc->update([
-            'approved' => true
-        ]);
-        $score = Score::find($sc->score_id);
-        $startnumber = $score->startnumber;
-        //TODO - remove score on DNS only
-        if ($sc->d == 0) {
-            ScoreCorrection::withTrashed()->where('score_id', $score->id)->forceDelete();
-            $score->delete();
-        } else {
-            $score->update([
-                'd' => $sc->d,
-                'e1' => $sc->e1,
-                'e2' => $sc->e2,
-                'e3' => $sc->e3,
-                'n' => $sc->n,
-                'total' => $sc->total
-            ]);
-        }
+        $sc->approve();
         unset($this->corrections[$correction]);
     }
 

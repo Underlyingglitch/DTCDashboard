@@ -178,6 +178,9 @@ class ScoreCorrectForm extends Component
             } else {
                 $this->dispatch('notification', 'Score correctie', 'Score correctie succesvol opgeslagen', 'success');
             }
+        } else {
+            // Auto approve
+            $sc->approve();
         }
         $this->d = '';
         $this->e1 = '';

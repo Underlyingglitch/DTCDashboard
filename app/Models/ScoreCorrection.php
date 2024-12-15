@@ -54,4 +54,24 @@ class ScoreCorrection extends Model implements Auditable
         }
         return 10 - $this->e;
     }
+
+    public function approve()
+    {
+        $this->approved = true;
+        $score = Score::find($this->score_id);
+        //TODO - remove score on DNS only
+        if ($this->d == 0) {
+            ScoreCorrection::withTrashed()->where('score_id', $score->id)->forceDelete();
+            $score->delete();
+        } else {
+            $score->update([
+                'd' => $this->d,
+                'e1' => $this->e1,
+                'e2' => $this->e2,
+                'e3' => $this->e3,
+                'n' => $this->n,
+                'total' => $this->total
+            ]);
+        }
+    }
 }

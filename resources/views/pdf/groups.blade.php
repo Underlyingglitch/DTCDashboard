@@ -26,7 +26,9 @@
             </tr>
             @foreach ($registrations->where('group_id', $group->id) as $registration)
                 <tr
-                    @if ($registration->signed_off) style="page-break-after:avoid;text-decoration:line-through;text-decoration-thickness:2px" @else style="page-break-after:avoid;" @endif>
+                    style="
+                @if ($registration->signed_off) text-decoration:line-through;text-decoration-thickness:2px @endif
+                    @if (!$loop->last) page-break-after:avoid; @endif">
                     <td style="width: 20px">{{ $registration->startnumber }}</td>
                     <td>{{ $registration->gymnast->name }}</td>
                     <td style="width: 30%">{{ $registration->club->name }}</td>

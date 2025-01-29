@@ -71,10 +71,15 @@ Artisan::command('calculate:score-team-place', function () {
     $this->info("\nScheduled to queue!");
 });
 
-Artisan::command('fetch:calendar {--test}', function () {
+Artisan::command('app:fetch-calendar {--test}', function () {
     $this->info('Fetching calendar' . ($this->option('test') ? ' (test)' : ''));
     Cache::forget('has_updated');
     \App\Jobs\Calendar\Initialize::dispatch($this->option('test'));
+});
+
+Artisan::command('app:update-resources', function () {
+    $this->info('Updating resources');
+    \App\Jobs\DGResources\UpdateList::dispatch();
 });
 
 Artisan::command('cache:clearsettings', function () {

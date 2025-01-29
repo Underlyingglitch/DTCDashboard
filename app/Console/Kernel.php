@@ -19,8 +19,8 @@ class Kernel extends ConsoleKernel
         }
 
         if (config('app.env') === 'production') {
-            $schedule->job(new \App\Jobs\DGResources\UpdateList())->dailyAt('06:00');
-            $schedule->job(new \App\Jobs\Calendar\Initialize())->dailyAt('03:00');
+            $schedule->command('app:update-resources')->dailyAt('06:00');
+            $schedule->command('app:fetch-calendar')->dailyAt('03:00');
         }
     }
 

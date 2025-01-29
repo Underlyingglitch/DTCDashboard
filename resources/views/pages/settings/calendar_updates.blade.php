@@ -10,7 +10,6 @@
     <p>Door het vinkje bij "Wijzigingen in ALLE wedstrijden" aan te zetten kan eenzelfde selectie worden gemaakt. Let op:
         dit zal resulteren in veel emails. Het is aan te raden om in plaats daarvan te abonneren op specifieke wedstrijden
         in de wedstrijdplanning.</p>
-    <p>Als er in een kolom geen selectie wordt gemaakt worden alle districten/disciplines meegenomen in de selectie.</p>
     <hr>
     <form action="{{ route('settings.calendar_updates') }}" method="post">
         @csrf

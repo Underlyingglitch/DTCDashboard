@@ -52,15 +52,11 @@ class CollectUpdates implements ShouldQueue
 
             if ($usersettings['calendar_updates_enabled_new'] == "true") {
                 $new_notifications = CalendarUpdate::with('calendar_item')->where('type', 'created')
-                    ->when($usersettings['calendar_updates_new_districts'] != "[]", function ($query) use ($usersettings) {
-                        return $query->whereHas('calendar_item', function ($query) use ($usersettings) {
-                            return $query->whereIn('district', json_decode($usersettings['calendar_updates_new_districts'], true));
-                        });
+                    ->whereHas('calendar_item', function ($query) use ($usersettings) {
+                        return $query->whereIn('district', json_decode($usersettings['calendar_updates_new_districts'], true));
                     })
-                    ->when($usersettings['calendar_updates_new_disciplines'] != "[]", function ($query) use ($usersettings) {
-                        return $query->whereHas('calendar_item', function ($query) use ($usersettings) {
-                            return $query->whereIn('discipline', json_decode($usersettings['calendar_updates_new_disciplines'], true));
-                        });
+                    ->whereHas('calendar_item', function ($query) use ($usersettings) {
+                        return $query->whereIn('discipline', json_decode($usersettings['calendar_updates_new_disciplines'], true));
                     })
                     ->get()->toArray();
                 $notifications = array_merge($notifications, $new_notifications);
@@ -68,15 +64,11 @@ class CollectUpdates implements ShouldQueue
 
             if ($usersettings['calendar_updates_enabled_change'] == "true") {
                 $new_notifications = CalendarUpdate::with('calendar_item')->where('type', 'updated')
-                    ->when($usersettings['calendar_updates_change_districts'] != "[]", function ($query) use ($usersettings) {
-                        return $query->whereHas('calendar_item', function ($query) use ($usersettings) {
-                            return $query->whereIn('district', json_decode($usersettings['calendar_updates_change_districts'], true));
-                        });
+                    ->whereHas('calendar_item', function ($query) use ($usersettings) {
+                        return $query->whereIn('district', json_decode($usersettings['calendar_updates_change_districts'], true));
                     })
-                    ->when($usersettings['calendar_updates_change_disciplines'] != "[]", function ($query) use ($usersettings) {
-                        return $query->whereHas('calendar_item', function ($query) use ($usersettings) {
-                            return $query->whereIn('discipline', json_decode($usersettings['calendar_updates_change_disciplines'], true));
-                        });
+                    ->whereHas('calendar_item', function ($query) use ($usersettings) {
+                        return $query->whereIn('discipline', json_decode($usersettings['calendar_updates_change_disciplines'], true));
                     })
                     ->get()->toArray();
                 $notifications = array_merge($notifications, $new_notifications);
@@ -87,7 +79,7 @@ class CollectUpdates implements ShouldQueue
             $notifications = array_merge($notifications, $sub_updates);
 
             $notifications = array_map("unserialize", array_unique(array_map("serialize", $notifications)));
-            
+
             if (count($notifications) > 0)
                 $user->notify(new CalendarUpdateNotification($notifications));
         }

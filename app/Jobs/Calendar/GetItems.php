@@ -95,5 +95,9 @@ class GetItems implements ShouldQueue
             ->delete();
 
         Cache::decrement('calendar_jobs');
+        if (Cache::get('calendar_jobs') == 0) {
+            CollectUpdates::dispatch();
+            Cache::forget('calendar_jobs');
+        }
     }
 }

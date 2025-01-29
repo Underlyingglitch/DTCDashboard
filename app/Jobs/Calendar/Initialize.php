@@ -49,11 +49,11 @@ class Initialize implements ShouldQueue
             }
 
             $districts = [
-                2 => 'Mid-West',
-                5 => 'Noord',
-                3 => 'Oost',
+                // 2 => 'Mid-West',
+                // 5 => 'Noord',
+                // 3 => 'Oost',
                 4 => 'Zuid',
-                8 => 'Zuid-Holland',
+                // 8 => 'Zuid-Holland',
                 1 => 'Landelijk'
             ];
             Cache::increment('calendar_jobs', count($districts));

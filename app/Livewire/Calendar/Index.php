@@ -34,8 +34,10 @@ class Index extends Component
 
     public function getResults()
     {
-        $monthStart = now()->month((int)$this->selectedMonth)->startOfMonth();
-        $monthEnd = now()->month((int)$this->selectedMonth)->endOfMonth();
+
+        $monthStart = now()->setDay(1)->setMonth((int)$this->selectedMonth)->startOfMonth();
+        $monthEnd = now()->setDay(1)->setMonth((int)$this->selectedMonth)->endOfMonth();
+
         $this->results = CalendarItem::where(function ($query) use ($monthStart, $monthEnd) {
             $query->whereBetween('date_from', [$monthStart, $monthEnd])
                 ->orWhereBetween('date_to', [$monthStart, $monthEnd])

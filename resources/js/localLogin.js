@@ -19,7 +19,7 @@ if (window.location.pathname == '/auth/local') {
             window.location.pathname = r.data.page
         }
         if (id_element) {
-            id_element.innerHTML = r.data.code
+            id_element.innerText = r.data.code
         } else {
             console.log('No element found, code:', r.data.code)
         }

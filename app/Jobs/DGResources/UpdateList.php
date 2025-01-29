@@ -67,7 +67,7 @@ class UpdateList implements ShouldQueue
                 }
                 $urls[] = $url;
                 $dg_resource = DGResource::updateOrCreate([
-                    'name' => $title,
+                    'url' => $url,
                 ], [
                     'category' => $category,
                     'name' => $title,

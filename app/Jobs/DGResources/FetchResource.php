@@ -42,7 +42,9 @@ class FetchResource implements ShouldQueue
         // Create the storage path if it does not exist
         Storage::makeDirectory('dg_resources');
         $path = 'dg_resources/' . $dg_resource->id . '.pdf';
-        Storage::write($path, file_get_contents($url));
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $url);
+        Storage::write($path, $response->getBody()->getContents());
         // deepcode ignore InsecureHash: not a password
         $hash = md5_file(Storage::path($path));
 

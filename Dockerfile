@@ -110,7 +110,13 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
 COPY docker/fpm-entrypoint.sh /opt/apps/laravel/entrypoint.sh
 RUN chmod +x /opt/apps/laravel/entrypoint.sh
 
+# Copy the php.ini file
 COPY docker/php.ini /usr/local/etc/php/php.ini
+
+# Copy the cacert.pem file
+COPY docker/cacert.pem /etc/ssl/certs/cacert.pem
+
+RUN chown www-data:www-data /etc/ssl/certs/cacert.pem
 
 USER  www-data
 

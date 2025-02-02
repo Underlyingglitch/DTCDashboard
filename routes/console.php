@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Team;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -89,3 +88,7 @@ Artisan::command('cache:clearsettings', function () {
         \Illuminate\Support\Facades\Cache::forget($key);
     }
 });
+
+
+// Import schedule.php from routes folder
+require base_path('routes/schedule.php');

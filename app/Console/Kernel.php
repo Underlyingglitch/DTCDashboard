@@ -13,15 +13,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->job(new \App\Jobs\SyncDatabase(), 'sync')->everyFifteenSeconds()->environments(['local']);
 
-        if (config('app.env') === 'local') {
-            $schedule->job(new \App\Jobs\SyncDatabase(), 'sync')->everyFifteenSeconds();
-        }
-
-        if (config('app.env') === 'production') {
-            $schedule->command('app:update-resources')->dailyAt('06:00');
-            $schedule->command('app:fetch-calendar')->dailyAt('03:00');
-        }
+        $schedule->command('app:update-resources')->dailyAt('06:00')->environments(['production']);
+        $schedule->command('app:fetch-calendar')->dailyAt('03:00')->environments(['production']);
     }
 
     /**

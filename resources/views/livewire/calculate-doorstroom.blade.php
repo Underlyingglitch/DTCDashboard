@@ -35,7 +35,7 @@
                         <th colspan="4">{{ $team['name'] }}</th>
                         @if ($points_shown)
                             @for ($i = 0; $i < count($match_days_selection); $i++)
-                                <th>{{ $team['scores'][$i] }}</th>
+                                <th>{{ $team['scores'][$i] ?? '-' }}</th>
                             @endfor
                             <th>{{ $team['total'] }}</th>
                         @endif

@@ -1,4 +1,6 @@
 <div class="card-body">
+    
+    @livewire('livescores.hint')
     Na ronde (0 voor alles): <input type="number" wire:model="limit" wire:change="updateLimit">
     @foreach ($registrations as $registration)
         <div class="card mb-2" wire:click="toggleModal({{ $registration['id'] }})">

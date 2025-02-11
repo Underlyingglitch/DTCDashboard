@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,12 +20,13 @@ class UserSetting extends Model
         'calendar_updates_new_disciplines' => 'array',
         'calendar_updates_change_districts' => 'array',
         'calendar_updates_change_disciplines' => 'array',
+        'livescores_hint_hidden' => 'boolean',
     ];
 
     protected static function booted()
     {
         static::addGlobalScope('user_id', function ($query) {
-            $query->where('user_id', auth()->id());
+            $query->where('user_id', Auth::id());
         });
     }
 
@@ -50,7 +52,7 @@ class UserSetting extends Model
         if (!$setting) {
             $setting = self::create([
                 'key' => $key,
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
                 'type' => self::$default_types[$key] ?? 'string'
             ]);
         }
@@ -59,7 +61,7 @@ class UserSetting extends Model
         if ($setting->type == 'array') $value = json_encode($value);
         $setting->value = $value;
         self::updateOrCreate(
-            ['key' => $key, 'user_id' => auth()->id()],
+            ['key' => $key, 'user_id' => Auth::id()],
             ['value' => $value]
         );
     }

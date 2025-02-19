@@ -34,10 +34,11 @@
                     <tr>
                         <th colspan="4">{{ $team['name'] }}</th>
                         @if ($points_shown)
+                            <th>{{ $team['total'] }}</th>
+                            <th>{{ $team['total_score'] }}</th>
                             @for ($i = 0; $i < count($match_days_selection); $i++)
                                 <th>{{ $team['scores'][$i] ?? '-' }}</th>
                             @endfor
-                            <th>{{ $team['total'] }}</th>
                         @endif
                     </tr>
                     @foreach ($team['registrations'] as $registration)
@@ -58,10 +59,11 @@
                         <td>{{ $registration['gymnast_id'] }}</td>
                         <td>{{ $registration['club_id'] }}</td>
                         @if ($points_shown)
+                            <th>{{ $registration['total'] }}</th>
+                            <th>{{ $registration['total_score'] }}</th>
                             @for ($i = 0; $i < count($match_days_selection); $i++)
                                 <th>{{ $registration['scores'][$i] ?? '' }}</th>
                             @endfor
-                            <th>{{ $registration['total'] }}</th>
                         @endif
                     </tr>
                 @endforeach

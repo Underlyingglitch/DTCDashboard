@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\MatchDay;
 use App\Models\TeamScore;
 use App\Models\Registration;
+use App\Models\Score;
 
 class CalculateDoorstroom extends Component
 {
@@ -48,6 +49,12 @@ class CalculateDoorstroom extends Component
 
     public function process()
     {
+        $all_scores = Score::whereIn('match_day_id', array_keys($this->match_days_selection))->where('total', '>', 0)->get();
+        $all_teamscores = TeamScore::whereIn('match_day_id', array_keys($this->match_days_selection))->where('total_score', '>', 0)->get();
+        if ($all_scores->count() < 1) {
+            $this->error = 'Er zijn geen scores ingevoerd voor de geselecteerde wedstrijddagen';
+            return;
+        }
         $this->error = null;
         $this->authorize('processDoorstroom', $this->competition);
 
@@ -72,11 +79,10 @@ class CalculateDoorstroom extends Component
         foreach ($this->match_days_selection as $match_day_id => $type) {
             $match_day = MatchDay::find($match_day_id);
             if ($this->teams) {
-                $teamscores = TeamScore::where('match_day_id', $match_day->id)
+                $teamscores = $all_teamscores->where('match_day_id', $match_day->id)
                     ->whereIn('team_id', $teams->pluck('id'))
                     ->where('total_score', '>', 0)
-                    ->orderBy('place')
-                    ->get()
+                    ->sortBy('place')
                     ->toArray();
                 // dd($teamscores);
                 foreach ($teamscores as $team) {
@@ -128,10 +134,17 @@ class CalculateDoorstroom extends Component
                         'club_id' => $registration->club->id,
                     ];
                 });
-                $doorstroom[] = ['name' => $team->name, 'registrations' => $registrations, 'scores' => $ind_scores[$team->id], 'total' => $score];
+                $doorstroom[] = [
+                    'name' => $team->name,
+                    'registrations' => $registrations,
+                    'scores' => $ind_scores[$team->id],
+                    'total' => $score,
+                    'total_score' => $all_teamscores->where('team_id', $team->id)->sum('total_score')
+                ];
             } else {
                 $item = $registration_cache[$id];
                 $item['scores'] = $ind_scores[$id];
+                $item['total_score'] = $all_scores->where('startnumber', $id)->sum('total');
                 $item['total'] = $score;
                 $doorstroom[] = $item;
             }

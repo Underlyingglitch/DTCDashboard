@@ -8,21 +8,21 @@
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
-        "axios": "^1.7.7",
+        "axios": "^1.8.2",
         "jquery": "^3.6.4",
-        "laravel-echo": "^1.17.1",
+        "laravel-echo": "^2.0.2",
         "laravel-vite-plugin": "^1.2.0",
-        "pusher-js": "^8.4.0-rc2",
+        "pusher-js": "^8.4.0",
         "sass": "^1.83.4",
         "vite": "^6.0.11"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^6.7.0",
+        "@fortawesome/fontawesome-free": "^6.7.2",
         "bootstrap": "4.6.2",
         "chart.js": "4.4.7",
         "jquery.easing": "^1.4.1",
         "jszip": "^3.10.1",
-        "pdfmake": "^0.2.15",
+        "pdfmake": "^0.2.18",
         "save": "^2.9.0",
         "toastr": "^2.1.4"
     }

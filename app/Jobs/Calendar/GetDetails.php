@@ -21,8 +21,11 @@ class GetDetails implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private CalendarItem $calendar_item, private bool $created)
-    {
+    public function __construct(
+        private CalendarItem $calendar_item,
+        private bool $created,
+        private bool $daily_check = false
+    ) {
         //
     }
 
@@ -53,31 +56,47 @@ class GetDetails implements ShouldQueue
         $calendar_item->program = $data['program'];
         $calendar_item->results = $data['result'];
 
+        $calendar_update = null;
+
         if (!$this->created) {
             if ($calendar_item->isDirty()) {
-                $update = CalendarUpdate::where([
+                $calendar_update = CalendarUpdate::updateOrCreate([
                     'calendar_item_id' => $calendar_item->id
-                ])->first();
-                if ($update === null) {
-                    CalendarUpdate::create([
-                        'calendar_item_id' => $calendar_item->id,
-                        'type' => 'updated',
-                        'value' => json_encode($calendar_item->getDirty())
-                    ]);
-                } else {
-                    $value = json_decode($update->value, true);
-                    $value = array_merge($value, $calendar_item->getDirty());
-                    $update->value = json_encode($value);
-                    $update->save();
-                }
+                ], [
+                    'type' => 'updated',
+                    'value' => json_encode($calendar_item->getDirty())
+                ]);
+                // $update = CalendarUpdate::where([
+                //     'calendar_item_id' => $calendar_item->id
+                // ])->first();
+                // if ($update === null) {
+                //     CalendarUpdate::create([
+                //         'calendar_item_id' => $calendar_item->id,
+                //         'type' => 'updated',
+                //         'value' => json_encode($calendar_item->getDirty())
+                //     ]);
+                // } else {
+                //     $value = json_decode($update->value, true);
+                //     $value = array_merge($value, $calendar_item->getDirty());
+                //     $update->value = json_encode($value);
+                //     $update->save();
+                // }
             }
         }
         $calendar_item->save();
 
-        Cache::decrement('calendar_jobs');
-        if (Cache::get('calendar_jobs') == 0) {
-            CollectUpdates::dispatch();
-            Cache::forget('calendar_jobs');
+        if ($this->daily_check) {
+            if ($calendar_update !== null) {
+                foreach ($calendar_item->subscribers as $user) {
+                    $user->notify(new \App\Notifications\DailyEventUpdateNotification($calendar_update));
+                }
+            }
+        } else {
+            Cache::decrement('calendar_jobs');
+            if (Cache::get('calendar_jobs') == 0) {
+                CollectUpdates::dispatch();
+                Cache::forget('calendar_jobs');
+            }
         }
     }
 }

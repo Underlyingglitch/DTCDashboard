@@ -5,6 +5,7 @@ namespace App\Livewire\Calendar;
 use Livewire\Component;
 use App\Models\CalendarItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class SubscribeBtn extends Component
 {
@@ -26,6 +27,7 @@ class SubscribeBtn extends Component
         } else {
             $item->subscribers()->attach(Auth::id());
         }
+        Cache::forget('no_daily_updates');
     }
 
     public function render()

@@ -76,6 +76,11 @@ Artisan::command('app:fetch-calendar {--test}', function () {
     \App\Jobs\Calendar\Initialize::dispatch($this->option('test'));
 });
 
+Artisan::command('app:fetch-calendar-subscribed', function () {
+    $this->info('Fetching calendar for subscribed users');
+    \App\Jobs\Calendar\GetEventUpdates::dispatch();
+});
+
 Artisan::command('app:update-resources', function () {
     $this->info('Updating resources');
     \App\Jobs\DGResources\UpdateList::dispatch();

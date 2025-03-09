@@ -20,3 +20,9 @@ Schedule::command('app:fetch-calendar')
     ->dailyAt('03:00')
     ->environments(['production'])
     ->emailOutputOnFailure($email_on_failure);
+
+Schedule::command('app:fetch-calendar-subscribed')
+    ->everyTenMinutes()
+    ->between('8:00', '22:00')
+    ->environments(['production'])
+    ->emailOutputOnFailure($email_on_failure);

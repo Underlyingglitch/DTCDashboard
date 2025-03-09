@@ -30,6 +30,7 @@ class ScoreCorrection extends Model implements Auditable
         parent::boot();
 
         static::created(function ($scoreCorrection) {
+
             event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection));
         });
 
@@ -73,5 +74,7 @@ class ScoreCorrection extends Model implements Auditable
                 'total' => $this->total
             ]);
         }
+
+        $this->save();
     }
 }

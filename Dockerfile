@@ -118,7 +118,7 @@ COPY docker/cacert.pem /etc/ssl/certs/cacert.pem
 
 RUN chown www-data:www-data /etc/ssl/certs/cacert.pem
 
-USER  www-data
+USER www-data
 
 COPY --from=composer_base --chown=www-data /opt/apps/laravel /opt/apps/laravel
 COPY --from=frontend /opt/apps/laravel/public /opt/apps/laravel/public

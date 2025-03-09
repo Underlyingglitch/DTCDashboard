@@ -50,7 +50,7 @@ RUN rm .env
 
 
 # BUILD FRONTEND
-FROM node:18 AS frontend
+FROM node:20 AS frontend
 
 COPY --from=composer_base /opt/apps/laravel /opt/apps/laravel
 
@@ -62,7 +62,7 @@ RUN npm install && \
 
 
 # BUILD CLI
-FROM php:8.3-alpine AS cli
+FROM php:8.4.4-alpine AS cli
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
@@ -91,7 +91,7 @@ RUN chown www-data:www-data /etc/ssl/certs/cacert.pem
 
 
 # BUILD FPM
-FROM php:8.3-fpm-alpine AS fpm_server
+FROM php:8.4.4-fpm-alpine AS fpm_server
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
@@ -129,7 +129,7 @@ ENTRYPOINT ["./entrypoint.sh"]
 
 
 # BUILD NGINX
-FROM nginx:1.20-alpine AS web_server
+FROM nginx:stable-alpine AS web_server
 
 WORKDIR /opt/apps/laravel
 

@@ -16,6 +16,12 @@ class MatchDayView extends Component
 
     public $niveaus;
 
+    protected $queryString = [
+        'niveau' => ['except' => null],
+        'teams' => ['except' => false],
+        'page' => ['except' => 'individual'],
+    ];
+
     public function mount(MatchDay $matchday, $niveau = null)
     {
         if (is_null($niveau)) {

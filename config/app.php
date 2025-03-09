@@ -72,7 +72,7 @@ return [
     |
     */
 
-    'timezone' => 'Europe/Amsterdam',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------

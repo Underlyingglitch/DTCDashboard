@@ -47,8 +47,10 @@ class CalendarItem extends Model
             return $from->locale('nl')->isoFormat('D MMM YYYY');
         } elseif ($from->isSameMonth($to)) {
             return $from->locale('nl')->isoFormat('D') . ' t/m ' . $to->locale('nl')->isoFormat('D MMM YYYY');
-        } else {
+        } elseif ($from->isSameYear($to)) {
             return $from->locale('nl')->isoFormat('D MMM') . ' t/m ' . $to->locale('nl')->isoFormat('D MMM YYYY');
+        } else {
+            return $from->locale('nl')->isoFormat('D MMM YYYY') . ' t/m ' . $to->locale('nl')->isoFormat('D MMM YYYY');
         }
     }
 

@@ -4,6 +4,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('page_title') | DTC TH Zuid</title>
 
     <link rel="icon" href="{{ asset('images/icons/icon128x128.png') }}">
@@ -55,7 +56,7 @@
     </style>
     @livewireStyles()
     @laravelPWA
-
+    <x-hotjar />
 </head>
 
 <body>

@@ -4,7 +4,7 @@ return [
     'name' => 'Livescores DTC TH Zuid',
     'manifest' => [
         'name' => 'Livescores DTC TH Zuid',
-        'short_name' => 'DTC-TH-Z-LS',
+        'short_name' => 'Livescores',
         'start_url' => '/livescores',
         'background_color' => '#ffffff',
         'theme_color' => '#000000',

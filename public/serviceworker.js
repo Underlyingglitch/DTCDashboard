@@ -71,3 +71,13 @@ self.addEventListener("fetch", event => {
             })
     )
 });
+
+// Notification
+self.addEventListener('push', event => {
+    const data = event.data.json();
+    self.registration.showNotification(data.title, {
+        body: data.body,
+        icon: '/images/icons/icon192x192.png',
+        // badge: '/images/icons/badge.png'
+    });
+});

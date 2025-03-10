@@ -24,6 +24,7 @@ Route::get('/config.js', function () {
         VITE_REVERB_HOST: "' . env('REVERB_HOST') . '",
         VITE_REVERB_PORT: "' . env('REVERB_PORT') . '",
         VITE_REVERB_SCHEME: "' . env('REVERB_SCHEME') . '",
+        VAPID_PUBLIC_KEY: "' . env('VAPID_PUBLIC_KEY') . '",
     };';
 
     return response($config, 200)

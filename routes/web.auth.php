@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
+use Minishlink\WebPush\VAPID;
+use Minishlink\WebPush\WebPush;
+use App\Models\PushSubscription;
+use Minishlink\WebPush\Subscription;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\JuryController;
@@ -129,4 +134,41 @@ Route::controller(SettingsController::class)->name('settings.')->prefix('setting
 
 Route::controller(MonitorController::class)->name('monitor.')->prefix('monitor')->group(function () {
     Route::get('/', 'index')->name('index');
+});
+
+
+Route::post('/subscribe', function (Request $request) {
+    $subscription = PushSubscription::updateOrCreate(
+        ['user_id' => Auth::id()],
+        ['subscription' => $request->input()]
+    );
+    return response()->json(['success' => true]);
+});
+
+Route::get('/test-notification', function () {
+    $subscription = PushSubscription::where('user_id', Auth::id())->first();
+    if ($subscription) {
+        $auth = array(
+            'VAPID' => array(
+                'subject' => 'mailto:rickokkersen@gmail.com',
+                'publicKey' => env('VAPID_PUBLIC_KEY'),
+                'privateKey' => env('VAPID_PRIVATE_KEY'),
+            ),
+        );
+        $webPush = new WebPush($auth);
+        $sub = Subscription::create($subscription->subscription);
+        $webPush->setReuseVAPIDHeaders(true);
+        $report = $webPush->sendOneNotification(
+            $sub,
+            json_encode(['title' => 'Test', 'body' => 'Dit is een test melding']),
+        );
+
+        if ($report->isSuccess()) {
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'error' => $report->getReason()]);
+        }
+    }
+
+    return response()->json(['success' => false, 'error' => 'Meldingen niet ingeschakeld']);
 });

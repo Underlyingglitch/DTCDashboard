@@ -56,7 +56,6 @@
     </style>
     @livewireStyles()
     @laravelPWA
-    <x-hotjar />
 </head>
 
 <body>

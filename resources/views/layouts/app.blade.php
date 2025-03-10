@@ -21,8 +21,6 @@
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 
     @livewireStyles
-
-    <x-hotjar />
 </head>
 
 <body id="page-top">

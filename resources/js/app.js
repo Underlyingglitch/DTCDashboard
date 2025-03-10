@@ -6,6 +6,13 @@ import "@fortawesome/fontawesome-free/scss/solid.scss";
 import "@fortawesome/fontawesome-free/scss/brands.scss";
 import "@fortawesome/fontawesome-free/scss/regular.scss";
 
+import Hotjar from '@hotjar/browser';
+
+const siteId = 5332816;
+const hotjarVersion = 6;
+
+Hotjar.init(siteId, hotjarVersion);
+
 // Subscribe to a user notification channel
 window.Echo.private(`App.Models.User.${window.userId}`).notification((e) => {
     notification(e.style, e.title, e.message);

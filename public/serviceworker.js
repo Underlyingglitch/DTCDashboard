@@ -53,6 +53,8 @@ self.addEventListener('activate', event => {
                     .filter(cacheName => (cacheName !== staticCacheName))
                     .map(cacheName => caches.delete(cacheName))
             );
+        }).then(() => {
+            return self.clients.claim();
         })
     );
 });

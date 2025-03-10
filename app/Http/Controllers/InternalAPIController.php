@@ -16,62 +16,6 @@ use Session;
 
 class InternalAPIController extends Controller
 {
-    public function test(Request $request)
-    {
-        // Store the request to a file
-        file_put_contents(storage_path('logs/internal_api.log'), json_encode($request->toArray()) . PHP_EOL, FILE_APPEND);
-        foreach ($request['events'] as $event) {
-            // if $event['channel'] starts with presence-jurytafel.
-            if (strpos($event['channel'], 'presence-jurytafel.') === 0) {
-                // Get the wedstrijd_id from the channel
-                $toestel = explode('.', $event['channel'])[1];
-                $key = 'monitor.jurytafel.' . $toestel;
-                $count = Setting::getValue('jurytafel_count_' . $toestel, 0);
-                if ($event['name'] == 'member_added') {
-                    $count++;
-                }
-                if ($event['name'] == 'member_removed') {
-                    // Only decrement if the count is higher than 0
-                    if ($count > 0) $count--;
-                }
-                if ($event['name'] == 'channel_vacated') {
-                    $count = 0;
-                }
-                Setting::setValue('jurytafel_count_' . $toestel, $count);
-                event(new \App\Events\Monitor\JuryTafelPresenceChanged($toestel, Cache::get($key)));
-            }
-        }
-    }
-
-    public function register(Request $request)
-    {
-        $request->validate([
-            'device_id' => 'required|string',
-        ]);
-        $request->session()->put('device_id', $request->device_id);
-        $device = Device::where('device_id', $request->device_id)->first();
-        if ($device) {
-            if ($device->authenticated_user_id) {
-                Auth::loginUsingId($device->authenticated_user_id);
-                return response()->json(['message' => 'already_registered', 'page' => $device->loaded_page]);
-            }
-            return response()->json(['message' => 'registered', 'code' => $device->name]);
-        }
-        $registered_devices = Device::where('type', 'registered')->get();
-        // Get a 4 digit random numer not in the list of registered devices
-        do {
-            $device_name = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-        } while ($registered_devices->contains('name', $device_name));
-        $device = Device::create([
-            'device_id' => $request->device_id,
-            'name' => $device_name,
-            'last_seen' => now(),
-            'type' => 'registered'
-        ]);
-        event(new \App\Events\Device\DeviceRegistered($device));
-        return response()->json(['message' => 'registered', 'code' => $device_name]);
-    }
-
     public function ping(Request $request)
     {
         $device = Device::where('device_id', $request->device_id)->first();

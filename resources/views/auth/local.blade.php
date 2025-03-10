@@ -13,7 +13,7 @@
 
     <script src="/config.js"></script>
 
-    @vite(['resources/scss/app.scss', 'resources/js/app.js', 'resources/js/localLogin.js'])
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 
 <body class="login-background">

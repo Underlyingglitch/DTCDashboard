@@ -9,7 +9,6 @@ export default defineConfig({
                 'resources/scss/livescores.scss',
                 'resources/js/app.js',
                 'resources/js/import.js',
-                'resources/js/localLogin.js',
                 'resources/js/jurytafel.js'
             ],
             refresh: true,

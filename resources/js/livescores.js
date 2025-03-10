@@ -1,58 +1,42 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const enableNotificationsButton = document.getElementById('enable-notifications');
+if ('Notification' in window && 'serviceWorker' in navigator) {
+    Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+            navigator.serviceWorker.ready.then(registration => {
+                const vapidPublicKey = window.__CONFIG__.VAPID_PUBLIC_KEY;
+                const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
-    if ('Notification' in window && 'serviceWorker' in navigator) {
-        if (Notification.permission === 'default') {
-            enableNotificationsButton.style.display = 'block';
-        } else {
-            enableNotificationsButton.style.display = 'none';
+                console.log('VAPID Public Key:', vapidPublicKey);
+                console.log('Converted VAPID Key:', convertedVapidKey);
+
+                registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: convertedVapidKey
+                }).then(subscription => {
+                    console.log('Subscription successful:', subscription);
+                    fetch('/subscribe', {
+                        method: 'POST',
+                        body: JSON.stringify(subscription),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to save subscription on server');
+                        }
+                        console.log('Subscription saved on server');
+                    }).catch(error => {
+                        console.error('Failed to save subscription on server:', error);
+                    });
+                }).catch(error => {
+                    console.error('Failed to subscribe the user:', error);
+                });
+            }).catch(error => {
+                console.error('Service Worker registration error:', error);
+            });
         }
-
-        enableNotificationsButton.addEventListener('click', function () {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    enableNotificationsButton.style.display = 'none';
-                    registerServiceWorkerAndSubscribe();
-                }
-            }).catch(error => {
-                console.error('Notification permission error:', error);
-            });
-        });
-    } else {
-        console.log('Service Worker or Notifications are not supported');
-    }
-});
-
-function registerServiceWorkerAndSubscribe() {
-    navigator.serviceWorker.ready.then(registration => {
-        const vapidPublicKey = window.__CONFIG__.VAPID_PUBLIC_KEY;
-        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-
-        registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: convertedVapidKey
-        }).then(subscription => {
-            console.log('Subscription successful');
-            fetch('/subscribe', {
-                method: 'POST',
-                body: JSON.stringify(subscription),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to save subscription on server');
-                }
-                console.log('Subscription saved on server');
-            }).catch(error => {
-                console.error('Failed to save subscription on server:', error);
-            });
-        }).catch(error => {
-            console.error('Failed to subscribe the user:', error);
-        });
     }).catch(error => {
-        console.error('Service Worker registration error:', error);
+        console.error('Notification permission error:', error);
     });
 }
 

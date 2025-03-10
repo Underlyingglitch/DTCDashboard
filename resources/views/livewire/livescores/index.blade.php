@@ -12,6 +12,7 @@
             worden
             ontleend.</p>
     </div>
+    <button class="btn btn-success" id="enable-notifications">Sta meldingen toe</button>
     <div id="accordion">
         @foreach ($matchdays as $matchday)
             <a href="{{ route('livescores.show', [$matchday]) }}">

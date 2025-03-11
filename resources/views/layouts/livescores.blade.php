@@ -13,7 +13,8 @@
         window.userId = @json(auth()->id());
     </script>
     <script src="/config.js"></script>
-    @vite(['resources/scss/livescores.scss', 'resources/js/app.js', 'resources/js/livescores.js'])
+    {{-- @vite(['resources/scss/livescores.scss', 'resources/js/app.js', 'resources/js/livescores.js']) --}}
+    @vite(['resources/scss/livescores.scss', 'resources/js/app.js'])
 
     <script type="module" defer>
         let online_count = document.getElementById('online_count');

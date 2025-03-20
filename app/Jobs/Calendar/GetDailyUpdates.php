@@ -33,9 +33,6 @@ class GetDailyUpdates implements ShouldQueue
      */
     public function handle(): void
     {
-        if (Cache::get('no_daily_updates', false)) return;
-        // Cache::set('no_daily_updates', false, strtotime('tomorrow') - time());
-
         $events = CalendarItem::where('date_from', '<=', now())
             ->where('date_to', '>=', now()->startOfDay())
             ->whereHas('subscribers')

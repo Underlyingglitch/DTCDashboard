@@ -23,6 +23,9 @@ Schedule::command('app:fetch-calendar')
 
 Schedule::command('app:fetch-calendar-subscribed')
     ->everyTenMinutes()
+    ->skip(function () {
+        return Cache::get('no_daily_updates', false);
+    })
     ->between('8:00', '22:00')
     ->environments(['production'])
     ->emailOutputOnFailure($email_on_failure);

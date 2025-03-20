@@ -78,7 +78,7 @@ Artisan::command('app:fetch-calendar {--test}', function () {
 
 Artisan::command('app:fetch-calendar-subscribed', function () {
     $this->info('Fetching calendar for subscribed users');
-    \App\Jobs\Calendar\GetEventUpdates::dispatch();
+    \App\Jobs\Calendar\GetDailyUpdates::dispatch();
 });
 
 Artisan::command('app:update-resources', function () {

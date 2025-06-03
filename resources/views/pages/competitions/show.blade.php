@@ -54,8 +54,10 @@
             </tbody>
         </table>
     </div>
-    @can('processDoorstroom', $competition)
-        <h4>Doorstroming berekenen</h4>
-        @livewire('calculate-doorstroom', ['competition' => $competition])
-    @endcan
+    @if ($competition->has_doorstroming)
+        @can('processDoorstroom', $competition)
+            <h4>Doorstroming berekenen</h4>
+            @livewire('calculate-doorstroom', ['competition' => $competition])
+        @endcan
+    @endif
 @endsection

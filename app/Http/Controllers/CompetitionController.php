@@ -43,12 +43,8 @@ class CompetitionController extends Controller
         ]);
 
         Competition::create($request->only('name'));
-        if (!Setting::getValue('db_write_enabled')) {
-            $message = ['warning', 'Competitie toegevoegd aan wachtrij'];
-        } else {
-            $message = ['success', 'Competitie succesvol aangemaakt'];
-        }
-        return redirect()->route('competitions.index')->with($message[0], $message[1]);
+
+        return redirect()->route('competitions.index')->with('success', 'Competitie succesvol aangemaakt');
     }
 
     /**
@@ -88,13 +84,15 @@ class CompetitionController extends Controller
             'name' => 'required|string',
         ]);
 
-        $competition->update($request->only('name'));
-        if (!Setting::getValue('db_write_enabled')) {
-            $message = ['warning', 'Competitie wijziging toegevoegd aan wachtrij'];
-        } else {
-            $message = ['success', 'Competitie succesvol bijgewerkt'];
-        }
-        return redirect()->route('competitions.index')->with($message[0], $message[1]);
+        $competition->name = $request->input('name');
+
+        // Handle checkboxes - convert to boolean
+        $competition->kngu_competition = $request->has('kngu_competition');
+        $competition->has_doorstroming = $request->has('has_doorstroming');
+
+        $competition->save();
+
+        return redirect()->route('competitions.index')->with('success', 'Competitie succesvol bijgewerkt');
     }
 
     /**

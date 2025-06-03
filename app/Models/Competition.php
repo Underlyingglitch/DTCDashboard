@@ -13,7 +13,7 @@ class Competition extends Model implements Auditable
 
     protected $cascadeDeletes = ['match_days', 'teams'];
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'kngu_competition', 'has_doorstroming'];
 
     public function match_days()
     {

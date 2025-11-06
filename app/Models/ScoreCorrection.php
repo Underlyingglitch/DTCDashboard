@@ -19,6 +19,7 @@ class ScoreCorrection extends Model implements Auditable
         'e2',
         'e3',
         'e',
+        'b',
         'n',
         'total',
         'approved',
@@ -71,6 +72,7 @@ class ScoreCorrection extends Model implements Auditable
                 'e2' => $this->e2,
                 'e3' => $this->e3,
                 'n' => $this->n,
+                'b' => $this->b ?? 0,
                 'total' => $this->total
             ]);
         }

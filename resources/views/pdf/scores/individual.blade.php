@@ -54,6 +54,10 @@
                                 n:
                                 -{{ number_format($score->n ?? 0, 1) }}
                             @endif
+                            @if (($score->b ?? 0) != 0)
+                                b:
+                                +{{ number_format($score->b ?? 0, 1) }}
+                            @endif
                         </td>
                         <td style="width: fit-content; border-left:none">
                             @if (is_null($score->d ?? null))

@@ -1,5 +1,5 @@
 <div class="card-body">
-    
+
     @livewire('livescores.hint')
     Na ronde (0 voor alles): <input type="number" wire:model="limit" wire:change="updateLimit">
     @foreach ($registrations as $registration)
@@ -30,6 +30,7 @@
                                     <th>D</th>
                                     <th>E</th>
                                     <th>N</th>
+                                    <th>B</th>
                                     <th>Totaal</th>
                                 </tr>
                                 @foreach ($registration['scores'] as $score)
@@ -38,6 +39,7 @@
                                         <td>{{ number_format($score['d'], 3) }}</td>
                                         <td>{{ number_format($score['e'], 3) }}</td>
                                         <td>{{ number_format($score['n'], 1) }}</td>
+                                        <td>{{ number_format($score['b'] ?? ($score['bonus'] ?? 0), 1) }}</td>
                                         <td>{{ number_format($score['total'], 3) }}</td>
                                     </tr>
                                 @endforeach

@@ -19,6 +19,7 @@ class ScoreInputForm extends Component
     public $e1;
     public $e2;
     public $e3;
+    public $b;
     public $n;
     public $t;
 
@@ -58,6 +59,7 @@ class ScoreInputForm extends Component
         $this->e2 = $this->e2 ? (float)str_replace(',', '.', $this->e2) : null;
         $this->e3 = $this->e3 ? (float)str_replace(',', '.', $this->e3) : null;
         $this->n = $this->n ? (float)str_replace(',', '.', $this->n) : null;
+        $this->b = $this->b ? (float)str_replace(',', '.', $this->b) : 0;
         $es = array_filter([$this->e1, $this->e2, $this->e3]);
         $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 3) : null;
         if ($this->d == 0 || $this->d == '') {
@@ -65,8 +67,15 @@ class ScoreInputForm extends Component
             $this->t = 0;
             return;
         }
-        // if ($this->n == '') $this->n = 0;
-        $this->t = round(10 - $this->e + $this->d - $this->n, 3);
+        // Delegate total calculation to Score model to keep logic in one place
+        $tmp = new \App\Models\Score();
+        $tmp->d = $this->d;
+        $tmp->e1 = $this->e1;
+        $tmp->e2 = $this->e2;
+        $tmp->e3 = $this->e3;
+        $tmp->n = $this->n;
+        $tmp->b = $this->b ?? 0;
+        $this->t = round($tmp->calculateTotal(), 3);
         if ($this->t < 0) {
             $this->t = 0;
         }
@@ -129,6 +138,7 @@ class ScoreInputForm extends Component
             'e2' => $this->e2 == '' ? null : $this->e2,
             'e3' => $this->e3 == '' ? null : $this->e3,
             'n' => $this->n ?? 0,
+            'b' => $this->b ?? 0,
             'total' => $this->t
         ]);
         if ($score->wasRecentlyCreated) {
@@ -143,6 +153,7 @@ class ScoreInputForm extends Component
         $this->e3 = '';
         $this->e = '';
         $this->n = '';
+        $this->b = '';
         $this->t = '';
         $this->startnumber = '';
         $this->locked = true;

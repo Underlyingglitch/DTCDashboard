@@ -19,6 +19,7 @@ class Score extends Model implements Auditable
         'e1',
         'e2',
         'e3',
+        'b',
         'n',
         'total',
         'place',
@@ -30,20 +31,23 @@ class Score extends Model implements Auditable
         parent::boot();
 
         static::creating(function ($score) {
-            $es = array_filter([$score->e1, $score->e2, $score->e3]);
-            $score->e = count($es) > 0 ? round(array_sum($es) / count($es), 3) : null;
-            $total = $score->d > 0 ? (($score->d + (10 - $score->e)) - $score->n) : 0;
-            if ($total < 0) $total = 0;
-            $score->total = $total;
+            $score->total = $score->calculateTotal();
         });
 
         static::updating(function ($score) {
-            $es = array_filter([$score->e1, $score->e2, $score->e3]);
-            $score->e = count($es) > 0 ? round(array_sum($es) / count($es), 3) : null;
-            $total = $score->d > 0 ? (($score->d + (10 - $score->e)) - $score->n) : 0;
-            if ($total < 0) $total = 0;
+            $total = $score->calculateTotal();
+            \Illuminate\Support\Facades\Log::info("total calculation for score ID {$score->id}: d={$score->d}, e={$score->e}, n={$score->n}, b={$score->b}, total={$total}");
             $score->total = $total;
         });
+    }
+
+    public function calculateTotal()
+    {
+        $es = array_filter([$this->e1, $this->e2, $this->e3]);
+        $this->e = count($es) > 0 ? round(array_sum($es) / count($es), 3) : null;
+        $total = $this->d > 0 ? (($this->d + (10 - $this->e)) - $this->n + $this->b) : 0;
+        if ($total < 0) $total = 0;
+        return $total;
     }
 
     public function match_day()

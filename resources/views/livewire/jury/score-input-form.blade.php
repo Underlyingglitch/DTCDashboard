@@ -8,6 +8,9 @@
             N: <input class="form-control" type="text" step=".1" inputmode="decimal" placeholder="N-score"
                 wire:model="n" wire:blur="calculate()" @if ($locked) disabled @endif
                 tabindex="5" />
+            B: <input class="form-control" type="text" step=".1" inputmode="decimal" placeholder="Bonus"
+                wire:model="b" wire:blur="calculate()" @if ($locked) disabled @endif
+                tabindex="6" />
             E: <input class="form-control" type="number" step=".001" placeholder="E-score" wire:model="e"
                 readonly />
             Totaal: <input class="form-control" type="number" step=".001" placeholder="Totaal" wire:model="t"
@@ -27,7 +30,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <input class="form-control btn btn-primary" type="submit" value="Opslaan" wire:click="save()"
-                        tabindex="6" />
+                        tabindex="7" />
                 </div>
                 <div class="col-md-6">
                     <input class="form-control btn btn-warning" type="submit" value="DNS" wire:click="dns()" />

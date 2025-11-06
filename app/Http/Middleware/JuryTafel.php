@@ -22,15 +22,15 @@ class JuryTafel
             return redirect()->route('auth.local');
         } else {
             if ($request->user()->hasRole('admin')) return $next($request);
+            // if (!$request->user()->hasRole('jury')) return $next($request); // NOTE - temporary override
+            $user_id = $request->user()->id;
+            $device = \App\Models\Device::where('authenticated_user_id', $user_id)->where('type', 'jury')->first();
 
-            $device_id = $request->session()->get('device_id');
-            $device = \App\Models\Device::where('device_id', $device_id)->where('type', 'jury')->first();
-
-            if (!$device || empty($device->authenticated_user_id)) {
-                Auth::logout();
-                return redirect()->route('auth.local');
-            }
-            Auth::loginUsingId($device->authenticated_user_id);
+            // if (!$device || empty($device->authenticated_user_id)) {
+            //     Auth::logout();
+            //     return redirect()->route('auth.local');
+            // }
+            // Auth::loginUsingId($device->authenticated_user_id);
         }
 
         $device->loaded_page = '/' . ($request->path() == 'auth/local' ? 'jurytafel' : $request->path());

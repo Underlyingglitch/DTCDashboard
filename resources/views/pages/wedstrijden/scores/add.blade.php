@@ -15,6 +15,7 @@
             <th>D-score</th>
             <th>E-aftrek</th>
             <th>N-aftrek</th>
+            <th>Bonus</th>
             <th>Totaal</th>
             <th>Overslaan</th>
         </tr>
@@ -56,6 +57,10 @@
                         <td>
                             <input style="width: 200px" class="form-control" type="number"
                                 name="n-{{ $registration->startnumber }}" value="0" step=".01">
+                        </td>
+                        <td>
+                            <input style="width: 200px" class="form-control" type="number"
+                                name="b-{{ $registration->startnumber }}" value="0" step=".01">
                         </td>
                         <td class="total-field">
                             <input style="width: 200px" class="form-control-plaintext" readonly type="text"
@@ -100,10 +105,12 @@
                 var d = $(`[name='d-${id}']`).val()
                 var e = $(`[name='e-${id}']`).val()
                 var n = $(`[name='n-${id}']`).val()
+                var b = $(`[name='b-${id}']`).val()
                 if (d == 0 && e == 0 && n == 0) {
                     var total = ''
                 } else {
-                    var total = Math.round(((parseFloat(d) + (10 - parseFloat(e))) - parseFloat(n)) * 1000) / 1000
+                    var total = Math.round(((parseFloat(d) + (10 - parseFloat(e))) - parseFloat(n) + (parseFloat(
+                        b) || 0)) * 1000) / 1000
                 }
                 $(`[data-id='t-${id}']`).val(total)
             }

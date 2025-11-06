@@ -34,7 +34,7 @@ Artisan::command('calculate:score-total', function () {
     $scores = \App\Models\Score::all();
     $bar = $this->output->createProgressBar(count($scores));
     foreach ($scores as $score) {
-        $total = $score->d > 0 ? (($score->d + (10 - $score->e)) - $score->n) : 0;
+        $total = $score->d > 0 ? (($score->d + (10 - $score->e)) - $score->n + ($score->b ?? 0)) : 0;
         if ($total < 0) $total = 0;
         $score->total = $total;
         $score->saveQuietly();

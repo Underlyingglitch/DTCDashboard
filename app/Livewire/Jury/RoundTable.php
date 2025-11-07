@@ -17,6 +17,7 @@ class RoundTable extends Component
     public $groups;
     public $group_names = [];
     public $registrations;
+    public $no_group = false;
 
     public function getListeners()
     {
@@ -136,13 +137,42 @@ class RoundTable extends Component
 
     public function getRegistrations()
     {
-        // $registrations = Wedstrijd::find(Setting::getValue('current_wedstrijd'))->registrations->whereIn('group_id', $this->groups);
-        $registrations = Registration::where('match_day_id', $this->matchday)->whereIn('niveau_id', $this->wedstrijd->niveaus->pluck('id'))->whereIn('group_id', $this->groups)->with(['gymnast', 'club', 'niveau'])->get();
+        // If there are no groups assigned for this toestel/round, mark and return early
+        if (empty($this->groups) || collect($this->groups)->every(fn($g) => $g == 0)) {
+            $this->registrations = [];
+            $this->no_group = true;
+            $this->group_names = []; // ensure title clears when there are no groups
+            return;
+        }
+
+        $this->no_group = false;
+        // Recompute human-readable group names so the view title updates when rounds change
+        $this->group_names = [];
+        foreach ($this->groups as $group) {
+            if ($group == 0) continue;
+            $baan = floor($group / 10) + 1;
+            $groepNum = $group % 10;
+            $this->group_names[] = "Baan {$baan} Groep {$groepNum}";
+        }
+
+        $registrations = Registration::where('match_day_id', $this->matchday)
+            ->whereIn('niveau_id', $this->wedstrijd->niveaus->pluck('id'))
+            ->whereIn('group_id', $this->groups)
+            ->with(['gymnast', 'club', 'niveau'])
+            ->get();
         $scores = Score::where('toestel', $this->toestel)->where('match_day_id', $this->matchday)->get();
         $score_corrections = ScoreCorrection::where('approved', 0)->whereHas('score', function ($query) {
             $query->where('toestel', $this->toestel)->where('match_day_id', $this->matchday);
         })->get();
+        // initialize registration buckets for each baan present in the groups so the blade can safely foreach()
         $this->registrations = [];
+        $banen = [];
+        foreach ($this->groups as $group) {
+            if ($group != 0) $banen[] = floor($group / 10) + 1;
+        }
+        foreach (array_unique($banen) as $baan) {
+            $this->registrations[$baan] = [];
+        }
         foreach ($registrations as $registration) {
             $status = 'pending';
             if ($registration->signed_off == 1) $status = 'signed_off';

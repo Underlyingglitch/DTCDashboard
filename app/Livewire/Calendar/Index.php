@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Calendar;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\CalendarItem;
 use App\Models\CalendarUpdate;
@@ -15,6 +16,7 @@ class Index extends Component
     public $selectedDistrict;
     public $selectedDiscipline;
 
+    public $monthOptions = [];
     public $results = [];
     public $subscribed = [];
     public $created;
@@ -24,19 +26,37 @@ class Index extends Component
 
     public function mount()
     {
-        $this->selectedMonth = date('n');
+        $this->generateMonthOptions();
+
+        $current = now();
+        $this->selectedMonth = $current->year . '-' . str_pad($current->month, 2, '0', STR_PAD_LEFT);
         $this->selectedDistrict = '*';
         $this->selectedDiscipline = '*';
+
         $this->created = CalendarUpdate::where('type', 'created')->pluck('calendar_item_id')->toArray();
         $this->updated = CalendarUpdate::where('type', 'updated')->pluck('calendar_item_id')->toArray();
         $this->getResults();
     }
 
+    private function generateMonthOptions()
+    {
+        $current = now();
+        $this->monthOptions = [];
+
+        for ($i = -1; $i <= 4; $i++) {
+            $date = $current->clone()->addMonths($i);
+            $key = $date->year . '-' . str_pad($date->month, 2, '0', STR_PAD_LEFT);
+            $monthName = $this->months[$date->month - 1];
+            $this->monthOptions[$key] = "{$monthName} {$date->year}";
+        }
+    }
+
     public function getResults()
     {
+        [$year, $month] = explode('-', $this->selectedMonth);
 
-        $monthStart = now()->setDay(1)->setMonth((int)$this->selectedMonth)->startOfMonth();
-        $monthEnd = now()->setDay(1)->setMonth((int)$this->selectedMonth)->endOfMonth();
+        $monthStart = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $monthEnd = Carbon::createFromDate($year, $month, 1)->endOfMonth();
 
         $this->results = CalendarItem::where(function ($query) use ($monthStart, $monthEnd) {
             $query->whereBetween('date_from', [$monthStart, $monthEnd])

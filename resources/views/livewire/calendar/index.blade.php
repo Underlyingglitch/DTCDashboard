@@ -2,10 +2,9 @@
     <div class="row">
         <div class="col">
             Maand:
-            <select wire:model="selectedMonth" wire:change="getResults">
-                @foreach ($months as $i => $month)
-                    <option value="{{ $i + 1 }}" wire:key="month_dropdown_{{ $i }}">
-                        {{ $month }}</option>
+            <select wire:model.live="selectedMonth">
+                @foreach ($monthOptions as $key => $label)
+                    <option value="{{ $key }}">{{ $label }}</option>
                 @endforeach
             </select>
         </div>

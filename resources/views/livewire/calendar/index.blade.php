@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col">
             Maand:
-            <select wire:model.live="selectedMonth">
+            <select wire:model="selectedMonth" wire:change="getResults">
                 @foreach ($monthOptions as $key => $label)
                     <option value="{{ $key }}">{{ $label }}</option>
                 @endforeach

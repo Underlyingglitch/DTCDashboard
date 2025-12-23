@@ -3,7 +3,7 @@ ARG PHP_EXTS="pdo_mysql mbstring exif pcntl bcmath gd zip"
 ARG PHP_PECL_EXTS="redis"
 
 # BUILDING COMPOSER BASE
-FROM composer:latest AS composer_base
+FROM php:8.4.4-alpine AS composer_base
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
@@ -12,6 +12,7 @@ RUN mkdir -p /opt/apps/laravel /opt/apps/laravel/bin
 
 WORKDIR /opt/apps/laravel
 
+# Install PHP extensions
 RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-certificates libxml2-dev oniguruma-dev libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev && \
     apk add --no-cache libzip && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
@@ -20,6 +21,11 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
     docker-php-ext-enable ${PHP_PECL_EXTS} && \
     apk del build-dependencies && \
     apk add --no-cache libpng libjpeg-turbo freetype
+
+# Install Composer
+RUN apk add --no-cache curl && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    apk del curl
 
 RUN addgroup -S composer && adduser -S composer -G composer
 

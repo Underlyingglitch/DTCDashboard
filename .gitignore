@@ -22,3 +22,4 @@ laravel-echo-server.json
 laravel-echo-server.lock
 .env.local
 /local_data
+**/@eaDir

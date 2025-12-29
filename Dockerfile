@@ -3,7 +3,7 @@ ARG PHP_EXTS="pdo_mysql mbstring exif pcntl bcmath gd zip"
 ARG PHP_PECL_EXTS="redis"
 
 # BUILDING COMPOSER BASE
-FROM php:8.4.4-alpine AS composer_base
+FROM php:8.5.0RC3-alpine AS composer_base
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
@@ -68,7 +68,7 @@ RUN npm install && \
 
 
 # BUILD CLI
-FROM php:8.4.4-alpine AS cli
+FROM php:8.5.0RC3-alpine AS cli
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS

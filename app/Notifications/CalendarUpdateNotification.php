@@ -58,15 +58,16 @@ class CalendarUpdateNotification extends Notification implements ShouldQueue
             ->greeting('Beste ' . $notifiable->name . ',')
             ->line('De wedstrijdplanning is aangepast op gebieden waar u een melding over wenste te ontvangen.');
         foreach ($this->notifications as $item) {
+            $ci = $item['calendar_item'];
             if ($item['type'] == 'created') {
-                $mail->line("Nieuw: **{$item['calendar_item']['title']}** op **" . \App\Models\CalendarItem::parseDate($item['calendar_item']['date_from'], $item['calendar_item']['date_to']) . "** ({$item['calendar_item']['discipline']}|{$item['calendar_item']['district']})");
+                $mail->line("Nieuw: **{$ci['title']}** op **" . $ci['date'] . "** ({$ci['discipline']}|{$ci['district']})");
             } elseif ($item['type'] == 'updated') {
                 $changes = '';
                 foreach (json_decode($item['value']) as $name => $value) {
                     $changes .= $field_names[$name] . ', ';
                 }
                 $changes = rtrim($changes, ', ');
-                $mail->line("Bijgewerkt: **{$item['calendar_item']['title']}** op **" . \App\Models\CalendarItem::parseDate($item['calendar_item']['date_from'], $item['calendar_item']['date_to']) . "** ({$item['calendar_item']['discipline']}|{$item['calendar_item']['district']}) - Wijziging(en): {$changes}");
+                $mail->line("Bijgewerkt: **{$ci['title']}** op **" . $ci['date'] . "** ({$ci['discipline']}|{$ci['district']}) - Wijziging(en): {$changes}");
             }
         }
         $mail->line('Bekijk het overzicht van alle wedstrijden om de wijzigingen te bekijken.')

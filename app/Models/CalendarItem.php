@@ -34,6 +34,10 @@ class CalendarItem extends Model
         'description_files' => 'array'
     ];
 
+    protected $appends = [
+        'date'
+    ];
+
     public function getDateAttribute()
     {
         return $this->parseDate($this->date_from, $this->date_to);

@@ -68,7 +68,7 @@ RUN npm install && \
 
 
 # BUILD CLI
-FROM php:8.4.4-alpine AS cli
+FROM php:8.5.0RC2-alpine AS cli
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS

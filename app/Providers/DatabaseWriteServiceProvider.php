@@ -17,15 +17,17 @@ class DatabaseWriteServiceProvider extends ServiceProvider
     /**
      * Register services.
      */
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap services.
      */
     public function boot(): void
     {
+        // If running in console and the command is package:discover, do nothing
+        if ($this->app->runningInConsole() && $_SERVER['argv'][1] ?? null === 'package:discover') {
+            return;
+        }
         // If server is not production, do nothing
         if (config('app.env') != 'production' && config('app.env') != 'dev') {
             return;

@@ -21,7 +21,7 @@
         "mews/purifier": "^3.4",
         "minishlink/web-push": "^9.0",
         "owen-it/laravel-auditing": "^13.6",
-        "phpoffice/phpspreadsheet": "^4.1",
+        "phpoffice/phpspreadsheet": "^5.4",
         "predis/predis": "^2.3",
         "seyyedam7/laravel-html-parser": "^2.2",
         "silviolleite/laravelpwa": "^2.0",

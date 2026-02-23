@@ -27,6 +27,12 @@ deploy:
 	kubectl rollout restart deployment dtcdashboard-nginx --namespace=laravel-applications
 	kubectl rollout restart deployment dtcdashboard-workers --namespace=laravel-applications
 
+deploy-test: 
+	kubectl rollout restart deployment dtcdashboard-test --namespace=laravel-applications
+	kubectl rollout restart deployment dtcdashboard-test-php-fpm --namespace=laravel-applications
+	kubectl rollout restart deployment dtcdashboard-test-nginx --namespace=laravel-applications
+	kubectl rollout restart deployment dtcdashboard-test-workers --namespace=laravel-applications
+
 docker: docker-build docker-push
 
 docker-build:

@@ -32,15 +32,15 @@ class ScoreCorrection extends Model implements Auditable
 
         static::created(function ($scoreCorrection) {
 
-            event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\Jury\ScoreCorrectionAdded($scoreCorrection));
         });
 
         static::updated(function ($scoreCorrection) {
-            event(new \App\Events\Jury\ScoreCorrectionUpdated($scoreCorrection, 'update'));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\Jury\ScoreCorrectionUpdated($scoreCorrection, 'update'));
         });
 
         static::deleted(function ($scoreCorrection) {
-            event(new \App\Events\Jury\ScoreCorrectionUpdated($scoreCorrection, 'delete'));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\Jury\ScoreCorrectionUpdated($scoreCorrection, 'delete'));
         });
     }
 

@@ -4,9 +4,7 @@ namespace App\Observers;
 
 use App\Models\Score;
 use App\Jobs\Scores\CalculateTeamScore;
-use App\Jobs\Scores\CalculateScorePlace;
-use App\Jobs\CheckCountedScores;
-use Illuminate\Support\Facades\Log;
+use App\Jobs\Scores\CalculateToestelRanking;
 
 class ScoreObserver
 {
@@ -15,13 +13,13 @@ class ScoreObserver
      */
     public function created(Score $score): void
     {
-        CalculateScorePlace::dispatch($score);
+        CalculateToestelRanking::dispatch($score->match_day_id, $score->registration->niveau_id, $score->toestel);
         // Check if score belongs to a team
         if ($score->registration->team ?? null) {
             // Check which scores count for this team
-            CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
+            CalculateTeamScore::dispatch($score->match_day_id, $score->registration->team->id, $score->toestel);
         }
-        event(new \App\Events\Scores\ScoreUpdated($score->match_day_id, $score));
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\Scores\ScoreUpdated($score->match_day_id, $score));
         \App\Jobs\Scores\UpdateProcessedScore::dispatch($score);
     }
 
@@ -32,12 +30,12 @@ class ScoreObserver
     {
         // Only if the total of the score is updated, recalculate the place of the score.
         if ($score->isDirty('total')) {
-            CalculateScorePlace::dispatch($score);
+            CalculateToestelRanking::dispatch($score->match_day_id, $score->registration->niveau_id, $score->toestel);
             if ($score->registration->team ?? null) {
-                CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
+                CalculateTeamScore::dispatch($score->match_day_id, $score->registration->team->id, $score->toestel);
             }
         }
-        event(new \App\Events\Scores\ScoreUpdated($score->match_day_id, $score));
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\Scores\ScoreUpdated($score->match_day_id, $score));
     }
 
     /**
@@ -45,7 +43,7 @@ class ScoreObserver
      */
     public function deleting(Score $score): void
     {
-        CalculateScorePlace::dispatch($score);
+        CalculateToestelRanking::dispatch($score->match_day_id, $score->registration->niveau_id, $score->toestel);
         \App\Jobs\Scores\UpdateProcessedScore::dispatch($score);
     }
 
@@ -55,7 +53,7 @@ class ScoreObserver
     public function deleted(Score $score): void
     {
         if ($score->registration->team ?? null) {
-            CalculateTeamScore::dispatch($score->registration->team, $score->toestel, $score->match_day_id);
+            CalculateTeamScore::dispatch($score->match_day_id, $score->registration->team->id, $score->toestel);
         }
     }
 }

@@ -93,11 +93,7 @@ class InternalAPIController extends Controller
         // Recalculate team scores
         $active_wedstrijd = Wedstrijd::find(Setting::getValue('current_wedstrijd'));
         foreach ($active_wedstrijd->teams as $team) {
-            $jobs = [];
-            for ($i = 1; $i <= 6; $i++) {
-                $jobs[] = new CalculateTeamScore($team, $i, $active_wedstrijd->match_day_id);
-            }
-            Bus::chain($jobs)->dispatch();
+            CalculateTeamScore::dispatch($active_wedstrijd->match_day_id, $team->id, 0);
         }
         return response()->json(['success' => $success_ids, 'error' => $error_ids]);
     }

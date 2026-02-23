@@ -49,7 +49,7 @@ class UpdateProcessedScore implements ShouldQueue
                 'toestel' => $this->score['toestel'],
                 'wedstrijd_id' => $wedstrijd->id,
             ])->first();
-            event(new \App\Events\ProcessedScoreUpdated($ps, true));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\ProcessedScoreUpdated($ps, true));
             $ps->delete();
             return;
         }

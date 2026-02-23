@@ -83,7 +83,7 @@ class Setting extends Model
             self::setValue('current_match_day', $wedstrijd->match_day_id, true);
             self::setValue('current_round', 1, true);
         }
-        if (!$cancel_event) event(new SettingUpdated($key, $value));
+        if (!$cancel_event) if (env('DO_BROADCASTING', true)) event(new SettingUpdated($key, $value));
     }
 
     public static function getValues(array $keys)

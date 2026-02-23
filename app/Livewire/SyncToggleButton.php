@@ -25,7 +25,7 @@ class SyncToggleButton extends Component
         Setting::setValue('sync_enabled', $this->status);
         $this->class = $this->status ? 'btn-danger' : 'btn-success';
         $this->label = $this->status ? 'Uitschakelen' : 'Inschakelen';
-        event(new \App\Events\DataSync\UpdateSyncStatus($this->status ? (SyncTask::where('synced', 0)->count() > 0 ? 1 : 3) : 0));
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus($this->status ? (SyncTask::where('synced', 0)->count() > 0 ? 1 : 3) : 0));
     }
 
     public function render()

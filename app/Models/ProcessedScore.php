@@ -22,11 +22,11 @@ class ProcessedScore extends Model implements Auditable
         parent::boot();
 
         static::updated(function ($ps) {
-            event(new \App\Events\ProcessedScoreUpdated($ps));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\ProcessedScoreUpdated($ps));
         });
 
         static::created(function ($ps) {
-            event(new \App\Events\ProcessedScoreUpdated($ps));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\ProcessedScoreUpdated($ps));
         });
     }
 

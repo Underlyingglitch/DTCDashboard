@@ -49,7 +49,7 @@ class CalculateDoorstroom extends Component
 
     public function process()
     {
-        $all_scores = Score::whereIn('match_day_id', array_keys($this->match_days_selection))->where('total', '>', 0)->get();
+        $all_scores = Score::whereIn('match_day_id', array_keys($this->match_days_selection))->get();
         $all_teamscores = TeamScore::whereIn('match_day_id', array_keys($this->match_days_selection))->where('total_score', '>', 0)->get();
         if ($all_scores->count() < 1) {
             $this->error = 'Er zijn geen scores ingevoerd voor de geselecteerde wedstrijddagen';
@@ -58,7 +58,7 @@ class CalculateDoorstroom extends Component
         $this->error = null;
         $this->authorize('processDoorstroom', $this->competition);
 
-        if ($this->amount < 1) {
+        if ($this->amount < 0) {
             $this->error = 'Vul een geldig aantal in';
             return;
         }
@@ -87,23 +87,41 @@ class CalculateDoorstroom extends Component
                 // dd($teamscores);
                 foreach ($teamscores as $team) {
                     $ind_score = $ind_scores[$team['team_id']] ?? [];
-                    $ind_score[] = $type * $this->teampoints[$team['place'] - 1] ?? 0;
+                    $place = $team['place'] ?? 0;
+                    if ($place > 0 && isset($this->teampoints[$place - 1])) {
+                        $points = $this->teampoints[$place - 1];
+                    } else {
+                        // Unranked teams get the last points value
+                        $points = end($this->teampoints);
+                    }
+                    $ind_score[] = $type * $points;
                     $score = $scores[$team['team_id']] ?? 0;
-                    $score += $type * $this->teampoints[$team['place'] - 1] ?? 0;
+                    $score += $type * $points;
                     $scores[$team['team_id']] = $score;
                     $ind_scores[$team['team_id']] = $ind_score;
                 }
             } else {
-                $registrations = Registration::where('match_day_id', $match_day->id)->where('signed_off', 0)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($match_day) {
+                $registrations = Registration::where('match_day_id', $match_day->id)->where('niveau_id', $this->niveau)->with(['gymnast', 'club', 'niveau', 'scores' => function ($query) use ($match_day) {
                     $query->where('match_day_id', $match_day->id);
-                }])->get()->filter(function ($registration) {
-                    return $registration->scores->sum('total') > 0;
-                })->sortByDesc('place');
+                }])->get()->sortByDesc('place');
+
+                // Find the highest place to determine the next slot for unranked
+                $maxPlace = $registrations->filter(fn($r) => $r->place > 0)->max('place') ?? 0;
+                $unrankedPointsIndex = min($maxPlace, count($this->points) - 1);
+                $unrankedPoints = $this->points[$unrankedPointsIndex] ?? 0;
+
                 foreach ($registrations as $registration) {
                     $ind_score = $ind_scores[$registration->startnumber] ?? [];
-                    $ind_score[] = $type * $this->points[$registration->place - 1] ?? 0;
+                    $place = $registration->place ?? 0;
+                    if ($place > 0 && isset($this->points[$place - 1])) {
+                        $points = $this->points[$place - 1];
+                    } else {
+                        // Unranked participants get the next slot points
+                        $points = $unrankedPoints;
+                    }
+                    $ind_score[] = $type * $points;
                     $score = $scores[$registration->startnumber] ?? 0;
-                    $score += $type * $this->points[$registration->place - 1] ?? 0;
+                    $score += $type * $points;
                     $scores[$registration->startnumber] = $score;
                     $ind_scores[$registration->startnumber] = $ind_score;
                     $registration_cache[$registration->startnumber] = [
@@ -121,7 +139,7 @@ class CalculateDoorstroom extends Component
         $counter = 0;
         foreach ($scores as $id => $score) {
             $counter++;
-            if ($counter > $this->amount) {
+            if ($this->amount > 0 && $counter > $this->amount) {
                 break;
             }
             if ($this->teams) {

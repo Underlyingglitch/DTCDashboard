@@ -86,7 +86,7 @@ class TestController extends Controller
         //     $scores = Score::where('match_day_id', $item['matchday'])
         //         ->where('startnumber', $item['startnumber'])->get();
         //     foreach ($scores as $score) {
-        //         \App\Jobs\Scores\CalculateScorePlace::dispatch($score);
+        //         \App\Jobs\Scores\CalculateToestelRanking::dispatch($score);
         //     }
         // }
     }

@@ -31,6 +31,6 @@ class ImportDB implements ShouldQueue
             }
         }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        event(new \App\Events\DBImportReady());
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\DBImportReady());
     }
 }

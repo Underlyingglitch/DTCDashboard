@@ -24,7 +24,7 @@ class GroupTableItem extends Component
         $this->registration->update([
             'signed_off' => !$this->registration->signed_off,
         ]);
-        event(new \App\Events\Jury\RegistrationUpdated($this->registration));
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\Jury\RegistrationUpdated($this->registration));
         $this->dispatch('registration' . $this->registration->id . 'Updated');
         // Render again
         $this->render();
@@ -36,7 +36,7 @@ class GroupTableItem extends Component
         $this->registration->update([
             'group_id' => $group_id,
         ]);
-        event(new \App\Events\Jury\GroupUpdated($group_id));
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\Jury\GroupUpdated($group_id));
     }
 
     #[On('registration{registration.id}Updated')]

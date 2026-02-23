@@ -64,4 +64,11 @@ class MatchDay extends Model implements Auditable
     {
         return $this->name . ' (' . $this->date->format('d-m-Y') . ') - ' . $this->competition->name;
     }
+
+    public function getTeamsAttribute()
+    {
+        return Team::whereHas('registrations', function ($query) {
+            $query->where('match_day_id', $this->id);
+        })->get();
+    }
 }

@@ -15,7 +15,7 @@ class SyncTask extends Model
 
         static::created(function ($st) {
             if (!Setting::getValue('sync_enabled')) return;
-            event(new \App\Events\DataSync\UpdateSyncStatus(1));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus(1));
         });
     }
 

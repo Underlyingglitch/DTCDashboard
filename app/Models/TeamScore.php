@@ -14,11 +14,11 @@ class TeamScore extends Model
         parent::boot();
 
         static::created(function ($score) {
-            event(new \App\Events\Scores\TeamScoresUpdated($score->match_day_id));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\Scores\TeamScoresUpdated($score->match_day_id));
         });
 
         static::updated(function ($score) {
-            event(new \App\Events\Scores\TeamScoresUpdated($score->match_day_id));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\Scores\TeamScoresUpdated($score->match_day_id));
         });
     }
 

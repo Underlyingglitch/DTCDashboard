@@ -38,11 +38,11 @@ class SyncDatabase implements ShouldQueue
         $changes = SyncTask::where('synced', false)->get(['id', 'model_type', 'model_id', 'operation', 'data'])->toArray();
 
         if (count($changes) === 0) {
-            event(new \App\Events\DataSync\UpdateSyncStatus(3));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus(3));
             return;
         }
 
-        event(new \App\Events\DataSync\UpdateSyncStatus(2));
+        if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus(2));
 
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', config('app.api_base_url') . '/internal/changes', [
@@ -57,9 +57,9 @@ class SyncDatabase implements ShouldQueue
         SyncTask::whereIn('id', $data['success'])->update(['synced' => true]);
         if (count($data['error']) > 0) {
             Log::error("Failed syncs: " . implode(', ', $data['error']));
-            event(new \App\Events\DataSync\UpdateSyncStatus(4, count($data['error'])));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus(4, count($data['error'])));
         } else {
-            event(new \App\Events\DataSync\UpdateSyncStatus(3));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus(3));
         }
     }
 }

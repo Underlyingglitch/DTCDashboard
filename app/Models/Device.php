@@ -21,7 +21,7 @@ class Device extends Model
         parent::boot();
 
         static::updated(function ($device) {
-            event(new \App\Events\Device\DeviceUpdated($device));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\Device\DeviceUpdated($device));
         });
     }
 

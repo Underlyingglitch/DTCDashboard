@@ -29,7 +29,7 @@ class SyncStatus extends Component
         if (!Setting::getValue('sync_enabled')) return;
         if ($this->status != 1 && $this->status != 4) {
             if (SyncTask::where('synced', 0)->count() == 0) {
-                event(new \App\Events\DataSync\UpdateSyncStatus(3));
+                if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus(3));
                 return;
             }
             return;

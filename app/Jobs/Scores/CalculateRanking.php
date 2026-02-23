@@ -3,33 +3,32 @@
 namespace App\Jobs\Scores;
 
 use App\Models\Registration;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class CalculatePlace implements ShouldQueue
+class CalculateRanking implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(public Registration $registration)
-    {
-    }
+    public function __construct(public int $match_day_id, public int $niveau_id) {}
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
-        $registrations = Registration::where('match_day_id', $this->registration->match_day_id)
-            ->where('niveau_id', $this->registration->niveau_id)
+        $registrations = Registration::where('match_day_id', $this->match_day_id)
+            ->where('niveau_id', $this->niveau_id)
             ->where('signed_off', false)
             ->with(['scores' => function ($query) {
-                $query->where('match_day_id', $this->registration->match_day_id);
+                $query->where('match_day_id', $this->match_day_id);
             }])
             ->get()
             ->sortByDesc(function ($registration) {

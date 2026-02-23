@@ -4,36 +4,34 @@ namespace App\Jobs\Scores;
 
 use App\Models\Score;
 use App\Models\Registration;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class CalculateScorePlace implements ShouldQueue
+class CalculateToestelRanking implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(public Score $score)
-    {
-    }
+    public function __construct(public int $match_day_id, public int $niveau_id, public int $toestel) {}
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
-        $startnumbers = Registration::where('match_day_id', $this->score->match_day_id)
-            ->where('niveau_id', $this->score->registration->niveau_id)
+        $startnumbers = Registration::where('match_day_id', $this->match_day_id)
+            ->where('niveau_id', $this->niveau_id)
             ->where('signed_off', false)
             ->pluck('startnumber');
 
-        $scores = Score::where('match_day_id', $this->score->match_day_id)
-            ->where('toestel', $this->score->toestel)
+        $scores = Score::where('match_day_id', $this->match_day_id)
+            ->where('toestel', $this->toestel)
             ->whereIn('startnumber', $startnumbers)
             ->orderBy('total', 'desc')
             ->orderBy('e', 'desc')
@@ -53,7 +51,5 @@ class CalculateScorePlace implements ShouldQueue
             $score->saveQuietly();
             $previousScore = $score->total;
         }
-        // Update the registration place
-        \App\Jobs\Scores\CalculatePlace::dispatch($this->score->registration);
     }
 }

@@ -26,7 +26,7 @@ class SettingsController extends Controller
 
         // If the setting is the sync_enabled setting, and the value is true, also send an event
         if ($setting == 'sync_enabled') {
-            event(new \App\Events\DataSync\UpdateSyncStatus($value));
+            if (env('DO_BROADCASTING', true)) event(new \App\Events\DataSync\UpdateSyncStatus($value));
         }
 
         return redirect()->back()->with('success', 'Instellingen opgeslagen');

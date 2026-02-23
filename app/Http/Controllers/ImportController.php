@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Club;
-use App\Models\Team;
 use App\Models\Group;
-use App\Models\Niveau;
 use App\Models\Gymnast;
-use App\Models\Trainer;
 use App\Models\MatchDay;
+use App\Models\Niveau;
 use App\Models\Registration;
+use App\Models\Score;
+use App\Models\Team;
+use App\Models\TeamScore;
+use App\Models\Trainer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 class ImportController extends Controller
@@ -49,6 +54,11 @@ class ImportController extends Controller
                 'matchday' => 'required|exists:match_days,id',
             ]);
             return $this->import_trainers($request);
+        } else if ($request->type == 'scores') {
+            $this->validate($request, [
+                'matchday' => 'required|exists:match_days,id',
+            ]);
+            return $this->import_scores($request);
         } else {
             return redirect()->back()->with('error', 'Onbekend type import');
         }
@@ -192,5 +202,13 @@ class ImportController extends Controller
         }
         $competition->trainers()->sync($trainers);
         return redirect()->back()->with('success', 'Trainers geimporteerd en gekoppeld aan competitie');
+    }
+
+    public function import_scores(Request $request)
+    {
+        Storage::put('imports/' . $request->file->getClientOriginalName(), file_get_contents($request->file));
+        $job = new \App\Jobs\Import\ScoreImport(Auth::id(), 'imports/' . $request->file->getClientOriginalName(), $request->matchday);
+        dispatch($job);
+        return redirect()->back()->with('success', 'Scores worden geimporteerd');
     }
 }

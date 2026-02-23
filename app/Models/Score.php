@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\ScoreSaved;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
@@ -35,9 +34,7 @@ class Score extends Model implements Auditable
         });
 
         static::updating(function ($score) {
-            $total = $score->calculateTotal();
-            \Illuminate\Support\Facades\Log::info("total calculation for score ID {$score->id}: d={$score->d}, e={$score->e}, n={$score->n}, b={$score->b}, total={$total}");
-            $score->total = $total;
+            $score->total = $score->calculateTotal();
         });
     }
 

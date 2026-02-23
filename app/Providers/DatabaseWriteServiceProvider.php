@@ -25,7 +25,7 @@ class DatabaseWriteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // If running in console and the command is package:discover, do nothing
-        if ($this->app->runningInConsole() && $_SERVER['argv'][1] ?? null === 'package:discover') {
+        if ($this->app->runningInConsole()) {
             return;
         }
         // If server is not production, do nothing

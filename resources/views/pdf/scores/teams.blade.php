@@ -76,7 +76,7 @@
                     @endforeach
                     <tr>
                         <td style="width: min-content"></td>
-                        <td>Totaal: {{ $team_total }}</td>
+                        <td>Totaal: {{ number_format($team_total, 3) }}</td>
                         @foreach ($toestellen as $key => $toestel)
                             <td colspan="2" style="width: fit-content">
                                 {{ number_format($team->team_scores->first()->toestel_scores[$key] ?? 0, 3) }}

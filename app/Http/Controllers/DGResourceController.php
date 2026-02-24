@@ -30,6 +30,6 @@ class DGResourceController extends Controller
 
         $this->authorize('view', $dg_resource);
 
-        return response()->file(Storage::path('dg_resources/' . $dg_resource . '.pdf'));
+        return Storage::download('dg_resources/' . $dg_resource . '.pdf');
     }
 }

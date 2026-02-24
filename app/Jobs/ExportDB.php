@@ -59,7 +59,7 @@ class ExportDB implements ShouldQueue
         }
 
         $filename = 'backup-' . date('Y-m-d-H-i-s') . '.json';
-        Storage::disk('local')->put($filename, json_encode($data));
+        Storage::put($filename, json_encode($data));
         if (env('DO_BROADCASTING', true)) event(new \App\Events\DBExportReady($filename));
     }
 }

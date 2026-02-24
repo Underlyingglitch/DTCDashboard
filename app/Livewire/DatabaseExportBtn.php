@@ -19,10 +19,7 @@ class DatabaseExportBtn extends Component
     {
         $this->dispatch('notification', 'Database export', 'Bestand downloaden', 'success');
         $filename = $payload['filename'];
-        return response()->streamDownload(function () use ($filename) {
-            echo Storage::disk('local')->get($filename);
-        }, $filename);
-        Storage::disk('local')->delete($filename);
+        return Storage::download($filename);
     }
 
     public function render()

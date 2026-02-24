@@ -85,9 +85,41 @@ class ScoreImport implements ShouldQueue, ShouldBeUnique
     private function readData()
     {
         $reader = new Csv();
-        $path = Storage::path($this->file_path);
-        $csv = $reader->load($path);
-        return $csv->getSheet(0)->toArray();
+
+        $in = Storage::readStream($this->file_path);
+        if ($in === false) {
+            throw new \Exception("Failed to read the file from storage.");
+        }
+
+        $tmp = tempnam(sys_get_temp_dir(), 'csv_');
+        if ($tmp === false) {
+            fclose($in);
+            throw new \Exception("Failed to create a temporary file.");
+        }
+
+        $out = fopen($tmp, 'wb');
+        if ($out === false) {
+            fclose($in);
+            @unlink($tmp);
+            throw new \Exception("Failed to open the temporary file for writing.");
+        }
+
+        stream_copy_to_stream($in, $out);
+
+        fclose($in);
+        fclose($out);
+
+        try {
+            $reader = new Csv();
+            $reader->setReadDataOnly(true);
+
+            $spreadsheet = $reader->load($tmp);
+            $data = $spreadsheet->getSheet(0)->toArray();
+        } finally {
+            @unlink($tmp);
+        }
+
+        return $data;
     }
 
     private function importScores($data)

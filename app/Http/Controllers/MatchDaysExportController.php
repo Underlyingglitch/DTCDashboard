@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MatchDay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MatchDaysExportController extends Controller
 {
@@ -49,13 +50,18 @@ class MatchDaysExportController extends Controller
 
         // Create the excel file
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        // Create export folder if it doesn't exist
-        if (!file_exists(storage_path('app/public/exports'))) {
-            mkdir(storage_path('app/public/exports'), 0777, true);
-        }
-        // Store and download the file
-        $writer->save(storage_path('app/public/exports/diplomas.xlsx'));
-        return response()->download(storage_path('app/public/exports/diplomas.xlsx'), 'Diplomas ' . $matchday->location->name . ' ' . $matchday->date->format('d-m-Y') . '.xlsx');
+
+        // Write to a temporary file
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'diplomas_');
+        $writer->save($tempFilePath);
+
+        // Store in S3 (or configured storage)
+        $fileName = 'exports/diplomas_' . $matchday->id . '_' . time() . '.xlsx';
+        Storage::put($fileName, file_get_contents($tempFilePath));
+
+        // Download the file
+        $downloadName = 'Diplomas ' . $matchday->location->name . ' ' . $matchday->date->format('d-m-Y') . '.xlsx';
+        return Storage::download($fileName, $downloadName);
     }
 
     public function trainer_emails(MatchDay $matchday)
@@ -80,12 +86,17 @@ class MatchDaysExportController extends Controller
 
         // Create the excel file
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        // Create export folder if it doesn't exist
-        if (!file_exists(storage_path('app/public/exports'))) {
-            mkdir(storage_path('app/public/exports'), 0777, true);
-        }
-        // Store and download the file
-        $writer->save(storage_path('app/public/exports/trainer_emails.xlsx'));
-        return response()->download(storage_path('app/public/exports/trainer_emails.xlsx'), 'Emailadressen trainers ' . $matchday->location->name . ' ' . $matchday->date->format('d-m-Y') . '.xlsx');
+
+        // Write to a temporary file
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'trainer_emails_');
+        $writer->save($tempFilePath);
+
+        // Store in S3 (or configured storage)
+        $fileName = 'exports/trainer_emails_' . $matchday->id . '_' . time() . '.xlsx';
+        Storage::put($fileName, file_get_contents($tempFilePath));
+
+        // Download the file
+        $downloadName = 'Emailadressen trainers ' . $matchday->location->name . ' ' . $matchday->date->format('d-m-Y') . '.xlsx';
+        return Storage::download($fileName, $downloadName);
     }
 }

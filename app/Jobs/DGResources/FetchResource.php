@@ -46,7 +46,7 @@ class FetchResource implements ShouldQueue
         $response = $client->request('GET', $url);
         Storage::write($path, $response->getBody()->getContents());
         // deepcode ignore InsecureHash: not a password
-        $hash = md5_file(Storage::path($path));
+        $hash = md5_file(Storage::get($path));
 
         if ($dg_resource->status === 'new') {
             $dg_resource->old_hash = $hash;

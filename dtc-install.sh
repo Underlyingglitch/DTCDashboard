@@ -54,8 +54,16 @@ fi
 if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
     echo -e "${YELLOW}Missing packages: ${MISSING_PACKAGES[*]}${NC}"
     echo ""
-    read -p "Would you like to install them now? (y/n) " -n 1 -r
-    echo ""
+    
+    # Check if stdin is available (interactive mode)
+    if [ -t 0 ]; then
+        read -p "Would you like to install them now? (y/n) " -n 1 -r
+        echo ""
+    else
+        # Non-interactive mode (piped via curl) - auto-proceed
+        echo -e "${YELLOW}Running in non-interactive mode - proceeding with installation...${NC}"
+        REPLY="y"
+    fi
     
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${YELLOW}Installing missing packages and updating repository...${NC}"
@@ -65,12 +73,14 @@ if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
         if echo "${MISSING_PACKAGES[@]}" | grep -q "php-cli"; then
             echo -e "${YELLOW}Adding PHP repository for PHP 8.5...${NC}"
             if ! grep -q "deb.*sury.*php" /etc/apt/sources.list.d/* 2>/dev/null; then
-                sudo apt-get install -y lsb-release ca-certificates curl 2>/dev/null
-                curl -sSL https://packages.sury.org/php/README.txt | sudo bash -E 2>/dev/null || true
+                echo -e "${BLUE}Setting up Sury PHP PPA...${NC}"
+                sudo apt-get install -y lsb-release ca-certificates curl 2>&1 | grep -v "^Get:" || true
+                curl -sSL https://packages.sury.org/php/README.txt | sudo bash -E 2>&1 | grep -E "(Adding|Updated|Setting)" || true
                 sudo apt-get update -qq
             fi
             # Update package list to use php8.5-cli
             MISSING_PACKAGES=("${MISSING_PACKAGES[@]/php-cli/php8.5-cli}")
+            echo -e "${BLUE}Installing PHP 8.5...${NC}"
         fi
         
         sudo apt-get install -y "${MISSING_PACKAGES[@]}"

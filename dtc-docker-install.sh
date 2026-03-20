@@ -25,6 +25,13 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+# Check for sudo/root access
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "${RED}❌ This script requires sudo/root privileges${NC}"
+    echo "Please run: sudo bash $0"
+    exit 1
+fi
+
 REPO_OWNER="Underlyingglitch"
 REPO_NAME="DTCDashboard"
 BRANCH="main"
@@ -56,11 +63,11 @@ if ! command -v docker &> /dev/null; then
     fi
 fi
 
-if ! command -v docker-compose &> /dev/null; then
-    echo -e "${YELLOW}Installing Docker Compose...${NC}"
-    sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    echo -e "${GREEN}✓ Docker Compose installed${NC}"
+# Check for Docker Compose plugin (docker compose) or standalone (docker-compose)
+if ! docker compose version &> /dev/null && ! command -v docker-compose &> /dev/null; then
+    echo -e "${RED}❌ Docker Compose is not installed${NC}"
+    echo "Install Docker Desktop or Docker Compose plugin: https://docs.docker.com/compose/install/"
+    exit 1
 fi
 
 echo -e "${GREEN}✓ Docker installed${NC}"
@@ -71,6 +78,13 @@ echo ""
 echo -e "${YELLOW}Setting up application directory...${NC}"
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
+
+# Determine docker compose command (plugin or standalone)
+if docker compose version &> /dev/null; then
+    DOCKER_COMPOSE="docker compose"
+else
+    DOCKER_COMPOSE="docker-compose"
+fi
 
 # Download docker-compose.yml
 echo -e "${YELLOW}Downloading docker-compose.yml...${NC}"
@@ -145,6 +159,16 @@ if [ ! -f .env ]; then
     sed -i "s|REVERB_APP_SECRET=.*|REVERB_APP_SECRET=$REVERB_APP_SECRET|g" .env
     sed -i "s|REVERB_HOST=.*|REVERB_HOST=\"$REVERB_HOST\"|g" .env
     
+    # Configure MQTT settings
+    MQTT_USERNAME="${DB_USERNAME:-mosquitto}"
+    MQTT_PASSWORD=$(openssl rand -base64 12)
+    
+    sed -i "s|MQTT_HOST=.*|MQTT_HOST=mqtt|g" .env
+    sed -i "s|MQTT_PORT=.*|MQTT_PORT=1883|g" .env
+    sed -i "s|MQTT_USERNAME=.*|MQTT_USERNAME=$MQTT_USERNAME|g" .env
+    sed -i "s|MQTT_PASSWORD=.*|MQTT_PASSWORD=$MQTT_PASSWORD|g" .env
+    sed -i "s|MQTT_PROTOCOL=.*|MQTT_PROTOCOL=mqtt|g" .env
+    
     # Configure Docker-specific settings
     sed -i "s|DB_HOST=.*|DB_HOST=mariadb|g" .env
     sed -i "s|REDIS_HOST=.*|REDIS_HOST=redis|g" .env
@@ -162,7 +186,7 @@ fi
 # Start Docker containers
 echo ""
 echo -e "${YELLOW}Starting Docker containers...${NC}"
-docker-compose up -d
+$DOCKER_COMPOSE up -d
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -176,10 +200,10 @@ if [ $? -eq 0 ]; then
     echo "  Database: $DB_DATABASE"
     echo ""
     echo -e "${BLUE}Useful Commands:${NC}"
-    echo "  View logs:     docker-compose -f $APP_DIR/docker-compose.yml logs -f"
-    echo "  Stop services: docker-compose -f $APP_DIR/docker-compose.yml down"
-    echo "  Restart:       docker-compose -f $APP_DIR/docker-compose.yml restart"
-    echo "  Update app:    cd $APP_DIR && git pull && docker-compose up -d"
+    echo "  View logs:     $DOCKER_COMPOSE logs -f"
+    echo "  Stop services: $DOCKER_COMPOSE down"
+    echo "  Restart:       $DOCKER_COMPOSE restart"
+    echo "  Update app:    $DOCKER_COMPOSE pull && $DOCKER_COMPOSE up -d"
     echo ""
     echo -e "${GREEN}🚀 Your application is running!${NC}"
 else

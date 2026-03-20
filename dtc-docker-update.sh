@@ -19,8 +19,22 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+# Check for sudo/root access
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "${RED}❌ This script requires sudo/root privileges${NC}"
+    echo "Please run: sudo bash $0"
+    exit 1
+fi
+
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$APP_DIR"
+
+# Determine docker compose command (plugin or standalone)
+if docker compose version &> /dev/null; then
+    DOCKER_COMPOSE="docker compose"
+else
+    DOCKER_COMPOSE="docker-compose"
+fi
 
 echo -e "${BLUE}================================${NC}"
 echo -e "${BLUE}DTCDashboard Docker Update${NC}"
@@ -49,22 +63,22 @@ fi
 
 # Pull latest Docker images
 echo -e "${YELLOW}Pulling latest Docker images...${NC}"
-docker-compose pull
+$DOCKER_COMPOSE pull
 
 # Run migrations
 echo -e "${YELLOW}Running database migrations...${NC}"
-docker-compose exec -T php php artisan migrate --force
+$DOCKER_COMPOSE exec -T php php artisan migrate --force
 
 # Clear caches
 echo -e "${YELLOW}Clearing caches...${NC}"
-docker-compose exec -T php php artisan cache:clear
-docker-compose exec -T php php artisan config:cache
-docker-compose exec -T php php artisan route:cache
-docker-compose exec -T php php artisan view:cache
+$DOCKER_COMPOSE exec -T php php artisan cache:clear
+$DOCKER_COMPOSE exec -T php php artisan config:cache
+$DOCKER_COMPOSE exec -T php php artisan route:cache
+$DOCKER_COMPOSE exec -T php php artisan view:cache
 
 # Restart containers
 echo -e "${YELLOW}Restarting services...${NC}"
-docker-compose up -d
+$DOCKER_COMPOSE up -d
 
 echo ""
 echo -e "${GREEN}================================${NC}"

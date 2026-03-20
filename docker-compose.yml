@@ -109,6 +109,37 @@ services:
         depends_on:
             - redis
 
+    mqtt:
+        image: eclipse-mosquitto:latest
+        container_name: mqtt
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+        volumes:
+            - mqtt_data:/mosquitto/data
+            - mqtt_logs:/mosquitto/log
+        environment:
+            MOSQUITTO_USERNAME: ${MQTT_USERNAME:-mosquitto}
+            MOSQUITTO_PASSWORD: ${MQTT_PASSWORD:-mosquitto}
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "mosquitto_sub",
+                    "-h",
+                    "localhost",
+                    "-t",
+                    "test",
+                    "-u",
+                    "${MQTT_USERNAME:-mosquitto}",
+                    "-P",
+                    "${MQTT_PASSWORD:-mosquitto}",
+                ]
+            timeout: 5s
+            retries: 5
+
 volumes:
     mariadb_data:
     redis_data:
+    mqtt_data:
+    mqtt_logs:

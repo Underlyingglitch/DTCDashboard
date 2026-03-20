@@ -84,22 +84,27 @@ USER www-data
 
 # 5) CLI target
 FROM php_runtime AS cli
-
-# 6) Queue worker target
-FROM php_runtime AS queue_worker
-CMD ["php", "artisan", "queue:work", "--verbose", "--tries=3", "--timeout=90"]
-
-# 7) Socket/Reverb target
-FROM php_runtime AS socket_server
-CMD ["php", "artisan", "reverb:start"]
-
-# 8) Cron target
-FROM php_runtime AS cron
 USER root
 RUN set -eux; \
     echo '* * * * * cd /opt/apps/laravel && php artisan schedule:run >> /proc/1/fd/1 2>> /proc/1/fd/2' > /etc/crontabs/www-data
 USER www-data
-CMD ["crond", "-l", "2", "-f"]
+CMD ["php", "artisan", "help"]
+
+# # 6) Queue worker target
+# FROM php_runtime AS queue_worker
+# CMD ["php", "artisan", "queue:work", "--verbose", "--tries=3", "--timeout=90"]
+
+# # 7) Socket/Reverb target
+# FROM php_runtime AS socket_server
+# CMD ["php", "artisan", "reverb:start"]
+
+# # 8) Cron target
+# FROM php_runtime AS cron
+# USER root
+# RUN set -eux; \
+#     echo '* * * * * cd /opt/apps/laravel && php artisan schedule:run >> /proc/1/fd/1 2>> /proc/1/fd/2' > /etc/crontabs/www-data
+# USER www-data
+# CMD ["crond", "-l", "2", "-f"]
 
 # 9) FPM target (don’t rebuild extensions; just start from fpm and copy artifacts)
 FROM php:${PHP_VERSION}-fpm-alpine AS fpm_server

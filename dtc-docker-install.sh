@@ -67,6 +67,36 @@ echo -e "${GREEN}✓ Docker installed${NC}"
 echo -e "${GREEN}✓ Docker Compose installed${NC}"
 echo ""
 
+NEEDS_AUTH="Y"
+if [[ $NEEDS_AUTH =~ ^[Yy]$ ]]; then
+    REGISTRY_URL="registry.rickokkersen.nl"
+    read -p "Enter username: " REGISTRY_USER
+    read -sp "Enter password: " REGISTRY_PASS
+    echo ""
+    
+    echo -e "${YELLOW}Logging in to Docker registry...${NC}"
+    
+    # Attempt docker login
+    if [ -z "$REGISTRY_URL" ]; then
+        # Docker Hub login
+        echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
+    else
+        # Private registry login
+        echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin "$REGISTRY_URL"
+    fi
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✓ Successfully authenticated with Docker registry${NC}"
+    else
+        echo -e "${RED}❌ Docker registry authentication failed${NC}"
+        read -p "Continue anyway? (y/n): " CONTINUE
+        if [[ ! $CONTINUE =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+    echo ""
+fi
+
 # Create app directory
 echo -e "${YELLOW}Setting up application directory...${NC}"
 mkdir -p "$APP_DIR"
@@ -79,24 +109,6 @@ else
     DOCKER_COMPOSE="docker-compose"
 fi
 
-# Download docker-compose.yml
-echo -e "${YELLOW}Downloading docker-compose.yml...${NC}"
-curl -fsSL "https://raw.githubusercontent.com/$REPO_OWNER/$REPO_NAME/$BRANCH/docker-compose.yml" -o docker-compose.yml
-echo -e "${GREEN}✓ docker-compose.yml downloaded${NC}"
-
-# Download .env template
-if [ ! -f .env.example ]; then
-    echo -e "${YELLOW}Downloading .env.example...${NC}"
-    curl -fsSL "https://raw.githubusercontent.com/$REPO_OWNER/$REPO_NAME/$BRANCH/.env.example" -o .env.example
-    echo -e "${GREEN}✓ .env.example downloaded${NC}"
-fi
-
-# Create .env if it doesn't exist
-if [ ! -f .env ]; then
-    echo ""
-    echo -e "${YELLOW}════ Application Configuration ════${NC}"
-    echo ""
-    
 # Helper function to safely update .env values
 update_env() {
     local key=$1
@@ -114,6 +126,19 @@ update_env() {
     fi
 }
 
+# Download docker-compose.yml
+echo -e "${YELLOW}Downloading docker-compose.yml...${NC}"
+curl -fsSL "https://raw.githubusercontent.com/$REPO_OWNER/$REPO_NAME/$BRANCH/docker-compose.yml" -o docker-compose.yml
+echo -e "${GREEN}✓ docker-compose.yml downloaded${NC}"
+
+# Download .env template
+if [ ! -f .env.example ]; then
+    echo -e "${YELLOW}Downloading .env.example...${NC}"
+    curl -fsSL "https://raw.githubusercontent.com/$REPO_OWNER/$REPO_NAME/$BRANCH/.env.example" -o .env.example
+    echo -e "${GREEN}✓ .env.example downloaded${NC}"
+fi
+
+# Create .env if it doesn't exist
 if [ ! -f .env ]; then
     echo ""
     echo -e "${YELLOW}════ Application Configuration ════${NC}"
@@ -191,6 +216,7 @@ if [ ! -f .env ]; then
     update_env "QUEUE_CONNECTION" "redis"
     update_env "SESSION_DRIVER" "redis"
     update_env "BROADCAST_DRIVER" "reverb"
+    update_env "FPM_HOST" "php:9000"
     
     echo ""
     echo -e "${GREEN}✓ Configuration saved to .env${NC}"

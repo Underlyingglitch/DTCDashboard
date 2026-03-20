@@ -9,6 +9,9 @@ VERSION ?= latest
 # You may also change the default value if you are using a different registry as a default
 REGISTRY ?= registry.rickokkersen.nl/dtcdashboard
 
+# PLATFORMS defines the target platforms for multi-platform builds
+PLATFORMS ?= linux/amd64,linux/arm64/v8
+
 # Define the no-cache flag variable
 NO_CACHE_FLAG=
 
@@ -33,20 +36,36 @@ deploy-test:
 	kubectl rollout restart deployment dtcdashboard-test-nginx --namespace=laravel-applications
 	kubectl rollout restart deployment dtcdashboard-test-workers --namespace=laravel-applications
 
-docker: docker-build docker-push
+# Setup buildx builder for multi-platform builds
+docker-buildx-setup:
+	@echo "Setting up Docker buildx for multi-platform builds..."
+	docker buildx create --name dtc-builder --driver docker-container 2>nul || echo Builder exists
+	docker buildx use dtc-builder
+	@echo "Docker buildx ready for platforms: ${PLATFORMS}"
 
-docker-build:
-	docker build . $(NO_CACHE_FLAG) --target cli -t ${REGISTRY}/cli:${VERSION}
-# 	docker build . $(NO_CACHE_FLAG) --target cron -t ${REGISTRY}/cron:${VERSION}
-	docker build . $(NO_CACHE_FLAG) --target fpm_server -t ${REGISTRY}/fpm_server:${VERSION}
-	docker build . $(NO_CACHE_FLAG) --target web_server -t ${REGISTRY}/web_server:${VERSION}
-# 	docker build . $(NO_CACHE_FLAG) --target queue_worker -t ${REGISTRY}/queue_worker:${VERSION}
-# 	docker build . $(NO_CACHE_FLAG) --target socket_server -t ${REGISTRY}/socket_server:${VERSION}
+# Multi-platform build and push (default make docker command)
+docker: docker-buildx-setup
+	@echo "=========================================="
+	@echo "Building multi-platform Docker images..."
+	@echo "=========================================="
+	@echo Registry: ${REGISTRY}
+	@echo Version: ${VERSION}
+	@echo Platforms: ${PLATFORMS}
+	docker buildx build . $(NO_CACHE_FLAG) --platform ${PLATFORMS} --target cli --push -t ${REGISTRY}/cli:${VERSION}
+	docker buildx build . $(NO_CACHE_FLAG) --platform ${PLATFORMS} --target fpm_server --push -t ${REGISTRY}/fpm_server:${VERSION}
+	docker buildx build . $(NO_CACHE_FLAG) --platform ${PLATFORMS} --target web_server --push -t ${REGISTRY}/web_server:${VERSION}
+	@echo "=========================================="
+	@echo "Multi-platform build completed successfully!"
+	@echo "=========================================="
 
-docker-push:
-	docker push ${REGISTRY}/cli:${VERSION}
-# 	docker push ${REGISTRY}/cron:${VERSION}
-	docker push ${REGISTRY}/fpm_server:${VERSION}
-	docker push ${REGISTRY}/web_server:${VERSION}
-# 	docker push ${REGISTRY}/queue_worker:${VERSION}
-# 	docker push ${REGISTRY}/socket_server:${VERSION}
+# Single-platform build for local testing (native arch only, no push)
+docker-local: docker-buildx-setup
+	@echo "Building single-platform images for local testing..."
+	@echo "(Native platform only, not pushed to registry)"
+	docker buildx build . $(NO_CACHE_FLAG) --target cli --load -t ${REGISTRY}/cli:${VERSION}-local
+	docker buildx build . $(NO_CACHE_FLAG) --target fpm_server --load -t ${REGISTRY}/fpm_server:${VERSION}-local
+	docker buildx build . $(NO_CACHE_FLAG) --target web_server --load -t ${REGISTRY}/web_server:${VERSION}-local
+	@echo "Local images built (not pushed):"
+	@echo "  - ${REGISTRY}/cli:${VERSION}-local"
+	@echo "  - ${REGISTRY}/fpm_server:${VERSION}-local"
+	@echo "  - ${REGISTRY}/web_server:${VERSION}-local"

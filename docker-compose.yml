@@ -82,7 +82,7 @@ services:
             - init
 
     queue-sync:
-        image: registry.rickokkersen.nl/dtcdashboard/queue_worker:latest
+        image: registry.rickokkersen.nl/dtcdashboard/cli:latest
         command:
             [
                 "php",

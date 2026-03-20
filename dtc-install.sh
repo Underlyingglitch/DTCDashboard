@@ -41,8 +41,9 @@ if ! command -v git &> /dev/null; then
     MISSING_PACKAGES+=("git")
 fi
 
+# Just check if PHP exists (any version) - dtc-setup.sh will ensure php8.3
 if ! command -v php &> /dev/null; then
-    MISSING_PACKAGES+=("php8.3-cli")
+    MISSING_PACKAGES+=("php-cli")
 fi
 
 if ! command -v wget &> /dev/null && ! command -v curl &> /dev/null; then
@@ -57,8 +58,21 @@ if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
     echo ""
     
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${YELLOW}Installing missing packages...${NC}"
+        echo -e "${YELLOW}Installing missing packages and updating repository...${NC}"
         sudo apt-get update -qq
+        
+        # For PHP, try to add Sury PPA for PHP 8.5 if php-cli not found
+        if echo "${MISSING_PACKAGES[@]}" | grep -q "php-cli"; then
+            echo -e "${YELLOW}Adding PHP repository for PHP 8.5...${NC}"
+            if ! grep -q "deb.*sury.*php" /etc/apt/sources.list.d/* 2>/dev/null; then
+                sudo apt-get install -y lsb-release ca-certificates curl 2>/dev/null
+                curl -sSL https://packages.sury.org/php/README.txt | sudo bash -E 2>/dev/null || true
+                sudo apt-get update -qq
+            fi
+            # Update package list to use php8.5-cli
+            MISSING_PACKAGES=("${MISSING_PACKAGES[@]/php-cli/php8.5-cli}")
+        fi
+        
         sudo apt-get install -y "${MISSING_PACKAGES[@]}"
         
         if [ $? -eq 0 ]; then
@@ -70,7 +84,9 @@ if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
     else
         echo -e "${RED}Cannot proceed without required packages${NC}"
         echo "To install manually, run:"
-        printf "  sudo apt-get install %s\n" "${MISSING_PACKAGES[@]}"
+        echo "  sudo apt-get update"
+        echo "  curl -sSL https://packages.sury.org/php/README.txt | sudo bash -E"
+        echo "  sudo apt-get install git php8.5-cli curl"
         exit 1
     fi
 fi

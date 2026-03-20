@@ -151,19 +151,31 @@ if [ "$IS_FRESH_INSTALL" = true ]; then
         log_info "Created .env file from .env.example"
     fi
     
+    # Update package cache
+    log_info "Updating package cache..."
+    sudo apt-get update -qq
+    
+    # Add Sury PHP PPA for PHP 8.5+
+    log_info "Checking for PHP repository..."
+    if ! grep -q "deb.*sury.*php" /etc/apt/sources.list.d/* 2>/dev/null; then
+        log_info "Adding PHP repository (Sury PPA for PHP 8.5)..."
+        sudo apt-get install -y lsb-release ca-certificates curl
+        curl -sSL https://packages.sury.org/php/README.txt | sudo bash -E
+        sudo apt-get update -qq
+        log_success "PHP repository added"
+    fi
+    
     # Install required web server packages
-    log_info "Checking web server packages..."
+    log_info "Installing web server packages..."
     if ! command -v nginx &> /dev/null; then
         log_info "Installing Nginx..."
-        sudo apt-get update -qq
         sudo apt-get install -y nginx
         log_success "Nginx installed"
     fi
     
     if ! command -v php &> /dev/null; then
         log_info "Installing PHP-FPM and extensions..."
-        sudo apt-get update -qq
-        sudo apt-get install -y php8.3-fpm php8.3-cli php8.3-curl php8.3-mbstring php8.3-mysql php8.3-redis php8.3-bcmath php8.3-xml php8.3-zip
+        sudo apt-get install -y php8.5-fpm php8.5-cli php8.5-curl php8.5-mbstring php8.5-mysql php8.5-redis php8.5-bcmath php8.5-xml php8.5-zip
         log_success "PHP installed"
     fi
     
@@ -389,10 +401,10 @@ MYSQL_EOF
             log_info "Creating Nginx site configuration..."
             
             # Create config from docker template, replacing placeholder paths and socket
-            # Replace app path and FastCGI socket (for php8.3-fpm)
+            # Replace app path and FastCGI socket (for php8.5-fpm)
             sudo bash -c "cat docker/nginx.conf | \
                 sed 's|/opt/apps/laravel/public|$APP_DIR/public|g' | \
-                sed 's|\${FPM_HOST}|unix:/run/php/php8.3-fpm.sock|g' \
+                sed 's|\${FPM_HOST}|unix:/run/php/php8.5-fpm.sock|g' \
                 > $NGINX_SITE_CONF"
             
             # Enable the site if not already enabled

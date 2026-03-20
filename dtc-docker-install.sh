@@ -25,13 +25,6 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Check for sudo/root access
-if [ "$EUID" -ne 0 ]; then 
-    echo -e "${RED}❌ This script requires sudo/root privileges${NC}"
-    echo "Please run: sudo bash $0"
-    exit 1
-fi
-
 REPO_OWNER="Underlyingglitch"
 REPO_NAME="DTCDashboard"
 BRANCH="main"
@@ -104,6 +97,28 @@ if [ ! -f .env ]; then
     echo -e "${YELLOW}════ Application Configuration ════${NC}"
     echo ""
     
+# Helper function to safely update .env values
+update_env() {
+    local key=$1
+    local value=$2
+    local file=.env
+    
+    # Escape special characters in value for sed
+    value=$(printf '%s\n' "$value" | sed -e 's/[\/&]/\\&/g')
+    
+    # Update the key with the escaped value
+    if grep -q "^${key}=" "$file"; then
+        sed -i "s|^${key}=.*|${key}=${value}|" "$file"
+    else
+        echo "${key}=${value}" >> "$file"
+    fi
+}
+
+if [ ! -f .env ]; then
+    echo ""
+    echo -e "${YELLOW}════ Application Configuration ════${NC}"
+    echo ""
+    
     cp .env.example .env
     
     # Get hostname
@@ -112,22 +127,22 @@ if [ ! -f .env ]; then
     # APP_NAME
     read -p "Enter application name (default: DTCDashboard): " APP_NAME
     APP_NAME="${APP_NAME:-DTCDashboard}"
-    sed -i "s|APP_NAME=.*|APP_NAME=$APP_NAME|g" .env
+    update_env "APP_NAME" "$APP_NAME"
     
     # APP_URL
     read -p "Enter APP_URL (default: http://$HOSTNAME.local): " APP_URL
     APP_URL="${APP_URL:-http://$HOSTNAME.local}"
-    sed -i "s|APP_URL=.*|APP_URL=$APP_URL|g" .env
+    update_env "APP_URL" "$APP_URL"
     
     # Database name
     read -p "Enter database name (default: dtc_dashboard): " DB_DATABASE
     DB_DATABASE="${DB_DATABASE:-dtc_dashboard}"
-    sed -i "s|DB_DATABASE=.*|DB_DATABASE=$DB_DATABASE|g" .env
+    update_env "DB_DATABASE" "$DB_DATABASE"
     
     # Database user
     read -p "Enter database username (default: dtc_user): " DB_USERNAME
     DB_USERNAME="${DB_USERNAME:-dtc_user}"
-    sed -i "s|DB_USERNAME=.*|DB_USERNAME=$DB_USERNAME|g" .env
+    update_env "DB_USERNAME" "$DB_USERNAME"
     
     # Database password
     read -sp "Enter database password (default: random): " DB_PASSWORD
@@ -136,16 +151,16 @@ if [ ! -f .env ]; then
         DB_PASSWORD=$(openssl rand -base64 16)
         echo -e "${BLUE}Generated random password${NC}"
     fi
-    sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=$DB_PASSWORD|g" .env
+    update_env "DB_PASSWORD" "$DB_PASSWORD"
     
     # Debug mode
     read -p "Enable debug mode? (y/n, default: n): " DEBUG_MODE
     if [[ $DEBUG_MODE =~ ^[Yy]$ ]]; then
-        sed -i "s|APP_DEBUG=.*|APP_DEBUG=true|g" .env
-        sed -i "s|LOG_LEVEL=.*|LOG_LEVEL=debug|g" .env
+        update_env "APP_DEBUG" "true"
+        update_env "LOG_LEVEL" "debug"
     else
-        sed -i "s|APP_DEBUG=.*|APP_DEBUG=false|g" .env
-        sed -i "s|LOG_LEVEL=.*|LOG_LEVEL=warning|g" .env
+        update_env "APP_DEBUG" "false"
+        update_env "LOG_LEVEL" "warning"
     fi
     
     # Generate REVERB settings
@@ -154,28 +169,28 @@ if [ ! -f .env ]; then
     REVERB_APP_SECRET=$(openssl rand -hex 16)
     REVERB_HOST="$HOSTNAME.local"
     
-    sed -i "s|REVERB_APP_ID=.*|REVERB_APP_ID=$REVERB_APP_ID|g" .env
-    sed -i "s|REVERB_APP_KEY=.*|REVERB_APP_KEY=$REVERB_APP_KEY|g" .env
-    sed -i "s|REVERB_APP_SECRET=.*|REVERB_APP_SECRET=$REVERB_APP_SECRET|g" .env
-    sed -i "s|REVERB_HOST=.*|REVERB_HOST=\"$REVERB_HOST\"|g" .env
+    update_env "REVERB_APP_ID" "$REVERB_APP_ID"
+    update_env "REVERB_APP_KEY" "$REVERB_APP_KEY"
+    update_env "REVERB_APP_SECRET" "$REVERB_APP_SECRET"
+    update_env "REVERB_HOST" "$REVERB_HOST"
     
     # Configure MQTT settings
     MQTT_USERNAME="${DB_USERNAME:-mosquitto}"
     MQTT_PASSWORD=$(openssl rand -base64 12)
     
-    sed -i "s|MQTT_HOST=.*|MQTT_HOST=mqtt|g" .env
-    sed -i "s|MQTT_PORT=.*|MQTT_PORT=1883|g" .env
-    sed -i "s|MQTT_USERNAME=.*|MQTT_USERNAME=$MQTT_USERNAME|g" .env
-    sed -i "s|MQTT_PASSWORD=.*|MQTT_PASSWORD=$MQTT_PASSWORD|g" .env
-    sed -i "s|MQTT_PROTOCOL=.*|MQTT_PROTOCOL=mqtt|g" .env
+    update_env "MQTT_HOST" "mqtt"
+    update_env "MQTT_PORT" "1883"
+    update_env "MQTT_USERNAME" "$MQTT_USERNAME"
+    update_env "MQTT_PASSWORD" "$MQTT_PASSWORD"
+    update_env "MQTT_PROTOCOL" "mqtt"
     
     # Configure Docker-specific settings
-    sed -i "s|DB_HOST=.*|DB_HOST=mariadb|g" .env
-    sed -i "s|REDIS_HOST=.*|REDIS_HOST=redis|g" .env
-    sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=redis|g" .env
-    sed -i "s|QUEUE_CONNECTION=.*|QUEUE_CONNECTION=redis|g" .env
-    sed -i "s|SESSION_DRIVER=.*|SESSION_DRIVER=redis|g" .env
-    sed -i "s|BROADCAST_DRIVER=.*|BROADCAST_DRIVER=reverb|g" .env
+    update_env "DB_HOST" "mariadb"
+    update_env "REDIS_HOST" "redis"
+    update_env "CACHE_DRIVER" "redis"
+    update_env "QUEUE_CONNECTION" "redis"
+    update_env "SESSION_DRIVER" "redis"
+    update_env "BROADCAST_DRIVER" "reverb"
     
     echo ""
     echo -e "${GREEN}✓ Configuration saved to .env${NC}"

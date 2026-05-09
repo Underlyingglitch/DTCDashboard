@@ -40,7 +40,7 @@
                                             </button>
                                         </div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.device.verify') }}" method="post">
+                                    <form class="user" action="{{ route('auth.device.login') }}" method="post">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text"

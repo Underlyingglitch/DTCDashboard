@@ -14,5 +14,5 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
 
 Route::controller(DeviceAuthController::class)->prefix('auth/device')->group(function () {
     Route::get('/login', 'showLogin')->name('auth.device.login');
-    Route::post('/verify', 'verifyToken')->name('auth.device.verify');
+    Route::post('/login', 'submitLogin');
 });

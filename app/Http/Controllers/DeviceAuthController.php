@@ -14,32 +14,41 @@ class DeviceAuthController extends Controller
     /**
      * Show the device login form.
      */
-    public function showLogin()
+    public function showLogin(Request $request)
     {
+        $token = $request->query('token');
+        if ($token) {
+            return $this->verifyToken($token);
+        }
         return view('auth.device-login');
     }
 
-    /**
-     * Handle device authentication via token.
-     */
-    public function verifyToken(Request $request)
+    public function submitLogin(Request $request)
     {
         $request->validate([
             'token' => 'required|string',
         ]);
 
-        $authToken = DeviceAuthToken::where('token', $request->token)
+        return $this->verifyToken($request->token);
+    }
+
+    /**
+     * Handle device authentication via token.
+     */
+    public function verifyToken(string $token)
+    {
+        $authToken = DeviceAuthToken::where('token', $token)
             ->first();
 
         if (!$authToken || !$authToken->isValid()) {
-            return back()->withErrors(['token' => 'Invalid or expired token.']);
+            return redirect(route('auth.device.login'))->withErrors(['token' => 'Invalid or expired token.']);
         }
 
         $device = $authToken->device;
 
         // Check if device exists and is not already authenticated
         if (!$device) {
-            return back()->withErrors(['token' => 'Device not found.']);
+            return redirect(route('auth.device.login'))->withErrors(['token' => 'Device not found.']);
         }
 
         // Authenticate the device using the 'device' guard

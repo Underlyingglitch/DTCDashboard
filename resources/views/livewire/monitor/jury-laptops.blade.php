@@ -1,7 +1,7 @@
 <div class="row">
-    @foreach ($jury_laptops as $i => $laptop)
+    @foreach ($devices as $i => $device)
         <div class="col-md-2">
-            @livewire('monitor.jury-laptop', ['laptop' => $laptop], key($i))
+            @livewire('monitor.jury-laptop', ['device' => $device], key($i))
         </div>
     @endforeach
 </div>

@@ -62,10 +62,37 @@ docker: docker-buildx-setup
 docker-local: docker-buildx-setup
 	@echo "Building single-platform images for local testing..."
 	@echo "(Native platform only, not pushed to registry)"
-	docker buildx build . $(NO_CACHE_FLAG) --target cli --load -t ${REGISTRY}/cli:${VERSION}-local
-	docker buildx build . $(NO_CACHE_FLAG) --target fpm_server --load -t ${REGISTRY}/fpm_server:${VERSION}-local
-	docker buildx build . $(NO_CACHE_FLAG) --target web_server --load -t ${REGISTRY}/web_server:${VERSION}-local
+	docker buildx build . $(NO_CACHE_FLAG) --platform ${PLATFORMS} --target cli --load -t ${REGISTRY}/cli:${VERSION}
+	docker buildx build . $(NO_CACHE_FLAG) --platform ${PLATFORMS} --target fpm_server --load -t ${REGISTRY}/fpm_server:${VERSION}
+	docker buildx build . $(NO_CACHE_FLAG) --platform ${PLATFORMS} --target web_server --load -t ${REGISTRY}/web_server:${VERSION}
 	@echo "Local images built (not pushed):"
-	@echo "  - ${REGISTRY}/cli:${VERSION}-local"
-	@echo "  - ${REGISTRY}/fpm_server:${VERSION}-local"
-	@echo "  - ${REGISTRY}/web_server:${VERSION}-local"
+	@echo "  - ${REGISTRY}/cli:${VERSION}"
+	@echo "  - ${REGISTRY}/fpm_server:${VERSION}"
+	@echo "  - ${REGISTRY}/web_server:${VERSION}"
+
+# Export images to tar files for offline deployment
+docker-export: docker-local
+	@echo "=========================================="
+	@echo "Exporting Docker images to tar files..."
+	@echo "=========================================="
+	@if not exist docker-exports mkdir docker-exports
+	@echo "Exporting CLI image..."
+	docker save ${REGISTRY}/cli:${VERSION} -o docker-exports/cli-${VERSION}.tar
+	@echo "✓ Exported: docker-exports/cli-${VERSION}.tar"
+	@echo ""
+	@echo "Exporting FPM Server image..."
+	docker save ${REGISTRY}/fpm_server:${VERSION} -o docker-exports/fpm_server-${VERSION}.tar
+	@echo "✓ Exported: docker-exports/fpm_server-${VERSION}.tar"
+	@echo ""
+	@echo "Exporting Web Server image..."
+	docker save ${REGISTRY}/web_server:${VERSION} -o docker-exports/web_server-${VERSION}.tar
+	@echo "✓ Exported: docker-exports/web_server-${VERSION}.tar"
+	@echo ""
+	@echo "=========================================="
+	@echo "Export completed! Tar files are ready."
+	@echo "=========================================="
+	@echo ""
+	@echo "To load images on target server:"
+	@echo "  docker load -i cli-${VERSION}.tar"
+	@echo "  docker load -i fpm_server-${VERSION}.tar"
+	@echo "  docker load -i web_server-${VERSION}.tar"

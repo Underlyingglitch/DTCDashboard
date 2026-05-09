@@ -21,52 +21,93 @@ class JuryLaptop extends Component
         '/auth/login_as' => 'Ontgrendelen',
     ];
 
-    public $laptop;
-
+    public $device;
     public $code;
     public $selected_page;
+    public $battery = null;
+    public $isOnline = false;
+    public $currentState = [];
+    public $authToken = null;
 
-    protected $listeners = ['deviceUpdated' => 'handleDeviceUpdated'];
+    protected $listeners = [
+        'deviceUpdated' => 'handleDeviceUpdated',
+        'echo:monitor,.DeviceDetailsUpdated' => 'handleDeviceDetailsUpdated'
+    ];
 
-    public function mount($laptop)
+    public function mount($device)
     {
-        $this->laptop = $laptop;
-        $this->selected_page = $laptop['loaded_page'];
+        $this->device = $device;
+        $this->selected_page = $device['loaded_page'];
+        $this->loadDeviceStatus();
+    }
+
+    protected function loadDeviceStatus()
+    {
+        $device = Device::find($this->device['id']);
+
+        if ($device) {
+            $this->isOnline = $device->is_online;
+            $this->battery = $device->battery;
+            $this->currentState = $device->current_state ?? [];
+        }
     }
 
     public function handleDeviceUpdated($payload)
     {
         // Handle the event
-        if ($this->laptop['id'] == $payload['id']) {
-            // Perform actions based on the event
-            $this->laptop = $payload;
+        if ($this->device['id'] == $payload['id']) {
+            $this->device = $payload;
             $this->selected_page = $payload['loaded_page'];
+        }
+    }
+
+    public function handleDeviceDetailsUpdated($payload)
+    {
+        // Handle real-time device details updates
+        if ($this->device['id'] == $payload['device_id']) {
+            $this->loadDeviceStatus();
         }
     }
 
     public function removeDevice()
     {
-        $device = \App\Models\Device::find($this->laptop['id']);
+        $device = Device::find($this->device['id']);
         $device->update(['device_id' => null]);
     }
 
     public function assignDevice()
     {
         $registered_device = Device::where('name', $this->code)->first();
-        $device = Device::find($this->laptop['id']);
+        $device = Device::find($this->device['id']);
         $device->device_id = $registered_device->device_id;
-        $device->loaded_page = '/auth/login_as';
+        $device->loaded_page = '/jurytafel';
         $device->save();
         $registered_device->delete();
         $this->code = null;
+        $this->device = $device->toArray();
     }
 
     public function setPage()
     {
         if (!array_key_exists($this->selected_page, $this->pages)) return;
-        $device = Device::find($this->laptop['id']);
-        $device->user->update(['locked' => false]);
+        $device = Device::find($this->device['id']);
         $device->update(['loaded_page' => $this->selected_page]);
+    }
+
+    public function sendAuthToken()
+    {
+        $device = Device::find($this->device['id']);
+
+        try {
+            $controller = app(\App\Http\Controllers\DeviceAuthController::class);
+            $request = request();
+            $request->merge(['device_id' => $device->id]);
+
+            $controller->sendTokenToDevice($request);
+            $this->dispatch('notification', ['message' => 'Authentication token sent to device', 'type' => 'success']);
+        } catch (\Exception $e) {
+            $this->dispatch('notification', ['message' => 'Failed to send token: ' . $e->getMessage(), 'type' => 'error']);
+        }
     }
 
     public function render()

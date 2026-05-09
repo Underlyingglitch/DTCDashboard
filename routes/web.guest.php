@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DeviceAuthController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('/login', 'login')->name('login');
@@ -9,4 +10,9 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('/register', 'register')->name('register');
     Route::post('/register', 'register_post');
     Route::post('/more_details', 'more_details')->name('more_details');
+});
+
+Route::controller(DeviceAuthController::class)->prefix('auth/device')->group(function () {
+    Route::get('/login', 'showLogin')->name('auth.device.login');
+    Route::post('/verify', 'verifyToken')->name('auth.device.verify');
 });

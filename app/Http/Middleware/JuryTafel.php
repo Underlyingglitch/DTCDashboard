@@ -11,31 +11,30 @@ class JuryTafel
 {
     /**
      * Handle an incoming request.
+     * This middleware tracks the loaded page for authenticated users and devices.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // If the user is not authenticated
-        if (!Auth::check()) {
-            $request->session()->forget('device_id');
-            return redirect()->route('auth.local');
-        } else {
+        // Check if a user is authenticated
+        if (Auth::check()) {
             if ($request->user()->hasRole('admin')) return $next($request);
-            // if (!$request->user()->hasRole('jury')) return $next($request); // NOTE - temporary override
+
+            // For jury users, track the page they're viewing
             $user_id = $request->user()->id;
-            $device = \App\Models\Device::where('authenticated_user_id', $user_id)->where('type', 'jury')->first();
+            $device = \App\Models\Device::where('authenticated_user_id', $user_id)
+                ->where('type', 'jury')
+                ->first();
 
-            // if (!$device || empty($device->authenticated_user_id)) {
-            //     Auth::logout();
-            //     return redirect()->route('auth.local');
-            // }
-            // Auth::loginUsingId($device->authenticated_user_id);
+            if ($device) {
+                $device->update([
+                    'loaded_page' => '/' . $request->path(),
+                    'last_seen' => now(),
+                ]);
+            }
         }
-
-        $device->loaded_page = '/' . ($request->path() == 'auth/local' ? 'jurytafel' : $request->path());
-        $device->last_seen = now();
-        $device->save();
+        // If device authentication is used, the device middleware handles tracking
 
         return $next($request);
     }

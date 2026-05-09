@@ -42,8 +42,6 @@ Route::middleware(['auth'])->get('/auth/logout', [AuthController::class, 'logout
 if (config('app.env') == 'local' || config('app.env') == 'dev') {
     Route::controller(AuthController::class)->name('auth.')->group(function () {
         Route::get('/auth/lock', 'lock')->name('lock')->middleware('auth');
-        Route::get('/auth/login_as', 'login_as')->name('login_as');
     });
-    Route::get('/auth/local', [AuthController::class, 'local'])->name('auth.local');
     Route::middleware(['jurytafel', 'locked'])->group(base_path('routes/web.jurytafel.php'));
 }

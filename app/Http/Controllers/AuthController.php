@@ -48,34 +48,6 @@ class AuthController extends Controller
             ->withErrors(['details' => 'Ongeldige inloggegevens!']);
     }
 
-    public function local(Request $request)
-    {
-        if ($request->session()->exists('device_id')) {
-            $device = Device::where('device_id', $request->session()->get('device_id'))->first();
-            if ($device && $device->authenticated_user_id) {
-                Auth::loginUsingId($device->authenticated_user_id);
-                return redirect($device->loaded_page);
-            }
-        }
-        return view('auth.local');
-    }
-
-    public function login_as(Request $request)
-    {
-        // Get default device_id from session
-        $device_id = $request->session()->get('device_id');
-        if (!$device_id) return redirect()->route('auth.local');
-
-        $device = Device::where('device_id', $device_id)->first();
-
-        $user = User::find($device->authenticated_user_id);
-        if (!$user) return redirect()->route('auth.local')->with('error', 'Geen gebruiker gevonden voor dit apparaat');
-        $user->locked = false;
-        $user->save();
-        Auth::login($user, false);
-        return redirect()->route($device->type == 'jury' ? 'jurytafel.index' : 'dashboard');
-    }
-
     public function register()
     {
         return view('auth.register');
@@ -143,8 +115,7 @@ class AuthController extends Controller
         if (Auth::validate(['email' => $user->email, 'password' => $request->password])) {
             Auth::user()->locked = false;
             Auth::user()->save();
-            $redirect = Device::where('ip', $request->ip())->first() ? 'jurytafel.index' : 'dashboard';
-            return redirect()->route($redirect);
+            return redirect()->route('dashboard');
         }
 
         return back()

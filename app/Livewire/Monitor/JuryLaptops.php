@@ -7,19 +7,28 @@ use Livewire\Component;
 
 class JuryLaptops extends Component
 {
-    public $jury_laptops = [];
+    public $devices = [];
 
-    public $listeners = ['echo:monitor,.DeviceUpdated' => 'deviceUpdated'];
+    public $listeners = [
+        'echo:monitor,.DeviceUpdated' => 'deviceUpdated',
+        'echo:monitor,.DeviceDetailsUpdated' => 'deviceDetailsUpdated'
+    ];
 
     public function mount()
     {
-        $this->jury_laptops = Device::where('type', 'jury')->get()->toArray();
+        $this->devices = Device::where('type', 'jury')->get()->toArray();
     }
 
     public function deviceUpdated($payload)
     {
         // Trigger event on the child livewire component 
         $this->dispatch('deviceUpdated', $payload);
+    }
+
+    public function deviceDetailsUpdated($payload)
+    {
+        // Trigger event on the child livewire component for real-time updates
+        $this->dispatch('deviceDetailsUpdated', $payload);
     }
 
     public function render()

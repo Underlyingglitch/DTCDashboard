@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'locked' => \App\Http\Middleware\LockedAccount::class,
             'internalapi' => \App\Http\Middleware\CheckAPIToken::class,
             'jurytafel' => \App\Http\Middleware\JuryTafel::class,
+            'auth.device' => \App\Http\Middleware\AuthenticateDevice::class,
         ]);
         $middleware->trustProxies(at: [
             '10.244.0.0/16'

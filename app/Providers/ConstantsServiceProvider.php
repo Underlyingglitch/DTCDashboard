@@ -53,11 +53,11 @@ class ConstantsServiceProvider extends ServiceProvider
 
         View::share('districts', [
             'Landelijk',
-            // 'Mid-West',
-            // 'Noord',
-            // 'Oost',
+            'Mid-West',
+            'Noord',
+            'Oost',
             'Zuid',
-            // 'Zuid-Holland',
+            'Zuid-Holland',
         ]);
 
         View::share('disciplines', [
